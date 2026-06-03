@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'dart:math';
+
+import 'package:consumer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../utils/responsive.dart';
+
 import '../../models/game_score.dart';
 import '../../services/leaderboard_service.dart';
 import '../../services/user_service.dart';
+import '../../utils/responsive.dart';
 
 class TetrisScreen extends StatefulWidget {
   const TetrisScreen({super.key});
@@ -18,13 +20,13 @@ class TetrisScreen extends StatefulWidget {
 class _TetrisScreenState extends State<TetrisScreen> {
   static const int rows = 20;
   static const int cols = 10;
-  
+
   List<List<int>> board = List.generate(rows, (_) => List.filled(cols, 0));
   List<List<int>> currentPiece = [];
   int currentX = 0;
   int currentY = 0;
   int currentColor = 1;
-  
+
   bool isPlaying = false;
   bool isGameOver = false;
   int score = 0;
@@ -34,19 +36,39 @@ class _TetrisScreenState extends State<TetrisScreen> {
 
   final List<List<List<int>>> pieces = [
     // I piece
-    [[1, 1, 1, 1]],
+    [
+      [1, 1, 1, 1],
+    ],
     // O piece
-    [[1, 1], [1, 1]],
+    [
+      [1, 1],
+      [1, 1],
+    ],
     // T piece
-    [[0, 1, 0], [1, 1, 1]],
+    [
+      [0, 1, 0],
+      [1, 1, 1],
+    ],
     // S piece
-    [[0, 1, 1], [1, 1, 0]],
+    [
+      [0, 1, 1],
+      [1, 1, 0],
+    ],
     // Z piece
-    [[1, 1, 0], [0, 1, 1]],
+    [
+      [1, 1, 0],
+      [0, 1, 1],
+    ],
     // J piece
-    [[1, 0, 0], [1, 1, 1]],
+    [
+      [1, 0, 0],
+      [1, 1, 1],
+    ],
     // L piece
-    [[0, 0, 1], [1, 1, 1]],
+    [
+      [0, 0, 1],
+      [1, 1, 1],
+    ],
   ];
 
   @override
@@ -80,7 +102,9 @@ class _TetrisScreenState extends State<TetrisScreen> {
   void _spawnPiece() {
     Random random = Random();
     int pieceIndex = random.nextInt(pieces.length);
-    currentPiece = pieces[pieceIndex].map((row) => List<int>.from(row)).toList();
+    currentPiece = pieces[pieceIndex]
+        .map((row) => List<int>.from(row))
+        .toList();
     currentColor = pieceIndex + 1;
     currentX = cols ~/ 2 - currentPiece[0].length ~/ 2;
     currentY = 0;
@@ -96,7 +120,7 @@ class _TetrisScreenState extends State<TetrisScreen> {
         if (piece[i][j] == 1) {
           int newY = y + i;
           int newX = x + j;
-          
+
           if (newY < 0) continue;
           if (newX < 0 || newX >= cols || newY >= rows) return true;
           if (board[newY][newX] != 0) return true;
@@ -132,7 +156,7 @@ class _TetrisScreenState extends State<TetrisScreen> {
         i++;
       }
     }
-    
+
     if (cleared > 0) {
       setState(() {
         linesCleared += cleared;
@@ -177,7 +201,7 @@ class _TetrisScreenState extends State<TetrisScreen> {
         (j) => currentPiece[currentPiece.length - 1 - j][i],
       ),
     );
-    
+
     if (!_checkCollision(rotated, currentX, currentY)) {
       setState(() {
         currentPiece = rotated;
@@ -202,7 +226,7 @@ class _TetrisScreenState extends State<TetrisScreen> {
     });
 
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'tetris',
         userId: userId,
@@ -229,9 +253,18 @@ class _TetrisScreenState extends State<TetrisScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Score: $score', style: TextStyle(fontSize: Responsive.fontSize(context, 20))),
-            Text('Level: $level', style: TextStyle(fontSize: Responsive.fontSize(context, 16))),
-            Text('Lines: $linesCleared', style: TextStyle(fontSize: Responsive.fontSize(context, 16))),
+            Text(
+              'Score: $score',
+              style: TextStyle(fontSize: Responsive.fontSize(context, 20)),
+            ),
+            Text(
+              'Level: $level',
+              style: TextStyle(fontSize: Responsive.fontSize(context, 16)),
+            ),
+            Text(
+              'Lines: $linesCleared',
+              style: TextStyle(fontSize: Responsive.fontSize(context, 16)),
+            ),
           ],
         ),
         actions: [
@@ -245,7 +278,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'tetris'});
+              context.pushNamed(
+                Routes.leaderboard,
+                extra: {'gameCode': 'tetris'},
+              );
             },
             child: const Text('Leaderboard'),
           ),
@@ -330,7 +366,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
                   aspectRatio: cols / rows,
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFFFF6B35), width: 2),
+                      border: Border.all(
+                        color: const Color(0xFFFF6B35),
+                        width: 2,
+                      ),
                     ),
                     child: CustomPaint(
                       painter: TetrisPainter(
@@ -362,7 +401,13 @@ class _TetrisScreenState extends State<TetrisScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text('START GAME', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                        child: const Text(
+                          'START GAME',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     )
                   : Column(
@@ -378,7 +423,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
                                   color: Color(0xFFFF6B35),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.rotate_right, color: Colors.white),
+                                child: const Icon(
+                                  Icons.rotate_right,
+                                  color: Colors.white,
+                                ),
                               ),
                               iconSize: 40,
                             ),
@@ -391,7 +439,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
                                   color: Color(0xFFFFD23F),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.arrow_downward, color: Colors.black),
+                                child: const Icon(
+                                  Icons.arrow_downward,
+                                  color: Colors.black,
+                                ),
                               ),
                               iconSize: 40,
                             ),
@@ -409,7 +460,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
                                   color: Color(0xFFFF6B35),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.arrow_back, color: Colors.white),
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
                               ),
                               iconSize: 40,
                             ),
@@ -422,7 +476,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
                                   color: Color(0xFFFF6B35),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.arrow_downward, color: Colors.white),
+                                child: const Icon(
+                                  Icons.arrow_downward,
+                                  color: Colors.white,
+                                ),
                               ),
                               iconSize: 40,
                             ),
@@ -435,7 +492,10 @@ class _TetrisScreenState extends State<TetrisScreen> {
                                   color: Color(0xFFFF6B35),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.arrow_forward, color: Colors.white),
+                                child: const Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                ),
                               ),
                               iconSize: 40,
                             ),
@@ -479,9 +539,14 @@ class TetrisPainter extends CustomPainter {
         final paint = Paint()
           ..color = getColor(board[i][j])
           ..style = PaintingStyle.fill;
-        
+
         canvas.drawRect(
-          Rect.fromLTWH(j * cellWidth, i * cellHeight, cellWidth - 1, cellHeight - 1),
+          Rect.fromLTWH(
+            j * cellWidth,
+            i * cellHeight,
+            cellWidth - 1,
+            cellHeight - 1,
+          ),
           paint,
         );
       }
@@ -494,10 +559,10 @@ class TetrisPainter extends CustomPainter {
           final paint = Paint()
             ..color = getColor(currentColor)
             ..style = PaintingStyle.fill;
-          
+
           final x = (currentX + j) * cellWidth;
           final y = (currentY + i) * cellHeight;
-          
+
           canvas.drawRect(
             Rect.fromLTWH(x, y, cellWidth - 1, cellHeight - 1),
             paint,

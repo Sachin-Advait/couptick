@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'dart:math';
+
+import 'package:consumer_app/routes/app_pages.dart';
+import 'package:consumer_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../utils/responsive.dart';
+
 import '../../models/game_score.dart';
 import '../../services/leaderboard_service.dart';
-import '../../services/user_service.dart';
+import '../../utils/responsive.dart';
 
 class SuperDashScreen extends StatefulWidget {
   const SuperDashScreen({super.key});
@@ -21,7 +23,7 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
   bool isJumping = false;
   bool isPlaying = false;
   bool isGameOver = false;
-  
+
   List<Obstacle> obstacles = [];
   List<Coin> coins = [];
   int score = 0;
@@ -61,7 +63,7 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
       if (isJumping || playerY < 0.5) {
         playerVelocity += 0.03;
         playerY += playerVelocity;
-        
+
         if (playerY >= 0.5) {
           playerY = 0.5;
           playerVelocity = 0;
@@ -84,17 +86,16 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
       // Spawn obstacles
       if (obstacles.isEmpty || obstacles.last.x < 0.5) {
         if (Random().nextDouble() < 0.03) {
-          obstacles.add(Obstacle(x: 1.2, height: Random().nextDouble() * 0.2 + 0.1));
+          obstacles.add(
+            Obstacle(x: 1.2, height: Random().nextDouble() * 0.2 + 0.1),
+          );
         }
       }
 
       // Spawn coins
       if (coins.isEmpty || coins.last.x < 0.3) {
         if (Random().nextDouble() < 0.05) {
-          coins.add(Coin(
-            x: 1.2,
-            y: Random().nextDouble() * 0.4 - 0.2,
-          ));
+          coins.add(Coin(x: 1.2, y: Random().nextDouble() * 0.4 - 0.2));
         }
       }
 
@@ -122,7 +123,7 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
 
       // Increase score
       score++;
-      
+
       // Increase speed
       if (score % 500 == 0 && gameSpeed < 8) {
         gameSpeed += 0.5;
@@ -135,7 +136,7 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
       _startGame();
       return;
     }
-    
+
     if (!isJumping && playerY >= 0.5) {
       setState(() {
         isJumping = true;
@@ -152,7 +153,7 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
     });
 
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'super_dash',
         userId: userId,
@@ -169,14 +170,13 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: const Text('🏃 Game Over!', textAlign: TextAlign.center),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Score: $score'),
-              Text('Coins: $coinsCollected'),
-            ],
+            children: [Text('Score: $score'), Text('Coins: $coinsCollected')],
           ),
           actions: [
             TextButton(
@@ -189,7 +189,10 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'super_dash'});
+                context.pushNamed(
+                  Routes.leaderboard,
+                  extra: {'gameCode': 'super_dash'},
+                );
               },
               child: const Text('Leaderboard'),
             ),
@@ -269,7 +272,9 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
                         child: Center(
                           child: Text(
                             '🏃',
-                            style: TextStyle(fontSize: Responsive.fontSize(context, 30)),
+                            style: TextStyle(
+                              fontSize: Responsive.fontSize(context, 30),
+                            ),
                           ),
                         ),
                       ),
@@ -281,7 +286,9 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
                         alignment: Alignment(obstacle.x, 0.5),
                         child: Container(
                           width: Responsive.dimension(context, 40),
-                          height: MediaQuery.of(context).size.height * obstacle.height,
+                          height:
+                              MediaQuery.of(context).size.height *
+                              obstacle.height,
                           color: const Color(0xFF654321),
                         ),
                       );
@@ -293,7 +300,9 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
                         alignment: Alignment(coin.x, coin.y),
                         child: Text(
                           '🪙',
-                          style: TextStyle(fontSize: Responsive.fontSize(context, 25)),
+                          style: TextStyle(
+                            fontSize: Responsive.fontSize(context, 25),
+                          ),
                         ),
                       );
                     }),

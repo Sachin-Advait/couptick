@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:consumer_app/routes/app_pages.dart';
+import 'package:consumer_app/services/user_service.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../utils/responsive.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,6 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
+      SessionManager.saveSession(
+        accessToken: 'sachin',
+        refreshToken: 'sachin',
+        userId: '12345',
+        fullName: 'CoupTick',
+        email: 'admin@couptick.com',
+      );
       context.goNamed(Routes.home);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -189,9 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
               icon: Icons.lock,
               suffix: IconButton(
                 icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_off
-                      : Icons.visibility,
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
                 ),
                 onPressed: () {
                   setState(() {
@@ -257,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           SizedBox(height: Responsive.spacing(context, 16)),
 
-// Register Link
+          // Register Link
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -288,19 +295,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
-
-  InputDecoration _inputDecoration(BuildContext context,
-      {required String hint,
-        required IconData icon,
-        Widget? suffix}) {
+  InputDecoration _inputDecoration(
+    BuildContext context, {
+    required String hint,
+    required IconData icon,
+    Widget? suffix,
+  }) {
     return InputDecoration(
       hintText: hint,
       prefixIcon: Icon(icon, color: const Color(0xFFFF6B35)),
       suffixIcon: suffix,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: Color(0xFFE5E7EB)),

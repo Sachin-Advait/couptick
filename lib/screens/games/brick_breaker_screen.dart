@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:consumer_app/routes/app_pages.dart';
 
+import 'package:consumer_app/routes/app_pages.dart';
+import 'package:consumer_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/game_score.dart';
 import '../../services/leaderboard_service.dart';
-import '../../services/user_service.dart';
 import '../../utils/responsive.dart';
 
 class BrickBreakerScreen extends StatefulWidget {
@@ -169,7 +169,7 @@ class _BrickBreakerScreenState extends State<BrickBreakerScreen> {
     });
 
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'brick_breaker',
         userId: userId,
@@ -199,7 +199,9 @@ class _BrickBreakerScreenState extends State<BrickBreakerScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'brick_breaker'},
+                context.pushNamed(
+                  Routes.leaderboard,
+                  extra: {'gameCode': 'brick_breaker'},
                 );
               },
               child: const Text('Leaderboard'),

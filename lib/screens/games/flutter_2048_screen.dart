@@ -204,7 +204,7 @@ class _Flutter2048ScreenState extends State<Flutter2048Screen> {
 
     // Submit score to leaderboard
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'flutter_2048',
         userId: userId,

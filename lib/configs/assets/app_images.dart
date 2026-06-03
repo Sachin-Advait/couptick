@@ -1,38 +1,28 @@
 class AppImages {
-  // Logos
-  static const String logo = 'assets/images/logo.png';
-  static const String logo2 = 'assets/images/logo_2.png';
+  static const String lanucherLogo = 'assets/images/lanucher_logo.png';
+  static const String textLogo = 'assets/images/text_logo_one.png';
+  static const String textLogo2 = 'assets/images/text_logo_two.png';
 
-  // Backgrounds
-  static const String loginBg = 'assets/images/login_bg.png';
+  static const String bg1 = 'assets/images/BG1.png';
+  static const String bg2 = 'assets/images/BG2.png';
+  static const String card = 'assets/images/Card.png';
+  static const String card2 = 'assets/images/Card2.png';
+  static const String card3 = 'assets/images/Card3.png';
 
-  // Icons (PNG)
-  static const String arrow = 'assets/images/arrow.png';
-  static const String search = 'assets/images/search.png';
-  static const String notification = 'assets/images/notification.png';
+  static const String eCoupon = 'assets/images/E-Coupon.png';
+  static const String eTicket = 'assets/images/E-Ticket.png';
+  static const String explore = 'assets/images/Explore.png';
 
-  // Bottom Navigation / Core SVGs
-  static const String home = 'assets/images/home.svg';
-  static const String cases = 'assets/images/cases.svg';
-  static const String verify = 'assets/images/verify.svg';
-  static const String upload = 'assets/images/upload.svg';
-  static const String more = 'assets/images/more.svg';
-  static const String user = 'assets/images/user.svg';
+  static const String eyeoff = 'assets/images/Eyeoff.png';
+  static const String eyeon = 'assets/images/Eyeon.png';
+  static const String mail = 'assets/images/Mail.png';
+  static const String phone = 'assets/images/Phone.png';
+  static const String password = 'assets/images/Password.png';
 
-  // Status / Indicators
-  static const String breach = 'assets/images/breach.svg';
-  static const String offline = 'assets/images/offline.svg';
-
-  // Auth / Security
-  static const String password = 'assets/images/password.svg';
-
-  // Summary / Dashboard
-  static const String scan = 'assets/images/scan.svg';
-  static const String file = 'assets/images/file.svg';
-  static const String due = 'assets/images/due.svg';
-
-  // Actions / Workflow
-  static const String createTask = 'assets/images/create_task.svg';
-  static const String requestDocks = 'assets/images/request_docks.svg';
-  static const String runRules = 'assets/images/run_rules.svg';
+  static const String home = 'assets/images/Home.png';
+  static const String myStuff = 'assets/images/MyStuff.png';
+  static const String activeDraws = 'assets/images/Active_Draws.png';
+  static const String products = 'assets/images/Products.png';
+  static const String notification = 'assets/images/Notification.png';
+  static const String search = 'assets/images/Search.png';
 }

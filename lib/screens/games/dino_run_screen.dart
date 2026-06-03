@@ -15,17 +15,18 @@ class DinoRunScreen extends StatefulWidget {
   State<DinoRunScreen> createState() => _DinoRunScreenState();
 }
 
-class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProviderStateMixin {
+class _DinoRunScreenState extends State<DinoRunScreen>
+    with SingleTickerProviderStateMixin {
   static const double gravity = 1200;
   static const double jumpVelocity = -600;
   static const double groundLevel = 0.7;
-  
+
   double dinoY = groundLevel;
   double dinoVelocity = 0;
   bool isJumping = false;
   bool isGameStarted = false;
   bool isGameOver = false;
-  
+
   List<Obstacle> obstacles = [];
   int score = 0;
   double gameSpeed = 300;
@@ -64,8 +65,9 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
 
   void _updateGame() {
     final now = DateTime.now();
-    final dt = lastUpdate != null 
-        ? (now.millisecondsSinceEpoch - lastUpdate!.millisecondsSinceEpoch) / 1000.0
+    final dt = lastUpdate != null
+        ? (now.millisecondsSinceEpoch - lastUpdate!.millisecondsSinceEpoch) /
+              1000.0
         : 0.016;
     lastUpdate = now;
 
@@ -74,7 +76,7 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
       if (isJumping || dinoY < groundLevel) {
         dinoVelocity += gravity * dt;
         dinoY += dinoVelocity * dt;
-        
+
         if (dinoY >= groundLevel) {
           dinoY = groundLevel;
           dinoVelocity = 0;
@@ -91,7 +93,9 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
       // Add new obstacles
       if (obstacles.isEmpty || obstacles.last.x < 0.7) {
         if (Random().nextDouble() < 0.02) {
-          obstacles.add(Obstacle(x: 1.1, height: Random().nextDouble() * 0.15 + 0.1));
+          obstacles.add(
+            Obstacle(x: 1.1, height: Random().nextDouble() * 0.15 + 0.1),
+          );
         }
       }
 
@@ -107,7 +111,7 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
 
       // Update score
       score = (score / 10).floor() * 10 + 1;
-      
+
       // Increase speed
       if (score % 100 == 0 && gameSpeed < 600) {
         gameSpeed += 20;
@@ -120,7 +124,7 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
       _startGame();
       return;
     }
-    
+
     if (!isJumping && dinoY >= groundLevel) {
       setState(() {
         isJumping = true;
@@ -137,7 +141,7 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
     });
 
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'dino_run',
         userId: userId,
@@ -189,7 +193,10 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'dino_run'});
+              context.pushNamed(
+                Routes.leaderboard,
+                extra: {'gameCode': 'dino_run'},
+              );
             },
             child: const Text('Leaderboard'),
           ),
@@ -252,17 +259,16 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        height: MediaQuery.of(context).size.height * (1 - groundLevel),
+                        height:
+                            MediaQuery.of(context).size.height *
+                            (1 - groundLevel),
                         color: const Color(0xFF535353),
                       ),
                     ),
 
                     // Dino
                     Align(
-                      alignment: Alignment(
-                        -0.8,
-                        (dinoY - groundLevel) * 4,
-                      ),
+                      alignment: Alignment(-0.8, (dinoY - groundLevel) * 4),
                       child: Container(
                         width: Responsive.dimension(context, 50),
                         height: Responsive.dimension(context, 50),
@@ -273,7 +279,9 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
                         child: Center(
                           child: Text(
                             '🦖',
-                            style: TextStyle(fontSize: Responsive.fontSize(context, 30)),
+                            style: TextStyle(
+                              fontSize: Responsive.fontSize(context, 30),
+                            ),
                           ),
                         ),
                       ),
@@ -282,13 +290,12 @@ class _DinoRunScreenState extends State<DinoRunScreen> with SingleTickerProvider
                     // Obstacles
                     ...obstacles.map((obstacle) {
                       return Align(
-                        alignment: Alignment(
-                          (obstacle.x - 0.5) * 2,
-                          1.0,
-                        ),
+                        alignment: Alignment((obstacle.x - 0.5) * 2, 1.0),
                         child: Container(
                           width: Responsive.dimension(context, 30),
-                          height: MediaQuery.of(context).size.height * obstacle.height,
+                          height:
+                              MediaQuery.of(context).size.height *
+                              obstacle.height,
                           decoration: BoxDecoration(
                             color: const Color(0xFFFF6B35),
                             borderRadius: BorderRadius.circular(4),

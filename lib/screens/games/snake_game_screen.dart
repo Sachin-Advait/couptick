@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'dart:math';
+
+import 'package:consumer_app/routes/app_pages.dart';
+import 'package:consumer_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../utils/responsive.dart';
+
 import '../../models/game_score.dart';
 import '../../services/leaderboard_service.dart';
-import '../../services/user_service.dart';
+import '../../utils/responsive.dart';
 
 class SnakeGameScreen extends StatefulWidget {
   const SnakeGameScreen({super.key});
@@ -18,7 +20,7 @@ class SnakeGameScreen extends StatefulWidget {
 class _SnakeGameScreenState extends State<SnakeGameScreen> {
   static const int gridSize = 20;
   static const int initialSpeed = 300;
-  
+
   List<Point<int>> snake = [const Point(10, 10)];
   Point<int> food = const Point(15, 15);
   String direction = 'right';
@@ -55,35 +57,40 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
 
   void _runGame() {
     gameTimer?.cancel();
-    gameTimer = Timer.periodic(Duration(milliseconds: max(100, initialSpeed - score * 5)), (timer) {
-      if (!isPlaying) return;
-      
-      setState(() {
-        direction = nextDirection;
-        Point<int> newHead = _getNewHead();
-        
-        // Check collision with walls or self
-        if (newHead.x < 0 || newHead.x >= gridSize || 
-            newHead.y < 0 || newHead.y >= gridSize ||
-            snake.contains(newHead)) {
-          _gameOver();
-          return;
-        }
-        
-        snake.insert(0, newHead);
-        
-        // Check if food is eaten
-        if (newHead == food) {
-          score += 10;
-          _generateFood();
-          // Restart timer with new speed
-          timer.cancel();
-          _runGame();
-        } else {
-          snake.removeLast();
-        }
-      });
-    });
+    gameTimer = Timer.periodic(
+      Duration(milliseconds: max(100, initialSpeed - score * 5)),
+      (timer) {
+        if (!isPlaying) return;
+
+        setState(() {
+          direction = nextDirection;
+          Point<int> newHead = _getNewHead();
+
+          // Check collision with walls or self
+          if (newHead.x < 0 ||
+              newHead.x >= gridSize ||
+              newHead.y < 0 ||
+              newHead.y >= gridSize ||
+              snake.contains(newHead)) {
+            _gameOver();
+            return;
+          }
+
+          snake.insert(0, newHead);
+
+          // Check if food is eaten
+          if (newHead == food) {
+            score += 10;
+            _generateFood();
+            // Restart timer with new speed
+            timer.cancel();
+            _runGame();
+          } else {
+            snake.removeLast();
+          }
+        });
+      },
+    );
   }
 
   Point<int> _getNewHead() {
@@ -108,7 +115,7 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
     do {
       newFood = Point(random.nextInt(gridSize), random.nextInt(gridSize));
     } while (snake.contains(newFood));
-    
+
     setState(() {
       food = newFood;
     });
@@ -134,7 +141,7 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
 
     // Submit score to leaderboard
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'snake',
         userId: userId,
@@ -188,7 +195,10 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'snake'});
+              context.pushNamed(
+                Routes.leaderboard,
+                extra: {'gameCode': 'snake'},
+              );
             },
             child: const Text('Leaderboard'),
           ),
@@ -214,9 +224,7 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
             // Header
             Container(
               padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-              ),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.05)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -252,13 +260,17 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.3),
-                      border: Border.all(color: const Color(0xFFFF6B35), width: 2),
+                      border: Border.all(
+                        color: const Color(0xFFFF6B35),
+                        width: 2,
+                      ),
                     ),
                     child: GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: gridSize,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: gridSize,
+                          ),
                       itemCount: gridSize * gridSize,
                       itemBuilder: (context, index) {
                         int x = index % gridSize;
@@ -275,10 +287,10 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                             color: isHead
                                 ? const Color(0xFFFF6B35)
                                 : isSnake
-                                    ? const Color(0xFF43e97b)
-                                    : isFood
-                                        ? const Color(0xFFFFD23F)
-                                        : Colors.transparent,
+                                ? const Color(0xFF43e97b)
+                                : isFood
+                                ? const Color(0xFFFFD23F)
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(isFood ? 4 : 2),
                           ),
                         );
@@ -319,12 +331,17 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                         IconButton(
                           onPressed: () => _changeDirection('up'),
                           icon: Container(
-                            padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+                            padding: EdgeInsets.all(
+                              Responsive.spacing(context, 12),
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFF6B35),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.arrow_upward, color: Colors.white),
+                            child: const Icon(
+                              Icons.arrow_upward,
+                              color: Colors.white,
+                            ),
                           ),
                           iconSize: Responsive.iconSize(context, 40),
                         ),
@@ -336,12 +353,17 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                             IconButton(
                               onPressed: () => _changeDirection('left'),
                               icon: Container(
-                                padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+                                padding: EdgeInsets.all(
+                                  Responsive.spacing(context, 12),
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFF6B35),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.arrow_back, color: Colors.white),
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
                               ),
                               iconSize: Responsive.iconSize(context, 40),
                             ),
@@ -359,7 +381,9 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                                 });
                               },
                               icon: Container(
-                                padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+                                padding: EdgeInsets.all(
+                                  Responsive.spacing(context, 12),
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.2),
                                   shape: BoxShape.circle,
@@ -375,12 +399,17 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                             IconButton(
                               onPressed: () => _changeDirection('right'),
                               icon: Container(
-                                padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+                                padding: EdgeInsets.all(
+                                  Responsive.spacing(context, 12),
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFF6B35),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.arrow_forward, color: Colors.white),
+                                child: const Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                ),
                               ),
                               iconSize: Responsive.iconSize(context, 40),
                             ),
@@ -391,12 +420,17 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                         IconButton(
                           onPressed: () => _changeDirection('down'),
                           icon: Container(
-                            padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+                            padding: EdgeInsets.all(
+                              Responsive.spacing(context, 12),
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFF6B35),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.arrow_downward, color: Colors.white),
+                            child: const Icon(
+                              Icons.arrow_downward,
+                              color: Colors.white,
+                            ),
                           ),
                           iconSize: Responsive.iconSize(context, 40),
                         ),

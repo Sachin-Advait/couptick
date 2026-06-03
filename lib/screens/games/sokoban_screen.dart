@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:consumer_app/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../utils/responsive.dart';
+
 import '../../models/game_score.dart';
 import '../../services/leaderboard_service.dart';
 import '../../services/user_service.dart';
+import '../../utils/responsive.dart';
 
 class SokobanScreen extends StatefulWidget {
   const SokobanScreen({super.key});
@@ -19,7 +20,7 @@ class _SokobanScreenState extends State<SokobanScreen> {
   List<List<int>> grid = [];
   int playerX = 0;
   int playerY = 0;
-  
+
   // 0=empty, 1=wall, 2=target, 3=box, 4=box on target, 5=player, 6=player on target
   final Map<int, List<List<int>>> levels = {
     1: [
@@ -51,10 +52,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
       _gameComplete();
       return;
     }
-    
+
     grid = levels[lvl]!.map((row) => List<int>.from(row)).toList();
     moves = 0;
-    
+
     // Find player
     for (int i = 0; i < grid.length; i++) {
       for (int j = 0; j < grid[i].length; j++) {
@@ -64,45 +65,50 @@ class _SokobanScreenState extends State<SokobanScreen> {
         }
       }
     }
-    
+
     setState(() {});
   }
 
   void _move(int dx, int dy) {
     int newX = playerX + dx;
     int newY = playerY + dy;
-    
-    if (newY < 0 || newY >= grid.length || newX < 0 || newX >= grid[0].length) return;
-    
+
+    if (newY < 0 || newY >= grid.length || newX < 0 || newX >= grid[0].length)
+      return;
+
     int target = grid[newY][newX];
-    
+
     // Wall
     if (target == 1) return;
-    
+
     // Box or box on target
     if (target == 3 || target == 4) {
       int boxNewX = newX + dx;
       int boxNewY = newY + dy;
-      
-      if (boxNewY < 0 || boxNewY >= grid.length || boxNewX < 0 || boxNewX >= grid[0].length) return;
-      
+
+      if (boxNewY < 0 ||
+          boxNewY >= grid.length ||
+          boxNewX < 0 ||
+          boxNewX >= grid[0].length)
+        return;
+
       int boxTarget = grid[boxNewY][boxNewX];
-      
+
       // Can't push into wall or another box
       if (boxTarget == 1 || boxTarget == 3 || boxTarget == 4) return;
-      
+
       // Move box
       setState(() {
         // Remove box from current position
         grid[newY][newX] = (target == 4) ? 2 : 0;
-        
+
         // Place box in new position
         grid[boxNewY][boxNewX] = (boxTarget == 2) ? 4 : 3;
-        
+
         // Move player
         grid[playerY][playerX] = (grid[playerY][playerX] == 6) ? 2 : 0;
         grid[newY][newX] = (grid[newY][newX] == 2) ? 6 : 5;
-        
+
         playerX = newX;
         playerY = newY;
         moves++;
@@ -112,13 +118,13 @@ class _SokobanScreenState extends State<SokobanScreen> {
       setState(() {
         grid[playerY][playerX] = (grid[playerY][playerX] == 6) ? 2 : 0;
         grid[newY][newX] = (target == 2) ? 6 : 5;
-        
+
         playerX = newX;
         playerY = newY;
         moves++;
       });
     }
-    
+
     if (_checkWin()) {
       _levelComplete();
     }
@@ -159,9 +165,9 @@ class _SokobanScreenState extends State<SokobanScreen> {
 
   void _gameComplete() async {
     int totalScore = level * 1000 - moves * 10;
-    
+
     try {
-      final userId = await UserService().getUserId();
+      final userId = SessionManager.userId;
       final gameScore = GameScore(
         gameCode: 'sokoban',
         userId: userId,
@@ -194,7 +200,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'sokoban'});
+                context.pushNamed(
+                  Routes.leaderboard,
+                  extra: {'gameCode': 'sokoban'},
+                );
               },
               child: const Text('Leaderboard'),
             ),
@@ -213,24 +222,37 @@ class _SokobanScreenState extends State<SokobanScreen> {
 
   Color _getCellColor(int value) {
     switch (value) {
-      case 1: return const Color(0xFF654321);
-      case 2: return const Color(0xFFFFD700).withOpacity(0.3);
-      case 3: return const Color(0xFF8B4513);
-      case 4: return const Color(0xFF2E8B57);
-      case 5: return const Color(0xFFFF6B35);
-      case 6: return const Color(0xFFFF6B35);
-      default: return const Color(0xFFF5F5DC);
+      case 1:
+        return const Color(0xFF654321);
+      case 2:
+        return const Color(0xFFFFD700).withOpacity(0.3);
+      case 3:
+        return const Color(0xFF8B4513);
+      case 4:
+        return const Color(0xFF2E8B57);
+      case 5:
+        return const Color(0xFFFF6B35);
+      case 6:
+        return const Color(0xFFFF6B35);
+      default:
+        return const Color(0xFFF5F5DC);
     }
   }
 
   String _getCellEmoji(int value) {
     switch (value) {
-      case 2: return '⭐';
-      case 3: return '📦';
-      case 4: return '✅';
-      case 5: return '🧑';
-      case 6: return '🧑';
-      default: return '';
+      case 2:
+        return '⭐';
+      case 3:
+        return '📦';
+      case 4:
+        return '✅';
+      case 5:
+        return '🧑';
+      case 6:
+        return '🧑';
+      default:
+        return '';
     }
   }
 
@@ -260,10 +282,7 @@ class _SokobanScreenState extends State<SokobanScreen> {
                     ),
                   ),
                   Column(
-                    children: [
-                      Text('Level: $level'),
-                      Text('Moves: $moves'),
-                    ],
+                    children: [Text('Level: $level'), Text('Moves: $moves')],
                   ),
                 ],
               ),
@@ -281,7 +300,9 @@ class _SokobanScreenState extends State<SokobanScreen> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: grid.isEmpty ? 1 : grid[0].length,
                       ),
-                      itemCount: grid.isEmpty ? 0 : grid.length * grid[0].length,
+                      itemCount: grid.isEmpty
+                          ? 0
+                          : grid.length * grid[0].length,
                       itemBuilder: (context, index) {
                         int i = index ~/ grid[0].length;
                         int j = index % grid[0].length;
@@ -296,7 +317,9 @@ class _SokobanScreenState extends State<SokobanScreen> {
                           child: Center(
                             child: Text(
                               _getCellEmoji(value),
-                              style: TextStyle(fontSize: Responsive.fontSize(context, 20)),
+                              style: TextStyle(
+                                fontSize: Responsive.fontSize(context, 20),
+                              ),
                             ),
                           ),
                         );
@@ -320,7 +343,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
                         color: const Color(0xFFFF6B35),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_upward, color: Colors.white),
+                      child: const Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                      ),
                     ),
                     iconSize: 40,
                   ),
@@ -335,7 +361,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
                             color: const Color(0xFFFF6B35),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back, color: Colors.white),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
                         ),
                         iconSize: 40,
                       ),
@@ -361,7 +390,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
                             color: const Color(0xFFFF6B35),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_forward, color: Colors.white),
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
                         ),
                         iconSize: 40,
                       ),
@@ -375,7 +407,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
                         color: const Color(0xFFFF6B35),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_downward, color: Colors.white),
+                      child: const Icon(
+                        Icons.arrow_downward,
+                        color: Colors.white,
+                      ),
                     ),
                     iconSize: 40,
                   ),
