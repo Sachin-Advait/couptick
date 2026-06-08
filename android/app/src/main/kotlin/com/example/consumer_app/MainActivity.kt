@@ -1,4 +1,4 @@
-package com.example.consumer_app
+package com.example.couptick
 
 import io.flutter.embedding.android.FlutterActivity
 

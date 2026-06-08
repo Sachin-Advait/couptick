@@ -1,4 +1,4 @@
-# consumer_app
+# couptick
 
 A new Flutter project.
 

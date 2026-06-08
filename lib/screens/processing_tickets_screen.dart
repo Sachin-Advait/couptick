@@ -1,13 +1,15 @@
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'package:go_router/go_router.dart';
+
 import '../utils/responsive.dart';
 
 class ProcessingTicketsScreen extends StatefulWidget {
   const ProcessingTicketsScreen({super.key});
 
   @override
-  State<ProcessingTicketsScreen> createState() => _ProcessingTicketsScreenState();
+  State<ProcessingTicketsScreen> createState() =>
+      _ProcessingTicketsScreenState();
 }
 
 class _ProcessingTicketsScreenState extends State<ProcessingTicketsScreen>
@@ -36,7 +38,7 @@ class _ProcessingTicketsScreenState extends State<ProcessingTicketsScreen>
 
     await Future.delayed(const Duration(milliseconds: 500));
     if (mounted) {
-      context.goNamed(Routes.ticketsAwarded);
+      context.pushNamed(Routes.ticketsAwarded);
     }
   }
 
@@ -72,7 +74,9 @@ class _ProcessingTicketsScreenState extends State<ProcessingTicketsScreen>
                   child: Center(
                     child: Text(
                       '🎟️',
-                      style: TextStyle(fontSize: Responsive.fontSize(context, 60)),
+                      style: TextStyle(
+                        fontSize: Responsive.fontSize(context, 60),
+                      ),
                     ),
                   ),
                 ),

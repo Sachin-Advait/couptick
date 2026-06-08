@@ -1,7 +1,10 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'package:go_router/go_router.dart';
-import '../utils/responsive.dart';
 
 class GamesHubScreen extends StatefulWidget {
   const GamesHubScreen({super.key});
@@ -13,340 +16,316 @@ class GamesHubScreen extends StatefulWidget {
 class _GamesHubScreenState extends State<GamesHubScreen> {
   String _selectedFilter = 'All';
 
+  final List<String> _filters = ['All', 'Arcade', 'Puzzle', 'Classic'];
+
+  final List<Map<String, dynamic>> _featured = [
+    {
+      'title': 'Super Dash',
+      'category': 'Arcade',
+      'rating': '4.8',
+      'score': '2100',
+      'color': AppColors.secondary,
+      'route': '/game-dash',
+    },
+    {
+      'title': 'Tetris',
+      'category': 'Puzzle',
+      'rating': '4.9',
+      'score': '1540',
+      'color': AppColors.primary,
+      'route': '/game-tetris',
+    },
+    {
+      'title': 'Brick Breaker',
+      'category': 'Arcade',
+      'rating': '4.7',
+      'score': '890',
+      'color': AppColors.success,
+      'route': '/game-brick',
+    },
+  ];
+
+  final List<Map<String, dynamic>> _allGames = [
+    {
+      'emoji': '🏃',
+      'title': 'Super Dash',
+      'category': 'Arcade',
+      'rating': '4.8',
+      'score': '2100',
+      'route': '/game-dash',
+    },
+    {
+      'emoji': '2️⃣',
+      'title': 'Flutter 2048',
+      'category': 'Puzzle',
+      'rating': '4.9',
+      'score': '1540',
+      'route': '/game-2048',
+    },
+    {
+      'emoji': '🐍',
+      'title': 'Snake',
+      'category': 'Classic',
+      'rating': '4.7',
+      'score': '890',
+      'route': '/game-snake',
+    },
+    {
+      'emoji': '🧱',
+      'title': 'Brick Breaker',
+      'category': 'Arcade',
+      'rating': '4.6',
+      'score': '1200',
+      'route': '/game-brick',
+    },
+    {
+      'emoji': '🦖',
+      'title': 'Dino Run',
+      'category': 'Arcade',
+      'rating': '4.5',
+      'score': '760',
+      'route': '/game-dino',
+    },
+    {
+      'emoji': '🎮',
+      'title': 'Tetris',
+      'category': 'Puzzle',
+      'rating': '4.9',
+      'score': '3240',
+      'route': '/game-tetris',
+    },
+    {
+      'emoji': '📦',
+      'title': 'Sokoban',
+      'category': 'Puzzle',
+      'rating': '4.8',
+      'score': '980',
+      'route': '/game-sokoban',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final filtered = _selectedFilter == 'All'
+        ? _allGames
+        : _allGames.where((g) => g['category'] == _selectedFilter).toList();
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Free Games',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 28),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1A1A2E),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.search),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 8)),
-                  Text(
-                    'Relax & Play',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 14),
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 16)),
-
-                  // Filter Chips
-                  SingleChildScrollView(
+      backgroundColor: AppColors.background,
+      body: Column(
+        children: [
+          _buildHeader(context),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                20.verticalSpace,
+                _buildSectionLabel(context, 'Featured'),
+                10.verticalSpace,
+                SizedBox(
+                  height: 140.heightMultiplier,
+                  child: ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _buildFilterChip('All'),
-                        SizedBox(width: Responsive.spacing(context, 8)),
-                        _buildFilterChip('Arcade'),
-                        SizedBox(width: Responsive.spacing(context, 8)),
-                        _buildFilterChip('Puzzle'),
-                        SizedBox(width: Responsive.spacing(context, 8)),
-                        _buildFilterChip('Classic'),
-                      ],
-                    ),
+                    itemCount: _featured.length,
+                    separatorBuilder: (context, index) => 15.horizontalSpace,
+                    itemBuilder: (_, i) =>
+                        _buildFeaturedCard(context, _featured[i]),
                   ),
-                ],
-              ),
-            ),
-
-            // Games Grid
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-                children: [
-                  // Featured Section
-                  Text(
-                    'Featured',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 20),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 12)),
-                  SizedBox(
-                    height: Responsive.dimension(context, 200),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildFeaturedCard(
-                          context,
-                          'Super Dash',
-                          'Arcade',
-                          '4.8',
-                          '2100',
-                          const LinearGradient(
-                            colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                          ),
-                          route: '/game-dash',
-                        ),
-                        _buildFeaturedCard(
-                          context,
-                          'Tetris',
-                          'Puzzle',
-                          '4.9',
-                          '1540',
-                          const LinearGradient(
-                            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                          ),
-                          route: '/game-tetris',
-                        ),
-                        _buildFeaturedCard(
-                          context,
-                          'Brick Breaker',
-                          'Arcade',
-                          '4.7',
-                          '890',
-                          const LinearGradient(
-                            colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
-                          ),
-                          route: '/game-brick',
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 24)),
-
-                  // All Games
-                  Text(
-                    'All Games',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 20),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 12)),
-                  GridView.count(
+                ),
+                20.verticalSpace,
+                _buildSectionLabel(context, 'All Games'),
+                10.verticalSpace,
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 16.widthMultiplier),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: Responsive.spacing(context, 12),
-                    mainAxisSpacing: Responsive.spacing(context, 12),
-                    childAspectRatio: 0.85,
-                    children: [
-                      _buildGameCard(
-                        '🏃',
-                        'Super Dash',
-                        'Arcade',
-                        '4.8',
-                        '2100',
-                        route: '/game-dash',
-                      ),
-                      _buildGameCard(
-                        '2️⃣',
-                        'Flutter 2048',
-                        'Puzzle',
-                        '4.9',
-                        '1540',
-                        route: '/game-2048',
-                      ),
-                      _buildGameCard(
-                        '🐍',
-                        'Snake',
-                        'Classic',
-                        '4.7',
-                        '890',
-                        route: '/game-snake',
-                      ),
-                      _buildGameCard(
-                        '🧱',
-                        'Brick Breaker',
-                        'Arcade',
-                        '4.6',
-                        '1200',
-                        route: '/game-brick',
-                      ),
-                      _buildGameCard(
-                        '🦖',
-                        'Dino Run',
-                        'Arcade',
-                        '4.5',
-                        '760',
-                        route: '/game-dino',
-                      ),
-                      _buildGameCard(
-                        '🎮',
-                        'Tetris',
-                        'Puzzle',
-                        '4.9',
-                        '3240',
-                        route: '/game-tetris',
-                      ),
-                      _buildGameCard(
-                        '📦',
-                        'Sokoban',
-                        'Puzzle',
-                        '4.8',
-                        '980',
-                        route: '/game-sokoban',
-                      ),
-                    ],
+                    crossAxisSpacing: 12.widthMultiplier,
+                    mainAxisSpacing: 12.heightMultiplier,
+                    childAspectRatio: 0.9,
                   ),
-                ],
-              ),
+                  itemCount: filtered.length,
+                  itemBuilder: (_, i) => _buildGameCard(context, filtered[i]),
+                ),
+                100.verticalSpace,
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label) {
-    final isSelected = _selectedFilter == label;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedFilter = label;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: Responsive.spacing(context, 16),
-          vertical: Responsive.spacing(context, 8),
-        ),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF6B35) : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : const Color(0xFF6B7280),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      color: AppColors.white,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top,
+        left: 20.widthMultiplier,
+        right: 20.widthMultiplier,
+        bottom: 16.heightMultiplier,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'My Stuff',
+                style: context.extraBold.copyWith(
+                  fontSize: 22.textMultiplier,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: 40.widthMultiplier,
+                  height: 40.widthMultiplier,
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceVariant,
+                    borderRadius: BorderRadius.circular(12.radiusMultipier),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(10.widthMultiplier),
+                    child: Image.asset(
+                      AppImages.search,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4.heightMultiplier),
+          Text(
+            'Relax & Play',
+            style: context.regular.copyWith(
+              fontSize: 13.textMultiplier,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 16.heightMultiplier),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _filters.map((f) {
+                final selected = _selectedFilter == f;
+                return GestureDetector(
+                  onTap: () => setState(() => _selectedFilter = f),
+                  child: Container(
+                    margin: EdgeInsets.only(right: 8.widthMultiplier),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.widthMultiplier,
+                      vertical: 8.heightMultiplier,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? AppColors.primary
+                          : AppColors.surfaceVariant,
+                      borderRadius: BorderRadius.circular(20.radiusMultipier),
+                    ),
+                    child: Text(
+                      f,
+                      style: context.semiBold.copyWith(
+                        fontSize: 13.textMultiplier,
+                        color: selected
+                            ? AppColors.white
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionLabel(BuildContext context, String label) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.widthMultiplier),
+      child: Text(
+        label,
+        style: context.bold.copyWith(
+          fontSize: 16.textMultiplier,
+          color: AppColors.textPrimary,
         ),
       ),
     );
   }
 
-  Widget _buildFeaturedCard(
-    BuildContext context,
-    String title,
-    String category,
-    String rating,
-    String bestScore,
-    Gradient gradient, {
-    String? route,
-  }) {
+  Widget _buildFeaturedCard(BuildContext context, Map<String, dynamic> game) {
+    final color = game['color'] as Color;
     return GestureDetector(
-      onTap: () {
-      if (route != null) {
-        context.push(route);
-      } else {
-        context.pushNamed(Routes.gameDetail, extra: {'title': title});
-      }
-    },
+      onTap: () => context.push(game['route']),
       child: Container(
-        width: Responsive.dimension(context, 280),
-        margin: EdgeInsets.only(right: Responsive.spacing(context, 12)),
+        width: 240.widthMultiplier,
         decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: color,
+          borderRadius: BorderRadius.circular(20.radiusMultipier),
         ),
-        padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+        padding: EdgeInsets.all(15.widthMultiplier),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              title,
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 24),
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
+              game['title'],
+              style: context.bold.copyWith(
+                fontSize: 20.textMultiplier,
+                color: AppColors.white,
               ),
             ),
-            SizedBox(height: Responsive.spacing(context, 8)),
+            SizedBox(height: 8.heightMultiplier),
             Row(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Responsive.spacing(context, 8),
-                    vertical: Responsive.spacing(context, 4),
+                    horizontal: 8.widthMultiplier,
+                    vertical: 4.heightMultiplier,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
-                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8.radiusMultipier),
                   ),
                   child: Text(
-                    category,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                    game['category'],
+                    style: context.medium.copyWith(
+                      fontSize: 11.textMultiplier,
+                      color: AppColors.white,
                     ),
                   ),
                 ),
-                SizedBox(width: Responsive.spacing(context, 8)),
+                SizedBox(width: 8.widthMultiplier),
                 Text(
-                  '⭐ $rating',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 14),
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  'Best: $bestScore',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 13),
-                    color: Colors.white.withOpacity(0.9),
+                  '⭐ ${game['rating']}',
+                  style: context.semiBold.copyWith(
+                    fontSize: 12.textMultiplier,
+                    color: AppColors.white,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: Responsive.spacing(context, 12)),
-            SizedBox(
+            SizedBox(height: 12.heightMultiplier),
+            Container(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => context.pushNamed(Routes.gameDetail, extra: {'title': title},
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFFFF6B35),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+              padding: EdgeInsets.symmetric(vertical: 10.heightMultiplier),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12.radiusMultipier),
+              ),
+              child: Center(
                 child: Text(
                   'PLAY NOW',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 14),
-                    fontWeight: FontWeight.w700,
+                  style: context.bold.copyWith(
+                    fontSize: 13.textMultiplier,
+                    color: color,
                   ),
                 ),
               ),
@@ -357,25 +336,18 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
     );
   }
 
-  Widget _buildGameCard(
-    String emoji,
-    String title,
-    String category,
-    String rating,
-    String bestScore, {
-    String? route,
-  }) {
+  Widget _buildGameCard(BuildContext context, Map<String, dynamic> game) {
     return GestureDetector(
-      onTap: () => context.pushNamed(Routes.gameDetail, extra: {'title': title},
-      ),
+      onTap: () =>
+          context.pushNamed(Routes.gameDetail, extra: {'title': game['title']}),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20.radiusMultipier),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 12,
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
               offset: const Offset(0, 2),
             ),
           ],
@@ -384,59 +356,58 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: Responsive.dimension(context, 100),
+              height: 90.heightMultiplier,
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
+                color: AppColors.border,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20.radiusMultipier),
                 ),
               ),
               child: Center(
                 child: Text(
-                  emoji,
-                  style: TextStyle(fontSize: Responsive.fontSize(context, 50)),
+                  game['emoji'],
+                  style: TextStyle(fontSize: 44.textMultiplier),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+              padding: EdgeInsets.all(12.widthMultiplier),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 16),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
+                    game['title'],
+                    style: context.semiBold.copyWith(
+                      fontSize: 14.textMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: Responsive.spacing(context, 4)),
+                  SizedBox(height: 2.heightMultiplier),
                   Text(
-                    category,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      color: const Color(0xFF6B7280),
+                    game['category'],
+                    style: context.regular.copyWith(
+                      fontSize: 11.textMultiplier,
+                      color: AppColors.textSecondary,
                     ),
                   ),
-                  SizedBox(height: Responsive.spacing(context, 8)),
+                  SizedBox(height: 6.heightMultiplier),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '⭐ $rating',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 12),
-                          fontWeight: FontWeight.w600,
+                        '⭐ ${game['rating']}',
+                        style: context.medium.copyWith(
+                          fontSize: 11.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       Text(
-                        'Best: $bestScore',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 11),
-                          color: const Color(0xFF6B7280),
+                        'Best: ${game['score']}',
+                        style: context.regular.copyWith(
+                          fontSize: 10.textMultiplier,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],

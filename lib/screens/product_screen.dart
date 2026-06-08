@@ -1,7 +1,10 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'package:go_router/go_router.dart';
-import '../utils/responsive.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -30,310 +33,314 @@ class _ProductsScreenState extends State<ProductsScreen> {
     'New Arrivals',
   ];
 
+  final List<Map<String, dynamic>> _featuredProducts = [
+    {
+      'emoji': '📱',
+      'title': 'iPhone 15 Pro',
+      'category': 'Electronics',
+      'price': '₹1,29,999',
+      'campaign': 'Win iPhone 15 Pro Max',
+      'entry': '₹299',
+      'hasCampaign': true,
+      'gradient': const LinearGradient(
+        colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+      ),
+    },
+    {
+      'emoji': '⌚',
+      'title': 'Apple Watch Ultra',
+      'category': 'Electronics',
+      'price': '₹89,999',
+      'campaign': 'Win Apple Watch',
+      'entry': '₹149',
+      'hasCampaign': true,
+      'gradient': LinearGradient(
+        colors: [AppColors.primary, AppColors.primary.withOpacity(0.7)],
+      ),
+    },
+    {
+      'emoji': '💻',
+      'title': 'MacBook Air M3',
+      'category': 'Electronics',
+      'price': '₹1,14,999',
+      'campaign': 'Win MacBook',
+      'entry': '₹349',
+      'hasCampaign': true,
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
+      ),
+    },
+    {
+      'emoji': '🎧',
+      'title': 'AirPods Pro Max',
+      'category': 'Electronics',
+      'price': '₹59,999',
+      'campaign': 'Win AirPods',
+      'entry': '₹99',
+      'hasCampaign': true,
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
+      ),
+    },
+  ];
+
+  final List<Map<String, dynamic>> _listProducts = [
+    {
+      'emoji': '📷',
+      'title': 'Canon EOS R6',
+      'category': 'Electronics',
+      'price': '₹2,29,999',
+      'seller': 'Digital Camera Store',
+      'hasCampaign': false,
+    },
+    {
+      'emoji': '🎸',
+      'title': 'Fender Stratocaster',
+      'category': 'Music',
+      'price': '₹89,999',
+      'seller': 'Music World',
+      'hasCampaign': false,
+    },
+    {
+      'emoji': '🚴',
+      'title': 'Mountain Bike Pro',
+      'category': 'Sports',
+      'price': '₹45,999',
+      'seller': 'Sports Arena',
+      'hasCampaign': true,
+      'campaign': 'Win Bike Gear',
+      'entry': '₹99',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Products',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 28),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1A1A2E),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.search),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              _showFilterBottomSheet(context);
-                            },
-                            icon: const Icon(Icons.tune),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 8)),
-                  Text(
-                    'Browse products & win prizes',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 14),
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 16)),
-
-                  // Category Chips
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _categories.map((category) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            right: Responsive.spacing(context, 8),
-                          ),
-                          child: _buildCategoryChip(category),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
+      backgroundColor: AppColors.background,
+      body: Column(
+        children: [
+          _buildHeader(context),
+          if (_selectedFilter != 'All Products') _buildFilterBadge(context),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.widthMultiplier,
+                vertical: 20.heightMultiplier,
               ),
-            ),
-
-            // Active Filter Badge
-            if (_selectedFilter != 'All Products')
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.spacing(context, 16),
-                  vertical: Responsive.spacing(context, 8),
-                ),
-                color: const Color(0xFFFF6B35).withOpacity(0.1),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.filter_alt,
-                      size: Responsive.iconSize(context, 16),
-                      color: const Color(0xFFFF6B35),
-                    ),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    Expanded(
-                      child: Text(
-                        'Filter: $_selectedFilter',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 13),
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFFF6B35),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedFilter = 'All Products';
-                        });
-                      },
-                      child: Icon(
-                        Icons.close,
-                        size: Responsive.iconSize(context, 18),
-                        color: const Color(0xFFFF6B35),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            // Products Grid
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-                children: [
-                  // Featured Products
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Featured Products',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 20),
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1A1A2E),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'View All →',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 14),
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFFF6B35),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 12)),
-
-                  GridView.count(
+              children: [
+                _buildSectionRow(context, 'Featured Products'),
+                SizedBox(height: 14.heightMultiplier),
+                GridView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: Responsive.spacing(context, 12),
-                    mainAxisSpacing: Responsive.spacing(context, 12),
-                    childAspectRatio: 0.5,
-                    children: [
-                      _buildProductCard(
-                        '📱',
-                        'iPhone 15 Pro',
-                        'Electronics',
-                        '₹1,29,999',
-                        'Win iPhone 15 Pro Max',
-                        '₹299',
-                        true,
-                        const LinearGradient(
-                          colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                        ),
-                      ),
-                      _buildProductCard(
-                        '⌚',
-                        'Apple Watch Ultra',
-                        'Electronics',
-                        '₹89,999',
-                        'Win Apple Watch',
-                        '₹149',
-                        true,
-                        const LinearGradient(
-                          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                        ),
-                      ),
-                      _buildProductCard(
-                        '💻',
-                        'MacBook Air M3',
-                        'Electronics',
-                        '₹1,14,999',
-                        'Win MacBook',
-                        '₹349',
-                        true,
-                        const LinearGradient(
-                          colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
-                        ),
-                      ),
-                      _buildProductCard(
-                        '🎧',
-                        'AirPods Pro Max',
-                        'Electronics',
-                        '₹59,999',
-                        'Win AirPods',
-                        '₹99',
-                        true,
-                        const LinearGradient(
-                          colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
-                        ),
-                      ),
-                      _buildProductCard(
-                        '👟',
-                        'Nike Air Max',
-                        'Fashion',
-                        '₹12,999',
-                        null,
-                        null,
-                        false,
-                        const LinearGradient(
-                          colors: [Color(0xFFf093fb), Color(0xFFf5576c)],
-                        ),
-                      ),
-                      _buildProductCard(
-                        '🎮',
-                        'PlayStation 5',
-                        'Electronics',
-                        '₹54,999',
-                        'Win PS5 Bundle',
-                        '₹199',
-                        true,
-                        const LinearGradient(
-                          colors: [Color(0xFFfa709a), Color(0xFFfee140)],
-                        ),
-                      ),
-                    ],
+                    crossAxisSpacing: 12.widthMultiplier,
+                    mainAxisSpacing: 12.heightMultiplier,
+                    childAspectRatio: 0.56,
                   ),
-
-                  SizedBox(height: Responsive.spacing(context, 24)),
-
-                  // All Products Section
-                  Text(
-                    'All Products',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 20),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 12)),
-
-                  // List View Products
-                  ..._buildProductListItems(),
-                ],
-              ),
+                  itemCount: _featuredProducts.length,
+                  itemBuilder: (_, i) =>
+                      _buildProductCard(context, _featuredProducts[i]),
+                ),
+                SizedBox(height: 28.heightMultiplier),
+                _buildSectionRow(context, 'All Products', showViewAll: false),
+                SizedBox(height: 14.heightMultiplier),
+                ..._listProducts.map((p) => _buildListItem(context, p)),
+                100.verticalSpace,
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildCategoryChip(String label) {
-    final isSelected = _selectedCategory == label;
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      color: AppColors.white,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 12.heightMultiplier,
+        left: 20.widthMultiplier,
+        right: 12.widthMultiplier,
+        bottom: 16.heightMultiplier,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Products',
+                style: context.extraBold.copyWith(
+                  fontSize: 22.textMultiplier,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              Row(
+                children: [
+                  _iconBtn(AppImages.search, () {}),
+                  SizedBox(width: 8.widthMultiplier),
+                  _iconBtn(
+                    null,
+                    () => _showFilterSheet(context),
+                    fallback: Icons.tune_rounded,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 4.heightMultiplier),
+          Text(
+            'Browse products & win prizes',
+            style: context.regular.copyWith(
+              fontSize: 13.textMultiplier,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 16.heightMultiplier),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _categories.map((c) {
+                final sel = _selectedCategory == c;
+                return GestureDetector(
+                  onTap: () => setState(() => _selectedCategory = c),
+                  child: Container(
+                    margin: EdgeInsets.only(right: 8.widthMultiplier),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.widthMultiplier,
+                      vertical: 8.heightMultiplier,
+                    ),
+                    decoration: BoxDecoration(
+                      color: sel ? AppColors.primary : AppColors.surfaceVariant,
+                      borderRadius: BorderRadius.circular(20.radiusMultipier),
+                    ),
+                    child: Text(
+                      c,
+                      style: context.semiBold.copyWith(
+                        fontSize: 13.textMultiplier,
+                        color: sel ? AppColors.white : AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _iconBtn(String? asset, VoidCallback onTap, {IconData? fallback}) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedCategory = label;
-        });
-      },
+      onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: Responsive.spacing(context, 16),
-          vertical: Responsive.spacing(context, 8),
-        ),
+        width: 40.widthMultiplier,
+        height: 40.widthMultiplier,
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF6B35) : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(20),
+          color: AppColors.surfaceVariant,
+          borderRadius: BorderRadius.circular(12.radiusMultipier),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : const Color(0xFF6B7280),
+        child: asset != null
+            ? Padding(
+                padding: EdgeInsets.all(10.widthMultiplier),
+                child: Image.asset(asset, color: AppColors.textSecondary),
+              )
+            : Icon(
+                fallback,
+                size: 18.widthMultiplier,
+                color: AppColors.textSecondary,
+              ),
+      ),
+    );
+  }
+
+  Widget _buildFilterBadge(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.widthMultiplier,
+        vertical: 10.heightMultiplier,
+      ),
+      color: AppColors.primarySurface,
+      child: Row(
+        children: [
+          Icon(
+            Icons.filter_alt_rounded,
+            size: 16.widthMultiplier,
+            color: AppColors.primary,
+          ),
+          SizedBox(width: 8.widthMultiplier),
+          Expanded(
+            child: Text(
+              'Filter: $_selectedFilter',
+              style: context.semiBold.copyWith(
+                fontSize: 12.textMultiplier,
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => setState(() => _selectedFilter = 'All Products'),
+            child: Icon(
+              Icons.close_rounded,
+              size: 16.widthMultiplier,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionRow(
+    BuildContext context,
+    String title, {
+    bool showViewAll = true,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: context.bold.copyWith(
+            fontSize: 16.textMultiplier,
+            color: AppColors.textPrimary,
           ),
         ),
-      ),
+        if (showViewAll)
+          GestureDetector(
+            onTap: () {},
+            child: Text(
+              'View All →',
+              style: context.semiBold.copyWith(
+                fontSize: 13.textMultiplier,
+                color: AppColors.secondary,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
-  Widget _buildProductCard(
-    String emoji,
-    String title,
-    String category,
-    String price,
-    String? campaignTitle,
-    String? entryFee,
-    bool hasCampaign,
-    Gradient gradient,
-  ) {
+  Widget _buildProductCard(BuildContext context, Map<String, dynamic> p) {
+    final hasCampaign = p['hasCampaign'] as bool;
     return GestureDetector(
       onTap: () {
-        if (hasCampaign) {
-          context.pushNamed(Routes.campaignDetail);
-        }
+        if (hasCampaign) context.pushNamed(Routes.campaignDetail);
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20.radiusMultipier),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 12,
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
               offset: const Offset(0, 2),
             ),
           ],
@@ -341,23 +348,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Section with Campaign Badge
             Stack(
               children: [
                 Container(
-                  height: Responsive.dimension(context, 140),
+                  height: 130.heightMultiplier,
                   decoration: BoxDecoration(
-                    gradient: gradient,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
+                    gradient: p['gradient'] as Gradient,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20.radiusMultipier),
                     ),
                   ),
                   child: Center(
                     child: Text(
-                      emoji,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 50),
-                      ),
+                      p['emoji'],
+                      style: TextStyle(fontSize: 44.textMultiplier),
                     ),
                   ),
                 ),
@@ -367,114 +371,90 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     right: 8,
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: Responsive.spacing(context, 8),
-                        vertical: Responsive.spacing(context, 4),
+                        horizontal: 8.widthMultiplier,
+                        vertical: 4.heightMultiplier,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFD23F),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.warning,
+                        borderRadius: BorderRadius.circular(10.radiusMultipier),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '🎟️',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 12),
-                            ),
-                          ),
-                          SizedBox(width: Responsive.spacing(context, 2)),
-                          Text(
-                            'Win',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 10),
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF1A1A2E),
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        '🎟 Win',
+                        style: context.medium.copyWith(
+                          fontSize: 10.textMultiplier,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),
               ],
             ),
-
-            // Details Section
             Padding(
-              padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+              padding: EdgeInsets.all(12.widthMultiplier),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 15),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
+                    p['title'],
+                    style: context.semiBold.copyWith(
+                      fontSize: 13.textMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: Responsive.spacing(context, 4)),
+                  SizedBox(height: 2.heightMultiplier),
                   Text(
-                    category,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      color: const Color(0xFF6B7280),
+                    p['category'],
+                    style: context.regular.copyWith(
+                      fontSize: 11.textMultiplier,
+                      color: AppColors.textSecondary,
                     ),
                   ),
-                  SizedBox(height: Responsive.spacing(context, 8)),
-                  Row(
-                    children: [
-                      Text(
-                        price,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 16),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFFFF6B35),
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 6.heightMultiplier),
+                  Text(
+                    p['price'],
+                    style: context.bold.copyWith(
+                      fontSize: 15.textMultiplier,
+                      color: AppColors.secondary,
+                    ),
                   ),
-                  if (hasCampaign && campaignTitle != null) ...[
-                    SizedBox(height: Responsive.spacing(context, 8)),
+                  if (hasCampaign && p['campaign'] != null) ...[
+                    SizedBox(height: 8.heightMultiplier),
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Responsive.spacing(context, 8),
-                        vertical: Responsive.spacing(context, 6),
-                      ),
+                      padding: EdgeInsets.all(8.widthMultiplier),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF6B35).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.primarySurface,
+                        borderRadius: BorderRadius.circular(10.radiusMultipier),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Raffle',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 9),
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF6B7280),
+                            'RAFFLE',
+                            style: context.medium.copyWith(
+                              fontSize: 9.textMultiplier,
+                              color: AppColors.primary,
+                              letterSpacing: 0.8,
                             ),
                           ),
+                          SizedBox(height: 2.heightMultiplier),
                           Text(
-                            campaignTitle,
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 11),
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFFFF6B35),
+                            p['campaign'],
+                            style: context.semiBold.copyWith(
+                              fontSize: 11.textMultiplier,
+                              color: AppColors.primary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (entryFee != null)
+                          if (p['entry'] != null)
                             Text(
-                              'Entry: $entryFee',
-                              style: TextStyle(
-                                fontSize: Responsive.fontSize(context, 10),
-                                color: const Color(0xFF6B7280),
+                              'Entry: ${p['entry']}',
+                              style: context.regular.copyWith(
+                                fontSize: 10.textMultiplier,
+                                color: AppColors.textSecondary,
                               ),
                             ),
                         ],
@@ -490,163 +470,125 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  List<Widget> _buildProductListItems() {
-    final products = [
-      {
-        'emoji': '📷',
-        'title': 'Canon EOS R6',
-        'category': 'Electronics',
-        'price': '₹2,29,999',
-        'seller': 'Digital Camera Store',
-        'hasCampaign': false,
-      },
-      {
-        'emoji': '🎸',
-        'title': 'Fender Stratocaster',
-        'category': 'Music',
-        'price': '₹89,999',
-        'seller': 'Music World',
-        'hasCampaign': false,
-      },
-      {
-        'emoji': '🚴',
-        'title': 'Mountain Bike Pro',
-        'category': 'Sports',
-        'price': '₹45,999',
-        'seller': 'Sports Arena',
-        'hasCampaign': true,
-        'campaign': 'Win Bike Gear',
-        'entryFee': '₹99',
-      },
-    ];
-
-    return products.map((product) {
-      return Container(
-        margin: EdgeInsets.only(bottom: Responsive.spacing(context, 12)),
-        padding: EdgeInsets.all(Responsive.spacing(context, 12)),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+  Widget _buildListItem(BuildContext context, Map<String, dynamic> p) {
+    final hasCampaign = p['hasCampaign'] as bool;
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.heightMultiplier),
+      padding: EdgeInsets.all(14.widthMultiplier),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.radiusMultipier),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 72.widthMultiplier,
+            height: 72.widthMultiplier,
+            decoration: BoxDecoration(
+              color: AppColors.primarySurface,
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Product Image
-            Container(
-              width: Responsive.dimension(context, 80),
-              height: Responsive.dimension(context, 80),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  product['emoji'] as String,
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 36),
-                  ),
-                ),
+            child: Center(
+              child: Text(
+                p['emoji'],
+                style: TextStyle(fontSize: 32.textMultiplier),
               ),
             ),
-            SizedBox(width: Responsive.spacing(context, 12)),
-
-            // Product Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product['title'] as String,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 15),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(width: 14.widthMultiplier),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  p['title'],
+                  style: context.semiBold.copyWith(
+                    fontSize: 14.textMultiplier,
+                    color: AppColors.textPrimary,
                   ),
-                  SizedBox(height: Responsive.spacing(context, 4)),
-                  Text(
-                    product['category'] as String,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      color: const Color(0xFF6B7280),
-                    ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 2.heightMultiplier),
+                Text(
+                  p['category'],
+                  style: context.regular.copyWith(
+                    fontSize: 11.textMultiplier,
+                    color: AppColors.textSecondary,
                   ),
-                  SizedBox(height: Responsive.spacing(context, 4)),
-                  Text(
-                    product['seller'] as String,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 11),
-                      color: const Color(0xFF6B7280),
-                    ),
+                ),
+                SizedBox(height: 2.heightMultiplier),
+                Text(
+                  p['seller'],
+                  style: context.light.copyWith(
+                    fontSize: 11.textMultiplier,
+                    color: AppColors.textDisabled,
                   ),
-                  SizedBox(height: Responsive.spacing(context, 8)),
-                  Row(
-                    children: [
-                      Text(
-                        product['price'] as String,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 16),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFFFF6B35),
+                ),
+                SizedBox(height: 6.heightMultiplier),
+                Row(
+                  children: [
+                    Text(
+                      p['price'],
+                      style: context.bold.copyWith(
+                        fontSize: 15.textMultiplier,
+                        color: AppColors.secondary,
+                      ),
+                    ),
+                    if (hasCampaign) ...[
+                      SizedBox(width: 8.widthMultiplier),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.widthMultiplier,
+                          vertical: 3.heightMultiplier,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.warningSurface,
+                          borderRadius: BorderRadius.circular(
+                            8.radiusMultipier,
+                          ),
+                        ),
+                        child: Text(
+                          '🎟 Win Prize',
+                          style: context.medium.copyWith(
+                            fontSize: 10.textMultiplier,
+                            color: AppColors.warning,
+                          ),
                         ),
                       ),
-                      if (product['hasCampaign'] == true) ...[
-                        SizedBox(width: Responsive.spacing(context, 8)),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Responsive.spacing(context, 6),
-                            vertical: Responsive.spacing(context, 3),
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFD23F),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            '🎟️ Win Prize',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 10),
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF1A1A2E),
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-
-            // Action Button
-            Icon(
-              Icons.arrow_forward_ios,
-              size: Responsive.iconSize(context, 16),
-              color: const Color(0xFF6B7280),
-            ),
-          ],
-        ),
-      );
-    }).toList();
+          ),
+          Icon(
+            Icons.chevron_right_rounded,
+            size: 20.widthMultiplier,
+            color: AppColors.textDisabled,
+          ),
+        ],
+      ),
+    );
   }
 
-  void _showFilterBottomSheet(BuildContext context) {
+  void _showFilterSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24.radiusMultipier),
+        ),
       ),
-      builder: (context) => Container(
-        padding: EdgeInsets.all(Responsive.spacing(context, 24)),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.all(24.widthMultiplier),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -656,50 +598,41 @@ class _ProductsScreenState extends State<ProductsScreen> {
               children: [
                 Text(
                   'Filter Products',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 20),
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1A1A2E),
+                  style: context.bold.copyWith(
+                    fontSize: 18.textMultiplier,
+                    color: AppColors.textPrimary,
                   ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                GestureDetector(
+                  onTap: () => Navigator.pop(ctx),
+                  child: Icon(
+                    Icons.close_rounded,
+                    size: 22.widthMultiplier,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: Responsive.spacing(context, 20)),
-
-            ..._filters.map((filter) {
-              return ListTile(
-                leading: Radio<String>(
-                  value: filter,
-                  groupValue: _selectedFilter,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedFilter = value!;
-                    });
-                    Navigator.pop(context);
-                  },
-                  activeColor: const Color(0xFFFF6B35),
-                ),
+            SizedBox(height: 20.heightMultiplier),
+            ..._filters.map(
+              (f) => RadioListTile<String>(
+                value: f,
+                groupValue: _selectedFilter,
+                activeColor: AppColors.primary,
                 title: Text(
-                  filter,
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 15),
-                    fontWeight: FontWeight.w600,
+                  f,
+                  style: context.semiBold.copyWith(
+                    fontSize: 14.textMultiplier,
+                    color: AppColors.textPrimary,
                   ),
                 ),
-                onTap: () {
-                  setState(() {
-                    _selectedFilter = filter;
-                  });
-                  Navigator.pop(context);
+                onChanged: (v) {
+                  setState(() => _selectedFilter = v!);
+                  Navigator.pop(ctx);
                 },
-              );
-            }),
-
-            SizedBox(height: Responsive.spacing(context, 20)),
+              ),
+            ),
+            SizedBox(height: 12.heightMultiplier),
           ],
         ),
       ),

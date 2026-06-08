@@ -1,7 +1,7 @@
-import 'package:consumer_app/common/utils/app_screen_util.dart';
-import 'package:consumer_app/configs/assets/app_images.dart';
-import 'package:consumer_app/configs/theme/app_colors.dart';
-import 'package:consumer_app/routes/app_pages.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';

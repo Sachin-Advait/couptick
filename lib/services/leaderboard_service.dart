@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:consumer_app/models/game_score.dart';
-import 'package:consumer_app/models/leaderboard_entry.dart';
+import 'package:couptick/models/game_score.dart';
+import 'package:couptick/models/leaderboard_entry.dart';
 import 'package:http/http.dart' as http;
 
 class LeaderboardService {

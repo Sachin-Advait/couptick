@@ -1,5 +1,5 @@
 import 'package:confetti/confetti.dart';
-import 'package:consumer_app/routes/app_pages.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -366,7 +366,7 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                         height: Responsive.dimension(context, 52),
                         child: ElevatedButton(
                           onPressed: () {
-                            context.goNamed(Routes.myWins);
+                            context.pushNamed(Routes.myWins);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF10B981),
@@ -390,7 +390,7 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                         height: Responsive.dimension(context, 52),
                         child: OutlinedButton(
                           onPressed: () {
-                            context.goNamed(Routes.home);
+                            context.pushNamed(Routes.home);
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(

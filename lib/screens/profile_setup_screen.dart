@@ -1,7 +1,7 @@
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/services.dart';
+
 import '../utils/responsive.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
@@ -58,7 +58,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     // Simulate API call
     Future.delayed(const Duration(seconds: 2), () {
-      context.goNamed(Routes.ticketsAwarded);  // ← ADD THIS LINE
+      context.pushNamed(Routes.ticketsAwarded); // ← ADD THIS LINE
     });
   }
 
@@ -66,9 +66,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           'Skip KYC?',
           style: TextStyle(
@@ -254,7 +252,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               },
                             ),
                           ),
-                          SizedBox(width: Responsive.spacing(context, 8)),  // ← Reduced from 12 to 8
+                          SizedBox(
+                            width: Responsive.spacing(context, 8),
+                          ), // ← Reduced from 12 to 8
                           Expanded(
                             child: _buildDropdown(
                               label: 'City *',
@@ -309,7 +309,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       _buildDocumentUpload(
                         'Upload PAN Card',
                         _panDocument,
-                            () => _handleDocumentPick('pan'),
+                        () => _handleDocumentPick('pan'),
                       ),
                       SizedBox(height: Responsive.spacing(context, 16)),
 
@@ -326,14 +326,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       _buildDocumentUpload(
                         'Upload Aadhaar Card',
                         _aadhaarDocument,
-                            () => _handleDocumentPick('aadhaar'),
+                        () => _handleDocumentPick('aadhaar'),
                       ),
                       SizedBox(height: Responsive.spacing(context, 16)),
 
                       _buildDocumentUpload(
                         'Upload Address Proof',
                         _addressProof,
-                            () => _handleDocumentPick('address'),
+                        () => _handleDocumentPick('address'),
                       ),
                       SizedBox(height: Responsive.spacing(context, 32)),
 
@@ -348,26 +348,27 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),
                             ),
-                            disabledBackgroundColor:
-                            const Color(0xFFFF6B35).withOpacity(0.5),
+                            disabledBackgroundColor: const Color(
+                              0xFFFF6B35,
+                            ).withOpacity(0.5),
                           ),
                           child: _isLoading
                               ? SizedBox(
-                            height: Responsive.dimension(context, 24),
-                            width: Responsive.dimension(context, 24),
-                            child: const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                                  height: Responsive.dimension(context, 24),
+                                  width: Responsive.dimension(context, 24),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
                               : Text(
-                            'Complete Setup',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 16),
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                                  'Complete Setup',
+                                  style: TextStyle(
+                                    fontSize: Responsive.fontSize(context, 16),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                       SizedBox(height: Responsive.spacing(context, 20)),
@@ -423,29 +424,24 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           textCapitalization: textCapitalization,
           validator: label.contains('*')
               ? (value) {
-            if (value == null || value.isEmpty) {
-              return 'This field is required';
-            }
-            return null;
-          }
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                }
               : null,
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, color: const Color(0xFFFF6B35)),
             counterText: '',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFFF6B35),
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
             ),
           ),
         ),
@@ -475,26 +471,18 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         DropdownButtonFormField<String>(
           initialValue: value,
           items: items
-              .map((item) => DropdownMenuItem(
-            value: item,
-            child: Text(item),
-          ))
+              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
               .toList(),
           onChanged: enabled ? onChanged : null,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFFF6B35),
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
             ),
           ),
         ),
@@ -503,10 +491,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Widget _buildDocumentUpload(
-      String label,
-      String? fileName,
-      VoidCallback onTap,
-      ) {
+    String label,
+    String? fileName,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -535,8 +523,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
               child: Icon(
                 fileName != null ? Icons.check_circle : Icons.upload_file,
-                color:
-                fileName != null ? const Color(0xFF10B981) : const Color(0xFFFF6B35),
+                color: fileName != null
+                    ? const Color(0xFF10B981)
+                    : const Color(0xFFFF6B35),
                 size: Responsive.iconSize(context, 24),
               ),
             ),

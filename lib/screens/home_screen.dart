@@ -1,8 +1,10 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,566 +14,304 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final PageController _featuredProductsController = PageController();
+  final PageController _featuredDrawsController = PageController();
+  int _productsPage = 0;
+  int _drawsPage = 0;
+
+  @override
+  void dispose() {
+    _featuredProductsController.dispose();
+    _featuredDrawsController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-              child: Column(
-                children: [
-                  // Top Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                        ).createShader(bounds),
-                        child: Text(
-                          'CoupTick',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 24),
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          _buildIconButton('🎟️', 3),
-                          SizedBox(width: Responsive.spacing(context, 12)),
-                          _buildIconButton('🔔', 2),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 20)),
-
-                  // Search Bar
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FA),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 14),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Search campaigns, prizes...',
-                        hintStyle: TextStyle(
-                          color: const Color(0xFF6B7280),
-                          fontSize: Responsive.fontSize(context, 14),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: const Color(0xFF6B7280),
-                          size: Responsive.iconSize(context, 20),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: Responsive.spacing(context, 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(AppImages.bg2),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.widthMultiplier),
+            child: Column(
+              children: [
+                /// ── TOP BAR ──
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Quick Actions - NOW WITH PRODUCTS
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildQuickAction(
-                          '🛍️',
-                          'Products',
-                          const Color(0xFFFF6B35),
-                          onTap: () {
-                            context.goNamed(Routes.products);
-                          },
-                        ),
-                        _buildQuickAction(
-                          '🎮',
-                          'Games',
-                          const Color(0xFF667eea),
-                          onTap: () {
-                            context.goNamed(Routes.gamesHub);
-                          },
-                        ),
-                        _buildQuickAction(
-                          '🎫',
-                          'Tickets',
-                          const Color(0xFF4facfe),
-                          onTap: () {
-                            context.goNamed(Routes.ticketWallet);
-                          },
-                        ),
-                        _buildQuickAction(
-                          '🏆',
-                          'Winners',
-                          const Color(0xFF43e97b),
-                          onTap: () {
-                            context.pushNamed(Routes.winners);
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: Responsive.spacing(context, 24)),
-
-                    // Featured Campaign
-                    GestureDetector(
-                      onTap: () => context.pushNamed(Routes.campaignDetail),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                          ),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        padding: EdgeInsets.all(
-                          Responsive.spacing(context, 24),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: Responsive.spacing(context, 12),
-                                vertical: Responsive.spacing(context, 6),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.25),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                '🔥 TRENDING NOW',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 12),
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: Responsive.spacing(context, 12)),
-                            Text(
-                              'Win iPhone 15 Pro Max!',
-                              style: TextStyle(
-                                fontSize: Responsive.fontSize(context, 22),
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(height: Responsive.spacing(context, 8)),
-                            Text(
-                              'Buy any phone & get instant tickets',
-                              style: TextStyle(
-                                fontSize: Responsive.fontSize(context, 14),
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                            ),
-                            SizedBox(height: Responsive.spacing(context, 16)),
-                            Row(
-                              children: [
-                                _buildStat('₹299', 'Per Play'),
-                                SizedBox(
-                                  width: Responsive.spacing(context, 20),
-                                ),
-                                _buildStat('₹1.2L', 'Prize'),
-                                SizedBox(
-                                  width: Responsive.spacing(context, 20),
-                                ),
-                                _buildStat('856', 'Playing'),
-                              ],
-                            ),
-                            SizedBox(height: Responsive.spacing(context, 16)),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => context.pushNamed(Routes.gamePlay),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      foregroundColor: const Color(0xFFFF6B35),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: Responsive.spacing(
-                                          context,
-                                          14,
-                                        ),
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '▶️ Play Now',
-                                      style: TextStyle(
-                                        fontSize: Responsive.fontSize(
-                                          context,
-                                          15,
-                                        ),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: Responsive.spacing(context, 12),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () => context.goNamed(Routes.products),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white.withOpacity(
-                                      0.2,
-                                    ),
-                                    foregroundColor: Colors.white,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: Responsive.spacing(
-                                        context,
-                                        20,
-                                      ),
-                                      vertical: Responsive.spacing(context, 14),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      side: const BorderSide(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    '🛍️ Shop',
-                                    style: TextStyle(
-                                      fontSize: Responsive.fontSize(
-                                        context,
-                                        15,
-                                      ),
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                    Text(
+                      'Welcome Abdul',
+                      style: context.bold.copyWith(
+                        fontSize: 24.textMultiplier,
+                        color: AppColors.white,
                       ),
                     ),
-                    SizedBox(height: Responsive.spacing(context, 24)),
-
-                    // Section Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Active Campaigns',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 20),
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1A1A2E),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'View All →',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 14),
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFFFF6B35),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: Responsive.spacing(context, 16)),
-
-                    // Campaigns Grid
-                    GridView.count(
-                      crossAxisCount: Responsive.isLargeScreen(context) ? 3 : 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: Responsive.spacing(context, 5),
-                      mainAxisSpacing: Responsive.spacing(context, 10),
-                      childAspectRatio: 0.68,
-                      children: [
-                        _buildCampaignCard(
-                          '📱',
-                          'Samsung Galaxy S24',
-                          '₹80,000',
-                          '₹199',
-                          '1.2K left',
-                          const LinearGradient(
-                            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                          ),
-                        ),
-                        _buildCampaignCard(
-                          '⌚',
-                          'Apple Watch Ultra',
-                          '₹60,000',
-                          '₹149',
-                          '890 left',
-                          const LinearGradient(
-                            colors: [Color(0xFFf093fb), Color(0xFFf5576c)],
-                          ),
-                        ),
-                        _buildCampaignCard(
-                          '💻',
-                          'MacBook Air M3',
-                          '₹1,20,000',
-                          '₹349',
-                          '2.1K left',
-                          const LinearGradient(
-                            colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
-                          ),
-                        ),
-                        _buildCampaignCard(
-                          '🎧',
-                          'AirPods Pro Max',
-                          '₹45,000',
-                          '₹99',
-                          '650 left',
-                          const LinearGradient(
-                            colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
-                          ),
-                        ),
-                      ],
+                    Image.asset(
+                      AppImages.notification,
+                      width: 20.widthMultiplier,
+                      height: 20.widthMultiplier,
+                      color: AppColors.white,
                     ),
                   ],
                 ),
-              ),
+
+                SizedBox(height: 16.heightMultiplier),
+
+                /// ── SEARCH BAR ──
+                Container(
+                  height: 48.heightMultiplier,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(30.radiusMultipier),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 16.widthMultiplier),
+                      Text(
+                        'Search...',
+                        style: context.regular.copyWith(
+                          fontSize: 14.textMultiplier,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(right: 14.widthMultiplier),
+                        child: Image.asset(
+                          AppImages.search,
+                          width: 20.widthMultiplier,
+                          height: 20.widthMultiplier,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 50.heightMultiplier),
+
+                /// ── SCROLLABLE BODY ──
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildQuickActionGrid(),
+                        SizedBox(height: 20.heightMultiplier),
+                        _buildFeaturedRow(),
+                        SizedBox(height: 20.heightMultiplier),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildIconButton(String emoji, int badgeCount) {
-    return Stack(
-      clipBehavior: Clip.none,
+  // ─────────────────────────────────────────────
+  //  2×2 QUICK ACTION GRID
+  // ─────────────────────────────────────────────
+  Widget _buildQuickActionGrid() {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 2.widthMultiplier,
+      mainAxisSpacing: 12.heightMultiplier,
+      childAspectRatio: 2.4,
       children: [
-        Container(
-          width: Responsive.dimension(context, 40),
-          height: Responsive.dimension(context, 40),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FA),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Text(
-              emoji,
-              style: TextStyle(fontSize: Responsive.fontSize(context, 20)),
-            ),
-          ),
+        _buildActionCard(
+          label: 'Products',
+          assetIcon: AppImages.products,
+          onTap: () => context.pushNamed(Routes.products),
         ),
-        if (badgeCount > 0)
-          Positioned(
-            top: -4,
-            right: -4,
-            child: Container(
-              width: Responsive.dimension(context, 18),
-              height: Responsive.dimension(context, 18),
-              decoration: const BoxDecoration(
-                color: Color(0xFFFF6B35),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  '$badgeCount',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: Responsive.fontSize(context, 10),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-          ),
+        _buildActionCard(
+          label: 'Active Draws',
+          assetIcon: AppImages.activeDraws,
+          onTap: () {},
+        ),
+        _buildActionCard(
+          label: 'E-Tickets',
+          assetIcon: AppImages.eTicket,
+          onTap: () => context.pushNamed(Routes.ticketWallet),
+        ),
+        _buildActionCard(
+          label: 'E-Coupons',
+          assetIcon: AppImages.eCoupon,
+          onTap: () {},
+        ),
       ],
     );
   }
 
-  Widget _buildQuickAction(
-    String emoji,
-    String label,
-    Color color, {
-    VoidCallback? onTap,
+  Widget _buildActionCard({
+    required String label,
+    required String assetIcon,
+    required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.radiusMultipier),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.radiusMultipier),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              /// Card.png as the card background
+              Image.asset(AppImages.card, fit: BoxFit.cover),
+              Positioned(
+                left: 14.widthMultiplier,
+                top: 0,
+                bottom: 0,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    label,
+                    style: context.semiBold.copyWith(
+                      fontSize: 13.textMultiplier,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ),
+
+              /// icon (right, bottom-anchored)
+              Positioned(
+                right: 40.widthMultiplier,
+                bottom: 20.heightMultiplier,
+                child: Image.asset(
+                  assetIcon,
+                  width: 34.widthMultiplier,
+                  height: 34.widthMultiplier,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  //  FEATURED ROW  (Products | Draws)
+  // ─────────────────────────────────────────────
+  Widget _buildFeaturedRow() {
+    return Row(
+      children: [
+        Expanded(child: _buildFeaturedCard(isFeaturedProducts: true)),
+        SizedBox(width: 12.widthMultiplier),
+        Expanded(child: _buildFeaturedCard(isFeaturedProducts: false)),
+      ],
+    );
+  }
+
+  Widget _buildFeaturedCard({required bool isFeaturedProducts}) {
+    final controller = isFeaturedProducts
+        ? _featuredProductsController
+        : _featuredDrawsController;
+    final currentPage = isFeaturedProducts ? _productsPage : _drawsPage;
+    final bgImage = isFeaturedProducts ? AppImages.card2 : AppImages.card3;
+    final heroImage = isFeaturedProducts
+        ? AppImages.laptop
+        : AppImages.headphone;
+    final title = isFeaturedProducts ? 'Featured\nProducts' : 'Featured\nDraws';
+    final subtitle = isFeaturedProducts
+        ? 'Handpicked favorites,\nchosen for quality and\nperformance.'
+        : 'Highlighted draws,\nchosen for quality.';
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage(bgImage), fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(20.radiusMultipier),
+      ),
       child: Column(
         children: [
-          Container(
-            width: Responsive.dimension(context, 56),
-            height: Responsive.dimension(context, 56),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [color, color.withOpacity(0.8)],
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Center(
-              child: Text(
-                emoji,
-                style: TextStyle(fontSize: Responsive.fontSize(context, 24)),
-              ),
+          SizedBox(
+            height: 160.heightMultiplier,
+            child: PageView(
+              controller: controller,
+              onPageChanged: (p) => setState(() {
+                if (isFeaturedProducts) {
+                  _productsPage = p;
+                } else {
+                  _drawsPage = p;
+                }
+              }),
+              children: [
+                _heroImage(heroImage),
+                _heroImage(heroImage),
+                _heroImage(heroImage),
+              ],
             ),
           ),
-          SizedBox(height: Responsive.spacing(context, 8)),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 12),
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF2D3142),
-            ),
+
+          /// Text + dots
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: context.bold.copyWith(
+                  fontSize: 14.textMultiplier,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 4.heightMultiplier),
+              Text(
+                subtitle,
+                style: context.regular.copyWith(
+                  fontSize: 11.textMultiplier,
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+              SizedBox(height: 10.heightMultiplier),
+
+              /// page indicator dots
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (i) {
+                  final active = i == currentPage;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: EdgeInsets.symmetric(horizontal: 3.widthMultiplier),
+                    width: 6.widthMultiplier,
+                    height: 6.widthMultiplier,
+                    decoration: BoxDecoration(
+                      color: active ? AppColors.primary : AppColors.border,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  );
+                }),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStat(String value, String label) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 24),
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 12),
-            color: Colors.white.withOpacity(0.8),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCampaignCard(
-    String emoji,
-    String title,
-    String prize,
-    String price,
-    String ticketsLeft,
-    Gradient gradient,
-  ) {
-    return GestureDetector(
-      onTap: () => context.pushNamed(Routes.campaignDetail),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 12,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: Responsive.dimension(context, 120),
-              decoration: BoxDecoration(
-                gradient: gradient,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  emoji,
-                  style: TextStyle(fontSize: Responsive.fontSize(context, 40)),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(Responsive.spacing(context, 12)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 14),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 6)),
-                  Text(
-                    'Prize: $prize',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 8)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Responsive.spacing(context, 10),
-                          vertical: Responsive.spacing(context, 4),
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFD23F),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          price,
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 12),
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1A1A2E),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        ticketsLeft,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 11),
-                          color: const Color(0xFF6B7280),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+  Widget _heroImage(String asset) {
+    return Padding(
+      padding: EdgeInsets.all(12.widthMultiplier),
+      child: Image.asset(asset, fit: BoxFit.contain),
     );
   }
 }

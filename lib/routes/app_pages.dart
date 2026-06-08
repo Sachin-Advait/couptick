@@ -1,32 +1,35 @@
-import 'package:consumer_app/common/utils/global_keys.dart';
-import 'package:consumer_app/screens/campaign_detail_screen.dart';
-import 'package:consumer_app/screens/claim_form_screen.dart';
-import 'package:consumer_app/screens/claim_submitted_screen.dart';
-import 'package:consumer_app/screens/dashboard/dashboard.dart';
-import 'package:consumer_app/screens/game_detail_screen.dart';
-import 'package:consumer_app/screens/game_play_screen.dart';
-import 'package:consumer_app/screens/games/brick_breaker_screen.dart';
-import 'package:consumer_app/screens/games/dino_run_screen.dart';
-import 'package:consumer_app/screens/games/flutter_2048_screen.dart';
-import 'package:consumer_app/screens/games/snake_game_screen.dart';
-import 'package:consumer_app/screens/games/sokoban_screen.dart';
-import 'package:consumer_app/screens/games/super_dash_screen.dart';
-import 'package:consumer_app/screens/games/tetris_screen.dart';
-import 'package:consumer_app/screens/games_hub_screen.dart';
-import 'package:consumer_app/screens/home_screen.dart';
-import 'package:consumer_app/screens/leaderboard_screen.dart';
-import 'package:consumer_app/screens/login_screen.dart';
-import 'package:consumer_app/screens/my_wins_screen.dart';
-import 'package:consumer_app/screens/processing_tickets_screen.dart';
-import 'package:consumer_app/screens/product_screen.dart';
-import 'package:consumer_app/screens/profile_screen.dart';
-import 'package:consumer_app/screens/profile_setup_screen.dart';
-import 'package:consumer_app/screens/register_screen.dart';
-import 'package:consumer_app/screens/ticket_awarded_screen.dart';
-import 'package:consumer_app/screens/ticket_wallet_screen.dart';
-import 'package:consumer_app/screens/transactions_screen.dart';
-import 'package:consumer_app/screens/winners_screen.dart';
+import 'package:couptick/common/utils/global_keys.dart';
+import 'package:couptick/screens/campaign_detail_screen.dart';
+import 'package:couptick/screens/claim_form_screen.dart';
+import 'package:couptick/screens/claim_submitted_screen.dart';
+import 'package:couptick/screens/dashboard/dashboard.dart';
+import 'package:couptick/screens/game_detail_screen.dart';
+import 'package:couptick/screens/game_play_screen.dart';
+import 'package:couptick/screens/games/brick_breaker_screen.dart';
+import 'package:couptick/screens/games/dino_run_screen.dart';
+import 'package:couptick/screens/games/flutter_2048_screen.dart';
+import 'package:couptick/screens/games/snake_game_screen.dart';
+import 'package:couptick/screens/games/sokoban_screen.dart';
+import 'package:couptick/screens/games/super_dash_screen.dart';
+import 'package:couptick/screens/games/tetris_screen.dart';
+import 'package:couptick/screens/games_hub_screen.dart';
+import 'package:couptick/screens/home_screen.dart';
+import 'package:couptick/screens/leaderboard_screen.dart';
+import 'package:couptick/screens/login_screen.dart';
+import 'package:couptick/screens/my_wins_screen.dart';
+import 'package:couptick/screens/processing_tickets_screen.dart';
+import 'package:couptick/screens/product_screen.dart';
+import 'package:couptick/screens/profile_screen.dart';
+import 'package:couptick/screens/profile_setup_screen.dart';
+import 'package:couptick/screens/register_screen.dart';
+import 'package:couptick/screens/splash/bloc/splash_bloc.dart';
+import 'package:couptick/screens/splash/view/splash_view.dart';
+import 'package:couptick/screens/ticket_awarded_screen.dart';
+import 'package:couptick/screens/ticket_wallet_screen.dart';
+import 'package:couptick/screens/transactions_screen.dart';
+import 'package:couptick/screens/winners_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 part 'app_routes.dart';
@@ -75,12 +78,24 @@ class Pages {
   static GoRouter get appRouter => _router;
 
   static final GoRouter _router = GoRouter(
-    initialLocation: Routes.login,
+    initialLocation: Routes.splash,
     navigatorKey: GlobalKeys.navigatorKey,
     routes: [
       /// ─────────────────────────
       /// AUTH
       /// ─────────────────────────
+      GoRoute(
+        path: Routes.splash,
+        name: Routes.splash,
+        pageBuilder: (context, state) => buildPageWithTransition(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => SplashBloc()..add(NavigateToNextEvent()),
+            child: const SplashView(),
+          ),
+        ),
+      ),
+
       GoRoute(
         path: Routes.login,
         name: Routes.login,

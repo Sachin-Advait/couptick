@@ -1,8 +1,8 @@
-import 'package:consumer_app/common/utils/app_screen_util.dart';
-import 'package:consumer_app/configs/assets/app_images.dart';
-import 'package:consumer_app/configs/theme/app_colors.dart';
-import 'package:consumer_app/routes/app_pages.dart';
-import 'package:consumer_app/services/user_service.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/routes/app_pages.dart';
+import 'package:couptick/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -37,6 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     }
+  }
+
+  @override
+  void initState() {
+    _mobileController.text = '97178392';
+    _passwordController.text = '12345678';
+    super.initState();
   }
 
   @override
@@ -109,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your mobile number';
                           }
-                          if (value.length != 10) {
+                          if (value.length != 8) {
                             return 'Enter a valid 10-digit number';
                           }
                           return null;
@@ -156,16 +163,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 10.heightMultiplier),
 
                       /// Forgot Password
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Forgot Password !',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 13.textMultiplier,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.secondary,
-                            fontStyle: FontStyle.italic,
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            'Forgot Password !',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13.textMultiplier,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
                         ),
                       ),

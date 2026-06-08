@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
-import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
+import 'package:couptick/routes/app_pages.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import '../utils/responsive.dart';
 
 class TicketsAwardedScreen extends StatefulWidget {
@@ -99,7 +100,9 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                       IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: Container(
-                          padding: EdgeInsets.all(Responsive.spacing(context, 8)),
+                          padding: EdgeInsets.all(
+                            Responsive.spacing(context, 8),
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -132,12 +135,17 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                               height: Responsive.dimension(context, 140),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
-                                  colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                                  colors: [
+                                    Color(0xFFFF6B35),
+                                    Color(0xFFFF8E53),
+                                  ],
                                 ),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFFF6B35).withOpacity(0.3),
+                                    color: const Color(
+                                      0xFFFF6B35,
+                                    ).withOpacity(0.3),
                                     blurRadius: 30,
                                     spreadRadius: 10,
                                   ),
@@ -186,7 +194,9 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
 
                         // Campaign Info Card
                         Container(
-                          padding: EdgeInsets.all(Responsive.spacing(context, 24)),
+                          padding: EdgeInsets.all(
+                            Responsive.spacing(context, 24),
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(24),
@@ -205,7 +215,9 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                                       Responsive.spacing(context, 8),
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFF6B35).withOpacity(0.2),
+                                      color: const Color(
+                                        0xFFFF6B35,
+                                      ).withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Icon(
@@ -214,22 +226,33 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                                       size: Responsive.iconSize(context, 24),
                                     ),
                                   ),
-                                  SizedBox(width: Responsive.spacing(context, 12)),
+                                  SizedBox(
+                                    width: Responsive.spacing(context, 12),
+                                  ),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Campaign',
                                           style: TextStyle(
-                                            fontSize: Responsive.fontSize(context, 12),
-                                            color: Colors.white.withOpacity(0.6),
+                                            fontSize: Responsive.fontSize(
+                                              context,
+                                              12,
+                                            ),
+                                            color: Colors.white.withOpacity(
+                                              0.6,
+                                            ),
                                           ),
                                         ),
                                         Text(
                                           campaignName,
                                           style: TextStyle(
-                                            fontSize: Responsive.fontSize(context, 18),
+                                            fontSize: Responsive.fontSize(
+                                              context,
+                                              18,
+                                            ),
                                             fontWeight: FontWeight.w700,
                                             color: Colors.white,
                                           ),
@@ -243,10 +266,15 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
 
                               // Tickets Count
                               Container(
-                                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                                padding: EdgeInsets.all(
+                                  Responsive.spacing(context, 20),
+                                ),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                                    colors: [
+                                      Color(0xFFFF6B35),
+                                      Color(0xFFFF8E53),
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -256,26 +284,40 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                                     Text(
                                       ticketsAwarded.toString(),
                                       style: TextStyle(
-                                        fontSize: Responsive.fontSize(context, 48),
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          48,
+                                        ),
                                         fontWeight: FontWeight.w800,
                                         color: Colors.white,
                                       ),
                                     ),
-                                    SizedBox(width: Responsive.spacing(context, 12)),
+                                    SizedBox(
+                                      width: Responsive.spacing(context, 12),
+                                    ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Raffle',
                                           style: TextStyle(
-                                            fontSize: Responsive.fontSize(context, 14),
-                                            color: Colors.white.withOpacity(0.9),
+                                            fontSize: Responsive.fontSize(
+                                              context,
+                                              14,
+                                            ),
+                                            color: Colors.white.withOpacity(
+                                              0.9,
+                                            ),
                                           ),
                                         ),
                                         Text(
                                           'Tickets',
                                           style: TextStyle(
-                                            fontSize: Responsive.fontSize(context, 20),
+                                            fontSize: Responsive.fontSize(
+                                              context,
+                                              20,
+                                            ),
                                             fontWeight: FontWeight.w700,
                                             color: Colors.white,
                                           ),
@@ -294,28 +336,42 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                                   Text(
                                     'Your Ticket Numbers',
                                     style: TextStyle(
-                                      fontSize: Responsive.fontSize(context, 14),
+                                      fontSize: Responsive.fontSize(
+                                        context,
+                                        14,
+                                      ),
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white.withOpacity(0.7),
                                     ),
                                   ),
-                                  SizedBox(height: Responsive.spacing(context, 12)),
+                                  SizedBox(
+                                    height: Responsive.spacing(context, 12),
+                                  ),
                                   Wrap(
                                     spacing: Responsive.spacing(context, 8),
                                     runSpacing: Responsive.spacing(context, 8),
                                     children: ticketNumbers.map((number) {
                                       return Container(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: Responsive.spacing(context, 16),
-                                          vertical: Responsive.spacing(context, 10),
+                                          horizontal: Responsive.spacing(
+                                            context,
+                                            16,
+                                          ),
+                                          vertical: Responsive.spacing(
+                                            context,
+                                            10,
+                                          ),
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color(0xFFFF6B35)
-                                                  .withOpacity(0.3),
+                                              color: const Color(
+                                                0xFFFF6B35,
+                                              ).withOpacity(0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 2),
                                             ),
@@ -324,7 +380,10 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                                         child: Text(
                                           number,
                                           style: TextStyle(
-                                            fontSize: Responsive.fontSize(context, 18),
+                                            fontSize: Responsive.fontSize(
+                                              context,
+                                              18,
+                                            ),
                                             fontWeight: FontWeight.w800,
                                             color: const Color(0xFFFF6B35),
                                           ),
@@ -338,12 +397,18 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
 
                               // Draw Info
                               Container(
-                                padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+                                padding: EdgeInsets.all(
+                                  Responsive.spacing(context, 16),
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFFD23F).withOpacity(0.15),
+                                  color: const Color(
+                                    0xFFFFD23F,
+                                  ).withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: const Color(0xFFFFD23F).withOpacity(0.3),
+                                    color: const Color(
+                                      0xFFFFD23F,
+                                    ).withOpacity(0.3),
                                   ),
                                 ),
                                 child: Row(
@@ -353,22 +418,33 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                                       color: const Color(0xFFFFD23F),
                                       size: Responsive.iconSize(context, 20),
                                     ),
-                                    SizedBox(width: Responsive.spacing(context, 12)),
+                                    SizedBox(
+                                      width: Responsive.spacing(context, 12),
+                                    ),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             'Draw Date',
                                             style: TextStyle(
-                                              fontSize: Responsive.fontSize(context, 12),
-                                              color: Colors.white.withOpacity(0.6),
+                                              fontSize: Responsive.fontSize(
+                                                context,
+                                                12,
+                                              ),
+                                              color: Colors.white.withOpacity(
+                                                0.6,
+                                              ),
                                             ),
                                           ),
                                           Text(
                                             '$drawDate • $drawTime',
                                             style: TextStyle(
-                                              fontSize: Responsive.fontSize(context, 15),
+                                              fontSize: Responsive.fontSize(
+                                                context,
+                                                15,
+                                              ),
                                               fontWeight: FontWeight.w700,
                                               color: Colors.white,
                                             ),
@@ -386,7 +462,9 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
 
                         // Info Message
                         Container(
-                          padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+                          padding: EdgeInsets.all(
+                            Responsive.spacing(context, 16),
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF10B981).withOpacity(0.15),
                             borderRadius: BorderRadius.circular(16),
@@ -438,7 +516,7 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                         height: Responsive.dimension(context, 52),
                         child: ElevatedButton(
                           onPressed: () {
-                            context.goNamed(Routes.ticketWallet);
+                            context.pushNamed(Routes.ticketWallet);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF6B35),
@@ -463,7 +541,7 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
                         height: Responsive.dimension(context, 52),
                         child: OutlinedButton(
                           onPressed: () {
-                            context.goNamed(Routes.home);
+                            context.pushNamed(Routes.home);
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(

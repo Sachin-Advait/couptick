@@ -1,6 +1,7 @@
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:consumer_app/routes/app_pages.dart';
 import 'package:go_router/go_router.dart';
+
 import '../utils/responsive.dart';
 
 class GamePlayScreen extends StatefulWidget {
@@ -23,9 +24,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> {
             // Header
             Container(
               padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-              ),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.05)),
               child: Column(
                 children: [
                   Row(
@@ -68,7 +67,9 @@ class _GamePlayScreenState extends State<GamePlayScreen> {
                     child: LinearProgressIndicator(
                       value: 0.6,
                       backgroundColor: Colors.white.withOpacity(0.1),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFF6B35)),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFFFF6B35),
+                      ),
                       minHeight: Responsive.spacing(context, 8),
                     ),
                   ),
@@ -127,8 +128,11 @@ class _GamePlayScreenState extends State<GamePlayScreen> {
                           gradient: _scratched
                               ? null
                               : const LinearGradient(
-                            colors: [Color(0xFFC0C0C0), Color(0xFFE8E8E8)],
-                          ),
+                                  colors: [
+                                    Color(0xFFC0C0C0),
+                                    Color(0xFFE8E8E8),
+                                  ],
+                                ),
                           color: _scratched ? const Color(0xFF667eea) : null,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
@@ -141,57 +145,87 @@ class _GamePlayScreenState extends State<GamePlayScreen> {
                         child: Center(
                           child: _scratched
                               ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '🎟️',
-                                style: TextStyle(fontSize: Responsive.fontSize(context, 80)),
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 16)),
-                              Text(
-                                'You Won!',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 20),
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 8)),
-                              Text(
-                                '3 Raffle Tickets',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 15),
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          )
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '🎟️',
+                                      style: TextStyle(
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          80,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: Responsive.spacing(context, 16),
+                                    ),
+                                    Text(
+                                      'You Won!',
+                                      style: TextStyle(
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          20,
+                                        ),
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: Responsive.spacing(context, 8),
+                                    ),
+                                    Text(
+                                      '3 Raffle Tickets',
+                                      style: TextStyle(
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          15,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                )
                               : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '👆',
-                                style: TextStyle(fontSize: Responsive.fontSize(context, 60)),
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 16)),
-                              Text(
-                                'Scratch Here',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 18),
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xFF1A1A2E),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '👆',
+                                      style: TextStyle(
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          60,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: Responsive.spacing(context, 16),
+                                    ),
+                                    Text(
+                                      'Scratch Here',
+                                      style: TextStyle(
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          18,
+                                        ),
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF1A1A2E),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: Responsive.spacing(context, 8),
+                                    ),
+                                    Text(
+                                      'Use your finger to scratch',
+                                      style: TextStyle(
+                                        fontSize: Responsive.fontSize(
+                                          context,
+                                          13,
+                                        ),
+                                        color: const Color(0xFF6B7280),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 8)),
-                              Text(
-                                'Use your finger to scratch',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 13),
-                                  color: const Color(0xFF6B7280),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),
@@ -204,7 +238,7 @@ class _GamePlayScreenState extends State<GamePlayScreen> {
                         height: Responsive.dimension(context, 52),
                         child: ElevatedButton(
                           onPressed: () {
-                            context.goNamed(Routes.processingTickets);
+                            context.pushNamed(Routes.processingTickets);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF6B35),
