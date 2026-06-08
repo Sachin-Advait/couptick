@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/common/widgets/game_over_dialog.dart';
 import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
-import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -220,62 +220,14 @@ class _Flutter2048ScreenState extends State<Flutter2048Screen> {
     }
 
     if (mounted) {
-      _showGameOverDialog();
+      GameOverDialog.show(
+        context: context,
+        score: score,
+        gameCode: 'flutter_2048',
+        emoji: '2️⃣',
+        onPlayAgain: _initGame,
+      );
     }
-  }
-
-  void _showGameOverDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('🎮 Game Over!', textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Final Score',
-              style: TextStyle(fontSize: Responsive.fontSize(context, 14)),
-            ),
-            Text(
-              '$score',
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 32),
-                fontWeight: FontWeight.w800,
-                color: const Color(0xFFFF6B35),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _initGame();
-            },
-            child: const Text('Play Again'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              context.pushNamed(
-                Routes.leaderboard,
-                extra: {'gameCode': 'flutter_2048'},
-              );
-            },
-            child: const Text('Leaderboard'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text('Exit'),
-          ),
-        ],
-      ),
-    );
   }
 
   Color _getTileColor(int value) {

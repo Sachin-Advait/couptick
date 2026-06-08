@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/common/widgets/game_over_dialog.dart';
 import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/configs/theme/app_theme.dart';
-import 'package:couptick/routes/app_pages.dart';
 import 'package:couptick/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -182,43 +182,16 @@ class _BrickBreakerScreenState extends State<BrickBreakerScreen> {
       );
       await LeaderboardService().submitScore(gameScore);
     } catch (e) {
-      print('Error submitting score: $e');
+      debugPrint('Error submitting score: $e');
     }
 
     if (mounted) {
-      showDialog(
+      GameOverDialog.show(
         context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: const Text('🎮 Game Over!'),
-          content: Text('Final Score: $score'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _startGame();
-              },
-              child: const Text('Play Again'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                context.pushNamed(
-                  Routes.leaderboard,
-                  extra: {'gameCode': 'brick_breaker'},
-                );
-              },
-              child: const Text('Leaderboard'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: const Text('Exit'),
-            ),
-          ],
-        ),
+        score: score,
+        gameCode: 'brick_breaker',
+        emoji: '🧱',
+        onPlayAgain: _startGame,
       );
     }
   }

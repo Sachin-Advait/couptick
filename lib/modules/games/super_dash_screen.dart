@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/common/widgets/game_over_dialog.dart';
 import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
-import 'package:couptick/routes/app_pages.dart';
 import 'package:couptick/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -165,49 +165,17 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
       );
       await LeaderboardService().submitScore(gameScore);
     } catch (e) {
-      print('Error submitting score: $e');
+      debugPrint('Error submitting score: $e');
     }
 
     if (mounted) {
-      showDialog(
+      GameOverDialog.show(
         context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('🏃 Game Over!', textAlign: TextAlign.center),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [Text('Score: $score'), Text('Coins: $coinsCollected')],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _startGame();
-              },
-              child: const Text('Play Again'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                context.pushNamed(
-                  Routes.leaderboard,
-                  extra: {'gameCode': 'super_dash'},
-                );
-              },
-              child: const Text('Leaderboard'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: const Text('Exit'),
-            ),
-          ],
-        ),
+        score: score,
+        gameCode: 'super_dash',
+        emoji: '🏃',
+        onPlayAgain: _startGame,
+        coinsCollected: coinsCollected,
       );
     }
   }
@@ -217,51 +185,54 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF87CEEB),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: _jump,
-          child: Column(
-            children: [
-              // Header
-              Container(
-                padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-                color: Colors.white.withOpacity(0.3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () => context.pop(),
-                      child: Image.asset(
-                        AppImages.back,
-                        height: 20.heightMultiplier,
-                        color: AppColors.textPrimary,
-                      ),
+        child: Column(
+          children: [
+            // Header — not part of the tap area
+            Container(
+              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+              color: Colors.white.withOpacity(0.3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () => context.pop(),
+                    child: Image.asset(
+                      AppImages.back,
+                      height: 20.heightMultiplier,
+                      color: AppColors.textPrimary,
                     ),
-                    Text(
-                      '🏃 Super Dash',
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 20),
-                        fontWeight: FontWeight.w700,
-                      ),
+                  ),
+                  Text(
+                    '🏃 Super Dash',
+                    style: TextStyle(
+                      fontSize: Responsive.fontSize(context, 20),
+                      fontWeight: FontWeight.w700,
                     ),
-                    Column(
-                      children: [
-                        Text('Score: $score'),
-                        Text('🪙 $coinsCollected'),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                  Column(
+                    children: [
+                      Text('Score: $score'),
+                      Text('🪙 $coinsCollected'),
+                    ],
+                  ),
+                ],
               ),
+            ),
 
-              // Game Area
-              Expanded(
+            // Game Area — tap here to jump
+            Expanded(
+              child: GestureDetector(
+                onTap: _jump,
                 child: Stack(
                   children: [
-                    // Ground
+                    // Sky background
+                    Container(color: const Color(0xFF87CEEB)),
+
+                    // Ground strip
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.3,
+                        height: 6,
                         color: const Color(0xFF8B4513),
                       ),
                     ),
@@ -314,14 +285,14 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
                       );
                     }),
 
-                    // Start Message
+                    // Start / tap prompt
                     if (!isPlaying && !isGameOver)
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Tap to Jump!',
+                              'Tap to Start!',
                               style: TextStyle(
                                 fontSize: Responsive.fontSize(context, 28),
                                 fontWeight: FontWeight.w800,
@@ -335,8 +306,8 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

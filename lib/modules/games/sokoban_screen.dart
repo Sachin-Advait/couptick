@@ -1,7 +1,7 @@
 import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/common/widgets/game_over_dialog.dart';
 import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
-import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -179,46 +179,21 @@ class _SokobanScreenState extends State<SokobanScreen> {
       );
       await LeaderboardService().submitScore(gameScore);
     } catch (e) {
-      print('Error submitting score: $e');
+      debugPrint('Error submitting score: $e');
     }
 
     if (mounted) {
-      showDialog(
+      GameOverDialog.show(
         context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: const Text('🎮 Game Complete!'),
-          content: Text('Final Score: $totalScore'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                setState(() {
-                  level = 1;
-                  _loadLevel(level);
-                });
-              },
-              child: const Text('Play Again'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                context.pushNamed(
-                  Routes.leaderboard,
-                  extra: {'gameCode': 'sokoban'},
-                );
-              },
-              child: const Text('Leaderboard'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: const Text('Exit'),
-            ),
-          ],
-        ),
+        score: totalScore,
+        gameCode: 'sokoban',
+        emoji: '📦',
+        onPlayAgain: () {
+          setState(() {
+            level = 1;
+            _loadLevel(level);
+          });
+        },
       );
     }
   }

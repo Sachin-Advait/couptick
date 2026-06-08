@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/common/widgets/game_over_dialog.dart';
 import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/configs/theme/app_theme.dart';
-import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -226,151 +226,17 @@ class _DinoRunScreenState extends State<DinoRunScreen>
       debugPrint('Score submit error: $e');
     }
 
-    if (mounted) _showGameOverDialog();
+    if (mounted) {
+      GameOverDialog.show(
+        context: context,
+        score: _score,
+        gameCode: 'dino_run',
+        emoji: '🦖',
+        onPlayAgain: _startGame,
+      );
+    }
   }
 
-  void _showGameOverDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24.radiusMultipier),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(24.widthMultiplier),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.diagonal3Values(-1, 1, 1),
-                child: Text(
-                  '🦖',
-                  style: TextStyle(fontSize: 48.textMultiplier),
-                ),
-              ),
-              SizedBox(height: 8.heightMultiplier),
-              Text(
-                'Game Over!',
-                style: ctx.extraBold.copyWith(
-                  fontSize: 22.textMultiplier,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              SizedBox(height: 16.heightMultiplier),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 20.heightMultiplier),
-                decoration: BoxDecoration(
-                  color: AppColors.primarySurface,
-                  borderRadius: BorderRadius.circular(16.radiusMultipier),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Your Score',
-                      style: ctx.regular.copyWith(
-                        fontSize: 12.textMultiplier,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    SizedBox(height: 6.heightMultiplier),
-                    Text(
-                      '$_score',
-                      style: ctx.extraBold.copyWith(
-                        fontSize: 44.textMultiplier,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20.heightMultiplier),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(ctx);
-                        context.pushNamed(
-                          Routes.leaderboard,
-                          extra: {'gameCode': 'dino_run'},
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.border),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            12.radiusMultipier,
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 13.heightMultiplier,
-                        ),
-                      ),
-                      child: Text(
-                        'Scores',
-                        style: ctx.semiBold.copyWith(
-                          fontSize: 13.textMultiplier,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10.widthMultiplier),
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(ctx);
-                        _startGame();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            12.radiusMultipier,
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 13.heightMultiplier,
-                        ),
-                      ),
-                      child: Text(
-                        'Play Again',
-                        style: ctx.bold.copyWith(
-                          fontSize: 13.textMultiplier,
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.heightMultiplier),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Exit Game',
-                  style: ctx.regular.copyWith(
-                    fontSize: 13.textMultiplier,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── build ──────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(

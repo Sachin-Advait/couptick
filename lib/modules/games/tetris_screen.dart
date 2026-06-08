@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/common/widgets/game_over_dialog.dart';
 import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/configs/theme/app_theme.dart';
-import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -243,62 +243,14 @@ class _TetrisScreenState extends State<TetrisScreen> {
     }
 
     if (mounted) {
-      _showGameOverDialog();
+      GameOverDialog.show(
+        context: context,
+        score: score,
+        gameCode: 'tetris',
+        emoji: '🎮',
+        onPlayAgain: _startGame,
+      );
     }
-  }
-
-  void _showGameOverDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('🎮 Game Over!', textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Score: $score',
-              style: TextStyle(fontSize: Responsive.fontSize(context, 20)),
-            ),
-            Text(
-              'Level: $level',
-              style: TextStyle(fontSize: Responsive.fontSize(context, 16)),
-            ),
-            Text(
-              'Lines: $linesCleared',
-              style: TextStyle(fontSize: Responsive.fontSize(context, 16)),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _startGame();
-            },
-            child: const Text('Play Again'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              context.pushNamed(
-                Routes.leaderboard,
-                extra: {'gameCode': 'tetris'},
-              );
-            },
-            child: const Text('Leaderboard'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text('Exit'),
-          ),
-        ],
-      ),
-    );
   }
 
   Color _getColorForValue(int value) {
