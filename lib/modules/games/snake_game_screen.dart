@@ -234,13 +234,10 @@ class _SnakeGameScreenState extends State<SnakeGameScreen> {
                 children: [
                   InkWell(
                     onTap: () => context.pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(8.widthMultiplier),
-                      child: Image.asset(
-                        AppImages.back,
-                        height: 20.heightMultiplier,
-                        color: AppColors.white,
-                      ),
+                    child: Image.asset(
+                      AppImages.back,
+                      height: 20.heightMultiplier,
+                      color: AppColors.white,
                     ),
                   ),
                   Text(

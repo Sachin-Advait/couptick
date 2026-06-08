@@ -8,8 +8,13 @@ import 'package:go_router/go_router.dart';
 
 class GameDetailScreen extends StatelessWidget {
   final String gameTitle;
+  final String gameRoute;
 
-  const GameDetailScreen({super.key, this.gameTitle = 'Game'});
+  const GameDetailScreen({
+    super.key,
+    this.gameTitle = 'Game',
+    this.gameRoute = '',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -113,14 +118,7 @@ class GameDetailScreen extends StatelessWidget {
                     height: 52.heightMultiplier,
                     child: ElevatedButton(
                       onPressed: () {
-                        final gameRoutes = {
-                          'Snake': Routes.gameSnake,
-                          'Flutter 2048': Routes.game2048,
-                          'Super Dash': Routes.gameSnake,
-                          'Tetris': Routes.game2048,
-                        };
-                        final route = gameRoutes[gameTitle] ?? Routes.gameSnake;
-                        context.push(route);
+                        context.pushNamed(gameRoute);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
@@ -145,8 +143,8 @@ class GameDetailScreen extends StatelessWidget {
                   // Leaderboard button
                   OutlinedButton(
                     onPressed: () {
-                      context.push(
-                        '/leaderboard',
+                      context.pushNamed(
+                        Routes.leaderboard,
                         extra: {
                           'gameCode': gameTitle.toLowerCase().replaceAll(
                             ' ',

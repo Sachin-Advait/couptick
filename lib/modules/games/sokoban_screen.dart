@@ -275,13 +275,10 @@ class _SokobanScreenState extends State<SokobanScreen> {
                 children: [
                   InkWell(
                     onTap: () => context.pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(8.widthMultiplier),
-                      child: Image.asset(
-                        AppImages.back,
-                        height: 20.heightMultiplier,
-                        color: AppColors.textPrimary,
-                      ),
+                    child: Image.asset(
+                      AppImages.back,
+                      height: 20.heightMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   Text(

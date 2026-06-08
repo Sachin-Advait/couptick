@@ -25,7 +25,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'rating': '4.8',
       'score': '2100',
       'color': AppColors.secondary,
-      'route': '/game-dash',
+      'route': Routes.gameDash,
     },
     {
       'title': 'Tetris',
@@ -33,7 +33,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'rating': '4.9',
       'score': '1540',
       'color': AppColors.primary,
-      'route': '/game-tetris',
+      'route': Routes.gameTetris,
     },
     {
       'title': 'Brick Breaker',
@@ -41,7 +41,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'rating': '4.7',
       'score': '890',
       'color': AppColors.success,
-      'route': '/game-brick',
+      'route': Routes.gameBrick,
     },
   ];
 
@@ -52,7 +52,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Arcade',
       'rating': '4.8',
       'score': '2100',
-      'route': '/game-dash',
+      'route': Routes.gameDash,
     },
     {
       'emoji': '2️⃣',
@@ -60,7 +60,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Puzzle',
       'rating': '4.9',
       'score': '1540',
-      'route': '/game-2048',
+      'route': Routes.game2048,
     },
     {
       'emoji': '🐍',
@@ -68,7 +68,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Classic',
       'rating': '4.7',
       'score': '890',
-      'route': '/game-snake',
+      'route': Routes.gameSnake,
     },
     {
       'emoji': '🧱',
@@ -76,7 +76,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Arcade',
       'rating': '4.6',
       'score': '1200',
-      'route': '/game-brick',
+      'route': Routes.gameBrick,
     },
     {
       'emoji': '🦖',
@@ -84,7 +84,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Arcade',
       'rating': '4.5',
       'score': '760',
-      'route': '/game-dino',
+      'route': Routes.gameDino,
     },
     {
       'emoji': '🎮',
@@ -92,7 +92,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Puzzle',
       'rating': '4.9',
       'score': '3240',
-      'route': '/game-tetris',
+      'route': Routes.gameTetris,
     },
     {
       'emoji': '📦',
@@ -100,7 +100,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
       'category': 'Puzzle',
       'rating': '4.8',
       'score': '980',
-      'route': '/game-sokoban',
+      'route': Routes.gameSokoban,
     },
   ];
 
@@ -338,8 +338,10 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
 
   Widget _buildGameCard(BuildContext context, Map<String, dynamic> game) {
     return GestureDetector(
-      onTap: () =>
-          context.pushNamed(Routes.gameDetail, extra: {'title': game['title']}),
+      onTap: () => context.pushNamed(
+        Routes.gameDetail,
+        extra: {'title': game['title'], 'route': game['route']},
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,

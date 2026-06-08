@@ -217,13 +217,16 @@ class Pages {
           GoRoute(
             path: Routes.gameDetail,
             name: Routes.gameDetail,
-            pageBuilder: (context, state) => buildPageWithTransition(
-              key: state.pageKey,
-              child: GameDetailScreen(
-                gameTitle:
-                    (state.extra as Map<String, dynamic>?)?['title'] ?? 'Game',
-              ),
-            ),
+            pageBuilder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>? ?? {};
+              return buildPageWithTransition(
+                key: state.pageKey,
+                child: GameDetailScreen(
+                  gameTitle: extra['title'] as String? ?? 'Game',
+                  gameRoute: extra['route'] as String? ?? '',
+                ),
+              );
+            },
           ),
 
           /// LEADERBOARD

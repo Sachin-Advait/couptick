@@ -326,13 +326,10 @@ class _Flutter2048ScreenState extends State<Flutter2048Screen> {
                 children: [
                   InkWell(
                     onTap: () => context.pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(8.widthMultiplier),
-                      child: Image.asset(
-                        AppImages.back,
-                        height: 20.heightMultiplier,
-                        color: AppColors.textPrimary,
-                      ),
+                    child: Image.asset(
+                      AppImages.back,
+                      height: 20.heightMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   Text(

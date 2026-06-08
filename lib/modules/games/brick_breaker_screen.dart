@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:couptick/services/user_service.dart';
@@ -242,9 +245,13 @@ class _BrickBreakerScreenState extends State<BrickBreakerScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    InkWell(
+                      onTap: () => context.pop(),
+                      child: Image.asset(
+                        AppImages.back,
+                        height: 20.heightMultiplier,
+                        color: AppColors.white,
+                      ),
                     ),
                     Text(
                       '🧱 Brick Breaker',
