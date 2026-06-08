@@ -10,6 +10,7 @@ class AppImages {
   static const String card3 = 'assets/images/card3.png';
 
   static const String eyeoff = 'assets/images/eyeoff.png';
+  static const String back = 'assets/images/back.png';
   static const String eyeon = 'assets/images/eyeon.png';
   static const String mail = 'assets/images/mail.png';
   static const String phone = 'assets/images/phone.png';

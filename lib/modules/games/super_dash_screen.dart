@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:couptick/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -225,9 +228,16 @@ class _SuperDashScreenState extends State<SuperDashScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back),
+                    InkWell(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        padding: EdgeInsets.all(8.widthMultiplier),
+                        child: Image.asset(
+                          AppImages.back,
+                          height: 20.heightMultiplier,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
                     ),
                     Text(
                       '🏃 Super Dash',

@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../utils/responsive.dart';
 
 class WinnersScreen extends StatelessWidget {
   const WinnersScreen({super.key});
@@ -9,50 +12,64 @@ class WinnersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+              color: AppColors.white,
+              padding: EdgeInsets.only(
+                left: 16.widthMultiplier,
+                right: 16.widthMultiplier,
+                top: 12.heightMultiplier,
+                bottom: 16.heightMultiplier,
+              ),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Container(
-                          padding: EdgeInsets.all(Responsive.spacing(context, 8)),
+                      InkWell(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          padding: EdgeInsets.all(8.widthMultiplier),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8F9FA),
-                            borderRadius: BorderRadius.circular(12),
+                            color: AppColors.surfaceVariant,
+                            borderRadius: BorderRadius.circular(
+                              12.radiusMultipier,
+                            ),
                           ),
-                          child: Icon(
-                            Icons.arrow_back,
-                            size: Responsive.iconSize(context, 20),
+                          child: Image.asset(
+                            AppImages.back,
+                            height: 20.heightMultiplier,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                       ),
-                      SizedBox(width: Responsive.spacing(context, 16)),
+                      SizedBox(width: 12.widthMultiplier),
                       Text(
                         '🏆 Winners',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 28),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1A1A2E),
+                        style: context.extraBold.copyWith(
+                          fontSize: 22.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: Responsive.spacing(context, 20)),
+                  SizedBox(height: 16.heightMultiplier),
                   Row(
                     children: [
-                      Expanded(child: _buildTab(context, 'Recent Winners', true)),
-                      SizedBox(width: Responsive.spacing(context, 12)),
-                      Expanded(child: _buildTab(context, 'My Wins', false, onTap: () {
-                        context.pushNamed(Routes.myWins);
-                      })),
+                      Expanded(
+                        child: _buildTab(context, 'Recent Winners', true),
+                      ),
+                      SizedBox(width: 10.widthMultiplier),
+                      Expanded(
+                        child: _buildTab(
+                          context,
+                          'My Wins',
+                          false,
+                          onTap: () => context.pushNamed(Routes.myWins),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -61,7 +78,7 @@ class WinnersScreen extends StatelessWidget {
 
             Expanded(
               child: ListView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                padding: EdgeInsets.all(20.widthMultiplier),
                 children: [
                   _buildWinnerCard(
                     context,
@@ -99,6 +116,7 @@ class WinnersScreen extends StatelessWidget {
                     '1,890',
                     '65%',
                   ),
+                  SizedBox(height: 20.heightMultiplier),
                 ],
               ),
             ),
@@ -108,25 +126,26 @@ class WinnersScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTab(BuildContext context, String label, bool isActive, {VoidCallback? onTap}) {
+  Widget _buildTab(
+    BuildContext context,
+    String label,
+    bool isActive, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: Responsive.spacing(context, 12)),
+        padding: EdgeInsets.symmetric(vertical: 12.heightMultiplier),
         decoration: BoxDecoration(
-          gradient: isActive ? const LinearGradient(
-            colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-          ) : null,
-          color: isActive ? null : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(12),
+          color: isActive ? AppColors.primary : AppColors.surfaceVariant,
+          borderRadius: BorderRadius.circular(12.radiusMultipier),
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 15),
-            fontWeight: FontWeight.w600,
-            color: isActive ? Colors.white : const Color(0xFF6B7280),
+          style: context.semiBold.copyWith(
+            fontSize: 13.textMultiplier,
+            color: isActive ? AppColors.white : AppColors.textSecondary,
           ),
         ),
       ),
@@ -134,90 +153,87 @@ class WinnersScreen extends StatelessWidget {
   }
 
   Widget _buildWinnerCard(
-      BuildContext context,
-      String avatar,
-      String name,
-      String location,
-      String date,
-      String prize,
-      String prizeValue,
-      String ticketNum,
-      String totalEntries,
-      String odds,
-      ) {
+    BuildContext context,
+    String avatar,
+    String name,
+    String location,
+    String date,
+    String prize,
+    String prizeValue,
+    String ticketNum,
+    String totalEntries,
+    String odds,
+  ) {
     return Container(
-      margin: EdgeInsets.only(bottom: Responsive.spacing(context, 16)),
+      margin: EdgeInsets.only(bottom: 16.heightMultiplier),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: const Border(left: BorderSide(color: Color(0xFFFF6B35), width: 4)),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20.radiusMultipier),
+        border: Border(left: BorderSide(color: AppColors.primary, width: 4)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+      padding: EdgeInsets.all(18.widthMultiplier),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Winner info
           Row(
             children: [
               Container(
-                width: Responsive.dimension(context, 60),
-                height: Responsive.dimension(context, 60),
+                width: 58.widthMultiplier,
+                height: 58.widthMultiplier,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.primarySurface,
+                  borderRadius: BorderRadius.circular(16.radiusMultipier),
                 ),
                 child: Center(
                   child: Text(
                     avatar,
-                    style: TextStyle(fontSize: Responsive.fontSize(context, 28)),
+                    style: TextStyle(fontSize: 26.textMultiplier),
                   ),
                 ),
               ),
-              SizedBox(width: Responsive.spacing(context, 16)),
+              SizedBox(width: 14.widthMultiplier),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       name,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 17),
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A2E),
+                      style: context.bold.copyWith(
+                        fontSize: 15.textMultiplier,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: Responsive.spacing(context, 4)),
+                    SizedBox(height: 3.heightMultiplier),
                     Text(
                       location,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 13),
-                        color: const Color(0xFF6B7280),
+                      style: context.regular.copyWith(
+                        fontSize: 12.textMultiplier,
+                        color: AppColors.textSecondary,
                       ),
                     ),
-                    SizedBox(height: Responsive.spacing(context, 8)),
+                    SizedBox(height: 6.heightMultiplier),
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: Responsive.spacing(context, 12),
-                        vertical: Responsive.spacing(context, 4),
+                        horizontal: 10.widthMultiplier,
+                        vertical: 4.heightMultiplier,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.successSurface,
+                        borderRadius: BorderRadius.circular(8.radiusMultipier),
                       ),
                       child: Text(
                         date,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 12),
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF10B981),
+                        style: context.semiBold.copyWith(
+                          fontSize: 11.textMultiplier,
+                          color: AppColors.success,
                         ),
                       ),
                     ),
@@ -226,61 +242,57 @@ class WinnersScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: Responsive.spacing(context, 16)),
+          SizedBox(height: 14.heightMultiplier),
 
+          // Prize block
           Container(
-            padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+            width: double.infinity,
+            padding: EdgeInsets.all(14.widthMultiplier),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
-              borderRadius: BorderRadius.circular(12),
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(12.radiusMultipier),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Prize Won',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 12),
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF6B7280),
+                  style: context.medium.copyWith(
+                    fontSize: 11.textMultiplier,
+                    color: AppColors.textSecondary,
                   ),
                 ),
-                SizedBox(height: Responsive.spacing(context, 6)),
+                SizedBox(height: 6.heightMultiplier),
                 Text(
                   prize,
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 18),
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1A1A2E),
+                  style: context.bold.copyWith(
+                    fontSize: 16.textMultiplier,
+                    color: AppColors.textPrimary,
                   ),
                 ),
-                SizedBox(height: Responsive.spacing(context, 4)),
+                SizedBox(height: 2.heightMultiplier),
                 Text(
                   'Worth $prizeValue',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 16),
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFFFF6B35),
+                  style: context.bold.copyWith(
+                    fontSize: 14.textMultiplier,
+                    color: AppColors.secondary,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: Responsive.spacing(context, 16)),
+          SizedBox(height: 14.heightMultiplier),
 
+          // Stats row
           Row(
             children: [
-              Expanded(
-                child: _buildStatBox(context, ticketNum, 'Ticket #'),
-              ),
-              SizedBox(width: Responsive.spacing(context, 16)),
+              Expanded(child: _buildStatBox(context, ticketNum, 'Ticket #')),
+              SizedBox(width: 10.widthMultiplier),
               Expanded(
                 child: _buildStatBox(context, totalEntries, 'Total Entries'),
               ),
-              SizedBox(width: Responsive.spacing(context, 16)),
-              Expanded(
-                child: _buildStatBox(context, odds, 'Odds'),
-              ),
+              SizedBox(width: 10.widthMultiplier),
+              Expanded(child: _buildStatBox(context, odds, 'Odds')),
             ],
           ),
         ],
@@ -290,27 +302,27 @@ class WinnersScreen extends StatelessWidget {
 
   Widget _buildStatBox(BuildContext context, String value, String label) {
     return Container(
-      padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+      padding: EdgeInsets.all(12.widthMultiplier),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(12.radiusMultipier),
       ),
       child: Column(
         children: [
           Text(
             value,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 18),
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF1A1A2E),
+            style: context.extraBold.copyWith(
+              fontSize: 16.textMultiplier,
+              color: AppColors.textPrimary,
             ),
+            textAlign: TextAlign.center,
           ),
-          SizedBox(height: Responsive.spacing(context, 4)),
+          SizedBox(height: 4.heightMultiplier),
           Text(
             label,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 11),
-              color: const Color(0xFF6B7280),
+            style: context.regular.copyWith(
+              fontSize: 10.textMultiplier,
+              color: AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),

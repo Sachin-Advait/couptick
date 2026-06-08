@@ -1,6 +1,9 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/responsive.dart';
+import 'package:go_router/go_router.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -12,108 +15,168 @@ class LeaderboardScreen extends StatefulWidget {
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
   String _selectedTimeframe = 'Global';
 
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
+  final List<String> _tabs = ['Global', 'Daily', 'Weekly'];
 
-  Future<void> _loadData() async {
-    try {} catch (e) {
-      print('Error loading leaderboard: $e');
-    }
-  }
+  final List<String> _names = [
+    'Ali',
+    'Sara',
+    'John',
+    'Emma',
+    'Rahul',
+    'Priya',
+    'Mike',
+    'Lisa',
+    'Tom',
+    'Nina',
+  ];
+
+  final List<int> _scores = [
+    2450,
+    2100,
+    1980,
+    1850,
+    1720,
+    1650,
+    1580,
+    1500,
+    1450,
+    1400,
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+              color: AppColors.white,
+              padding: EdgeInsets.only(
+                left: 16.widthMultiplier,
+                right: 16.widthMultiplier,
+                top: 12.heightMultiplier,
+                bottom: 16.heightMultiplier,
+              ),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      SizedBox(width: Responsive.spacing(context, 8)),
-                      Expanded(
-                        child: Text(
-                          'Leaderboard',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 20),
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1A1A2E),
+                      InkWell(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          padding: EdgeInsets.all(8.widthMultiplier),
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceVariant,
+                            borderRadius: BorderRadius.circular(
+                              12.radiusMultipier,
+                            ),
                           ),
+                          child: Image.asset(
+                            AppImages.back,
+                            height: 16.heightMultiplier,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.widthMultiplier),
+                      Text(
+                        'Leaderboard',
+                        style: context.bold.copyWith(
+                          fontSize: 20.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: Responsive.spacing(context, 16)),
+                  SizedBox(height: 16.heightMultiplier),
 
                   // Tabs
                   Row(
-                    children: [
-                      Expanded(child: _buildTab('Global')),
-                      SizedBox(width: Responsive.spacing(context, 8)),
-                      Expanded(child: _buildTab('Daily')),
-                      SizedBox(width: Responsive.spacing(context, 8)),
-                      Expanded(child: _buildTab('Weekly')),
-                    ],
+                    children: _tabs.map((tab) {
+                      final isSelected = _selectedTimeframe == tab;
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _selectedTimeframe = tab),
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              right: tab != _tabs.last ? 8.widthMultiplier : 0,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.heightMultiplier,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : AppColors.surfaceVariant,
+                              borderRadius: BorderRadius.circular(
+                                12.radiusMultipier,
+                              ),
+                            ),
+                            child: Text(
+                              tab,
+                              textAlign: TextAlign.center,
+                              style: context.semiBold.copyWith(
+                                fontSize: 13.textMultiplier,
+                                color: isSelected
+                                    ? AppColors.white
+                                    : AppColors.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
             ),
 
-            // My Rank Card (Sticky)
+            // My Rank Card
             Container(
-              color: const Color(0xFFFFD23F).withOpacity(0.15),
-              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+              color: AppColors.primarySurface,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.widthMultiplier,
+                vertical: 14.heightMultiplier,
+              ),
               child: Row(
                 children: [
                   Container(
-                    width: Responsive.dimension(context, 50),
-                    height: Responsive.dimension(context, 50),
+                    width: 48.widthMultiplier,
+                    height: 48.widthMultiplier,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B35),
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '#32',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 14),
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
+                        style: context.bold.copyWith(
+                          fontSize: 13.textMultiplier,
+                          color: AppColors.white,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: Responsive.spacing(context, 12)),
+                  SizedBox(width: 12.widthMultiplier),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'You (guest_123)',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 15),
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1A1A2E),
+                          style: context.semiBold.copyWith(
+                            fontSize: 14.textMultiplier,
+                            color: AppColors.textPrimary,
                           ),
                         ),
+                        SizedBox(height: 2.heightMultiplier),
                         Text(
                           'Best: 2100',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 13),
-                            color: const Color(0xFF6B7280),
+                          style: context.regular.copyWith(
+                            fontSize: 12.textMultiplier,
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -121,83 +184,29 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   ),
                   Text(
                     '1250',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 20),
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFFFF6B35),
+                    style: context.extraBold.copyWith(
+                      fontSize: 20.textMultiplier,
+                      color: AppColors.primary,
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Top List
+            // List
             Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return _buildLeaderboardItem(
-                    context,
-                    index + 1,
-                    [
-                      'Ali',
-                      'Sara',
-                      'John',
-                      'Emma',
-                      'Rahul',
-                      'Priya',
-                      'Mike',
-                      'Lisa',
-                      'Tom',
-                      'Nina',
-                    ][index],
-                    [
-                      2450,
-                      2100,
-                      1980,
-                      1850,
-                      1720,
-                      1650,
-                      1580,
-                      1500,
-                      1450,
-                      1400,
-                    ][index],
-                  );
-                },
+                padding: EdgeInsets.all(16.widthMultiplier),
+                itemCount: _names.length,
+                itemBuilder: (context, index) => _buildLeaderboardItem(
+                  context,
+                  index + 1,
+                  _names[index],
+                  _scores[index],
+                ),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTab(String label) {
-    final isSelected = _selectedTimeframe == label;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedTimeframe = label;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: Responsive.spacing(context, 10),
-        ),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF6B35) : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : const Color(0xFF6B7280),
-          ),
         ),
       ),
     );
@@ -210,22 +219,30 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     int score,
   ) {
     Color rankColor;
+    String rankLabel;
     if (rank == 1) {
-      rankColor = const Color(0xFFFFD700); // Gold
+      rankColor = const Color(0xFFFFD700);
+      rankLabel = '🥇';
     } else if (rank == 2) {
-      rankColor = const Color(0xFFC0C0C0); // Silver
+      rankColor = const Color(0xFFC0C0C0);
+      rankLabel = '🥈';
     } else if (rank == 3) {
-      rankColor = const Color(0xFFCD7F32); // Bronze
+      rankColor = const Color(0xFFCD7F32);
+      rankLabel = '🥉';
     } else {
-      rankColor = const Color(0xFF6B7280);
+      rankColor = AppColors.textDisabled;
+      rankLabel = '#$rank';
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: Responsive.spacing(context, 12)),
-      padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+      margin: EdgeInsets.only(bottom: 10.heightMultiplier),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.widthMultiplier,
+        vertical: 14.heightMultiplier,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.radiusMultipier),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -236,41 +253,47 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       ),
       child: Row(
         children: [
-          Container(
-            width: Responsive.dimension(context, 40),
-            height: Responsive.dimension(context, 40),
-            decoration: BoxDecoration(
-              color: rankColor.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                '#$rank',
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 14),
-                  fontWeight: FontWeight.w800,
-                  color: rankColor,
-                ),
-              ),
-            ),
+          SizedBox(
+            width: 40.widthMultiplier,
+            child: rank <= 3
+                ? Text(
+                    rankLabel,
+                    style: TextStyle(fontSize: 22.textMultiplier),
+                    textAlign: TextAlign.center,
+                  )
+                : Container(
+                    width: 36.widthMultiplier,
+                    height: 36.widthMultiplier,
+                    decoration: BoxDecoration(
+                      color: rankColor.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '#$rank',
+                        style: context.bold.copyWith(
+                          fontSize: 12.textMultiplier,
+                          color: rankColor,
+                        ),
+                      ),
+                    ),
+                  ),
           ),
-          SizedBox(width: Responsive.spacing(context, 12)),
+          SizedBox(width: 12.widthMultiplier),
           Expanded(
             child: Text(
               name,
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 15),
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF1A1A2E),
+              style: context.semiBold.copyWith(
+                fontSize: 14.textMultiplier,
+                color: AppColors.textPrimary,
               ),
             ),
           ),
           Text(
             score.toString(),
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 18),
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF1A1A2E),
+            style: context.extraBold.copyWith(
+              fontSize: 17.textMultiplier,
+              color: rank <= 3 ? AppColors.secondary : AppColors.textPrimary,
             ),
           ),
         ],

@@ -3,6 +3,7 @@ import 'package:couptick/configs/assets/app_images.dart';
 import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
+import 'package:couptick/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +13,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+enum _CardBgRotation { normal, flipHorizontal, flipVertical, flipBoth }
 
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _featuredProductsController = PageController();
@@ -108,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 20.heightMultiplier),
                         _buildFeaturedRow(),
                         SizedBox(height: 20.heightMultiplier),
+                        _trendingNow(),
+                        40.verticalSpace,
                       ],
                     ),
                   ),
@@ -120,36 +125,175 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  2×2 QUICK ACTION GRID
-  // ─────────────────────────────────────────────
+  Widget _trendingNow() {
+    return GestureDetector(
+      onTap: () => context.pushNamed(Routes.campaignDetail),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.primary, Color(0xFF1a5d7a)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        padding: EdgeInsets.all(Responsive.spacing(context, 24)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.spacing(context, 12),
+                vertical: Responsive.spacing(context, 6),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                '🔥 TRENDING NOW',
+                style: TextStyle(
+                  fontSize: Responsive.fontSize(context, 12),
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: Responsive.spacing(context, 12)),
+            Text(
+              'Win iPhone 15 Pro Max!',
+              style: TextStyle(
+                fontSize: Responsive.fontSize(context, 22),
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: Responsive.spacing(context, 8)),
+            Text(
+              'Buy any phone & get instant tickets',
+              style: TextStyle(
+                fontSize: Responsive.fontSize(context, 14),
+                color: Colors.white.withOpacity(0.9),
+              ),
+            ),
+            SizedBox(height: Responsive.spacing(context, 16)),
+            Row(
+              children: [
+                _buildStat('₹299', 'Per Play'),
+                SizedBox(width: Responsive.spacing(context, 20)),
+                _buildStat('₹1.2L', 'Prize'),
+                SizedBox(width: Responsive.spacing(context, 20)),
+                _buildStat('856', 'Playing'),
+              ],
+            ),
+            SizedBox(height: Responsive.spacing(context, 16)),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => context.pushNamed(Routes.gamePlay),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFFFF6B35),
+                      padding: EdgeInsets.symmetric(
+                        vertical: Responsive.spacing(context, 14),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text('▶️ Play Now', style: context.bold),
+                  ),
+                ),
+                SizedBox(width: Responsive.spacing(context, 12)),
+                ElevatedButton(
+                  onPressed: () => context.pushNamed(Routes.products),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Responsive.spacing(context, 20),
+                      vertical: Responsive.spacing(context, 14),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: const BorderSide(color: Colors.white, width: 2),
+                    ),
+                  ),
+                  child: Text(
+                    '🛍️ Shop',
+                    style: TextStyle(
+                      fontSize: Responsive.fontSize(context, 15),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStat(String value, String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: Responsive.fontSize(context, 24),
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: Responsive.fontSize(context, 12),
+            color: Colors.white.withOpacity(0.8),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildQuickActionGrid() {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 2.widthMultiplier,
+      crossAxisSpacing: 12.widthMultiplier,
       mainAxisSpacing: 12.heightMultiplier,
       childAspectRatio: 2.4,
       children: [
         _buildActionCard(
           label: 'Products',
           assetIcon: AppImages.products,
+          bgRotation: _CardBgRotation.normal,
+          labelOnLeft: true,
           onTap: () => context.pushNamed(Routes.products),
         ),
         _buildActionCard(
           label: 'Active Draws',
           assetIcon: AppImages.activeDraws,
+          bgRotation: _CardBgRotation.flipHorizontal,
+          labelOnLeft: false,
           onTap: () {},
         ),
         _buildActionCard(
           label: 'E-Tickets',
           assetIcon: AppImages.eTicket,
+          bgRotation: _CardBgRotation.flipVertical,
+          labelOnLeft: true,
           onTap: () => context.pushNamed(Routes.ticketWallet),
         ),
         _buildActionCard(
           label: 'E-Coupons',
           assetIcon: AppImages.eCoupon,
+          bgRotation: _CardBgRotation.flipBoth,
+          labelOnLeft: false,
           onTap: () {},
         ),
       ],
@@ -160,7 +304,30 @@ class _HomeScreenState extends State<HomeScreen> {
     required String label,
     required String assetIcon,
     required VoidCallback onTap,
+    _CardBgRotation bgRotation = _CardBgRotation.normal,
+    bool labelOnLeft = true,
   }) {
+    Widget bg = Image.asset(AppImages.card, fit: BoxFit.cover);
+
+    Widget rotatedBg;
+    switch (bgRotation) {
+      case _CardBgRotation.normal:
+        rotatedBg = bg;
+        break;
+      case _CardBgRotation.flipHorizontal:
+        // Mirror horizontally — blob flips to the other side
+        rotatedBg = Transform.scale(scaleX: -1, child: bg);
+        break;
+      case _CardBgRotation.flipVertical:
+        // Flip vertically — blob moves to top
+        rotatedBg = Transform.scale(scaleY: -1, child: bg);
+        break;
+      case _CardBgRotation.flipBoth:
+        // Mirror + flip — blob moves to top opposite side
+        rotatedBg = Transform.scale(scaleX: -1, scaleY: -1, child: bg);
+        break;
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -168,18 +335,36 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(16.radiusMultipier),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.radiusMultipier),
+          borderRadius: BorderRadius.circular(12.radiusMultipier),
           child: Stack(
             fit: StackFit.expand,
             children: [
-              /// Card.png as the card background
-              Image.asset(AppImages.card, fit: BoxFit.cover),
+              /// Background
+              rotatedBg,
+
+              /// Icon — opposite side from label
               Positioned(
-                left: 14.widthMultiplier,
+                left: labelOnLeft ? null : 18.widthMultiplier,
+                right: labelOnLeft ? 25.widthMultiplier : null,
+                bottom: 10.heightMultiplier,
+                child: Image.asset(
+                  assetIcon,
+                  width: 50.widthMultiplier,
+                  height: 50.widthMultiplier,
+                  fit: BoxFit.contain,
+                ),
+              ),
+
+              /// Label — left or right
+              Positioned(
+                left: labelOnLeft ? 14.widthMultiplier : null,
+                right: labelOnLeft ? null : 10.widthMultiplier,
                 top: 0,
                 bottom: 0,
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: labelOnLeft
+                      ? Alignment.centerLeft
+                      : Alignment.centerRight,
                   child: Text(
                     label,
                     style: context.semiBold.copyWith(
@@ -187,18 +372,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: AppColors.primary,
                     ),
                   ),
-                ),
-              ),
-
-              /// icon (right, bottom-anchored)
-              Positioned(
-                right: 40.widthMultiplier,
-                bottom: 20.heightMultiplier,
-                child: Image.asset(
-                  assetIcon,
-                  width: 34.widthMultiplier,
-                  height: 34.widthMultiplier,
-                  fit: BoxFit.contain,
                 ),
               ),
             ],
@@ -264,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           /// Text + dots
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 title,
@@ -301,6 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }),
               ),
+              10.verticalSpace,
             ],
           ),
         ],

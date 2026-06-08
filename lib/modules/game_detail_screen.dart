@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class GameDetailScreen extends StatelessWidget {
   final String gameTitle;
@@ -11,30 +13,41 @@ class GameDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String title = gameTitle;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+              color: AppColors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.widthMultiplier,
+                vertical: 12.heightMultiplier,
+              ),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back),
+                  InkWell(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(8.widthMultiplier),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceVariant,
+                        borderRadius: BorderRadius.circular(12.radiusMultipier),
+                      ),
+                      child: Image.asset(
+                        AppImages.back,
+                        height: 18.heightMultiplier,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                   ),
-                  SizedBox(width: Responsive.spacing(context, 8)),
+                  SizedBox(width: 12.widthMultiplier),
                   Text(
                     gameTitle,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 20),
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E),
+                    style: context.bold.copyWith(
+                      fontSize: 20.textMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -43,38 +56,38 @@ class GameDetailScreen extends StatelessWidget {
 
             Expanded(
               child: ListView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                padding: EdgeInsets.all(20.widthMultiplier),
                 children: [
                   // Preview
                   Container(
-                    height: Responsive.dimension(context, 200),
+                    height: 200.heightMultiplier,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                        colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20.radiusMultipier),
                     ),
                     child: Center(
                       child: Text(
                         '🎮',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 80),
-                        ),
+                        style: TextStyle(fontSize: 72.textMultiplier),
                       ),
                     ),
                   ),
-                  SizedBox(height: Responsive.spacing(context, 20)),
+                  SizedBox(height: 20.heightMultiplier),
 
                   // Description
                   Text(
                     'Endless runner game with stunning graphics and smooth controls. Jump, slide, and collect coins!',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 14),
-                      color: const Color(0xFF6B7280),
+                    style: context.regular.copyWith(
+                      fontSize: 14.textMultiplier,
+                      color: AppColors.textSecondary,
                       height: 1.6,
                     ),
                   ),
-                  SizedBox(height: Responsive.spacing(context, 24)),
+                  SizedBox(height: 24.heightMultiplier),
 
                   // Stats
                   Row(
@@ -82,22 +95,22 @@ class GameDetailScreen extends StatelessWidget {
                       Expanded(
                         child: _buildStatCard(context, '2100', 'Best Score'),
                       ),
-                      SizedBox(width: Responsive.spacing(context, 12)),
+                      SizedBox(width: 12.widthMultiplier),
                       Expanded(
                         child: _buildStatCard(context, '2-5 min', 'Avg Time'),
                       ),
-                      SizedBox(width: Responsive.spacing(context, 12)),
+                      SizedBox(width: 12.widthMultiplier),
                       Expanded(
                         child: _buildStatCard(context, 'Arcade', 'Category'),
                       ),
                     ],
                   ),
-                  SizedBox(height: Responsive.spacing(context, 24)),
+                  SizedBox(height: 24.heightMultiplier),
 
-                  // Buttons
+                  // Play button
                   SizedBox(
                     width: double.infinity,
-                    height: Responsive.dimension(context, 52),
+                    height: 52.heightMultiplier,
                     child: ElevatedButton(
                       onPressed: () {
                         final gameRoutes = {
@@ -106,57 +119,63 @@ class GameDetailScreen extends StatelessWidget {
                           'Super Dash': Routes.gameSnake,
                           'Tetris': Routes.game2048,
                         };
-
-                        final route = gameRoutes[title] ?? Routes.gameSnake;
+                        final route = gameRoutes[gameTitle] ?? Routes.gameSnake;
                         context.push(route);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF6B35),
+                        backgroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(
+                            16.radiusMultipier,
+                          ),
                         ),
+                        elevation: 0,
                       ),
                       child: Text(
-                        '▶️ PLAY NOW',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 16),
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                        '▶️  PLAY NOW',
+                        style: context.bold.copyWith(
+                          fontSize: 15.textMultiplier,
+                          color: AppColors.white,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: Responsive.spacing(context, 12)),
+                  SizedBox(height: 12.heightMultiplier),
+
+                  // Leaderboard button
                   OutlinedButton(
                     onPressed: () {
                       context.push(
                         '/leaderboard',
                         extra: {
-                          'gameCode': title.toLowerCase().replaceAll(' ', '_'),
+                          'gameCode': gameTitle.toLowerCase().replaceAll(
+                            ' ',
+                            '_',
+                          ),
                         },
                       );
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(
-                        color: Color(0xFFFF6B35),
+                        color: AppColors.primary,
                         width: 2,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.radiusMultipier),
                       ),
                       padding: EdgeInsets.symmetric(
-                        vertical: Responsive.spacing(context, 14),
+                        vertical: 14.heightMultiplier,
                       ),
                     ),
                     child: Text(
                       'VIEW LEADERBOARD',
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 15),
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFFFF6B35),
+                      style: context.bold.copyWith(
+                        fontSize: 14.textMultiplier,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
+                  SizedBox(height: 20.heightMultiplier),
                 ],
               ),
             ),
@@ -168,13 +187,13 @@ class GameDetailScreen extends StatelessWidget {
 
   Widget _buildStatCard(BuildContext context, String value, String label) {
     return Container(
-      padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+      padding: EdgeInsets.all(16.widthMultiplier),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.radiusMultipier),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -184,19 +203,18 @@ class GameDetailScreen extends StatelessWidget {
         children: [
           Text(
             value,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 18),
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF1A1A2E),
+            style: context.extraBold.copyWith(
+              fontSize: 17.textMultiplier,
+              color: AppColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: Responsive.spacing(context, 4)),
+          SizedBox(height: 4.heightMultiplier),
           Text(
             label,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 11),
-              color: const Color(0xFF6B7280),
+            style: context.regular.copyWith(
+              fontSize: 11.textMultiplier,
+              color: AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,

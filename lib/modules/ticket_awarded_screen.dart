@@ -1,9 +1,10 @@
 import 'package:confetti/confetti.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class TicketsAwardedScreen extends StatefulWidget {
   const TicketsAwardedScreen({super.key});
@@ -19,7 +20,6 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
 
-  // Sample data - in real app this would come from route arguments
   final String campaignName = 'iPhone 15 Pro Max';
   final int ticketsAwarded = 3;
   final List<String> ticketNumbers = ['#2451', '#2452', '#2453'];
@@ -30,12 +30,10 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
   void initState() {
     super.initState();
 
-    // Confetti controller
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 3),
     );
 
-    // Animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -53,7 +51,6 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
       ),
     );
 
-    // Start animations
     Future.delayed(const Duration(milliseconds: 300), () {
       _confettiController.play();
       _animationController.forward();
@@ -63,10 +60,9 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: const Color(0xFF0D2233),
       body: Stack(
         children: [
-          // Confetti
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -78,495 +74,417 @@ class _TicketsAwardedScreenState extends State<TicketsAwardedScreen>
               gravity: 0.05,
               shouldLoop: false,
               colors: const [
-                Color(0xFFFF6B35),
-                Color(0xFFFFD23F),
-                Color(0xFF10B981),
-                Color(0xFF667eea),
+                AppColors.secondary,
+                AppColors.warning,
+                AppColors.success,
+                AppColors.info,
                 Color(0xFFf093fb),
               ],
             ),
           ),
-
-          // Content
-          SafeArea(
-            child: Column(
-              children: [
-                // Header
-                Padding(
-                  padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Container(
-                          padding: EdgeInsets.all(
-                            Responsive.spacing(context, 8),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: Responsive.iconSize(context, 20),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+          Positioned(
+            left: 20,
+            top: 70,
+            child: InkWell(
+              onTap: () => context.goNamed(Routes.home),
+              child: Container(
+                padding: EdgeInsets.all(8.widthMultiplier),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12.radiusMultipier),
                 ),
+                child: Icon(
+                  Icons.close_rounded,
+                  color: AppColors.white,
+                  size: 18.widthMultiplier,
+                ),
+              ),
+            ),
+          ),
 
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(Responsive.spacing(context, 24)),
-                    child: Column(
-                      children: [
-                        SizedBox(height: Responsive.spacing(context, 40)),
+          Column(
+            children: [
+              40.verticalSpace,
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 16.widthMultiplier),
+                  shrinkWrap: true,
+                  children: [
+                    SizedBox(height: 24.heightMultiplier),
 
-                        // Success Animation
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: ScaleTransition(
-                            scale: _scaleAnimation,
-                            child: Container(
-                              width: Responsive.dimension(context, 140),
-                              height: Responsive.dimension(context, 140),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFFF6B35),
-                                    Color(0xFFFF8E53),
-                                  ],
-                                ),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(
-                                      0xFFFF6B35,
-                                    ).withOpacity(0.3),
-                                    blurRadius: 30,
-                                    spreadRadius: 10,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '🎟️',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 70),
-                                  ),
-                                ),
-                              ),
+                    // Success icon
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Container(
+                          width: 130.widthMultiplier,
+                          height: 130.widthMultiplier,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                          ),
-                        ),
-                        SizedBox(height: Responsive.spacing(context, 32)),
-
-                        // Success Message
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Congratulations! 🎉',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 32),
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 12)),
-                              Text(
-                                'You\'ve Won Raffle Tickets!',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 18),
-                                  color: Colors.white.withOpacity(0.8),
-                                ),
-                                textAlign: TextAlign.center,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.35),
+                                blurRadius: 30,
+                                spreadRadius: 10,
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(height: Responsive.spacing(context, 40)),
-
-                        // Campaign Info Card
-                        Container(
-                          padding: EdgeInsets.all(
-                            Responsive.spacing(context, 24),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.2),
-                              width: 1,
+                          child: Center(
+                            child: Text(
+                              '🎟️',
+                              style: TextStyle(fontSize: 58.textMultiplier),
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              // Campaign Name
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(
-                                      Responsive.spacing(context, 8),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xFFFF6B35,
-                                      ).withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Icon(
-                                      Icons.emoji_events,
-                                      color: const Color(0xFFFFD23F),
-                                      size: Responsive.iconSize(context, 24),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: Responsive.spacing(context, 12),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Campaign',
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              12,
-                                            ),
-                                            color: Colors.white.withOpacity(
-                                              0.6,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          campaignName,
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              18,
-                                            ),
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 20)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24.heightMultiplier),
 
-                              // Tickets Count
+                    // Heading
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Congratulations! 🎉',
+                            style: context.extraBold.copyWith(
+                              fontSize: 26.textMultiplier,
+                              color: AppColors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 8.heightMultiplier),
+                          Text(
+                            "You've Won Raffle Tickets!",
+                            style: context.regular.copyWith(
+                              fontSize: 15.textMultiplier,
+                              color: AppColors.white.withOpacity(0.75),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 28.heightMultiplier),
+
+                    // Campaign info card
+                    Container(
+                      padding: EdgeInsets.all(22.widthMultiplier),
+                      decoration: BoxDecoration(
+                        color: AppColors.white.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(24.radiusMultipier),
+                        border: Border.all(
+                          color: AppColors.white.withOpacity(0.15),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          // Campaign name
+                          Row(
+                            children: [
                               Container(
-                                padding: EdgeInsets.all(
-                                  Responsive.spacing(context, 20),
-                                ),
+                                padding: EdgeInsets.all(8.widthMultiplier),
                                 decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFFFF6B35),
-                                      Color(0xFFFF8E53),
-                                    ],
+                                  color: AppColors.secondary.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(
+                                    12.radiusMultipier,
                                   ),
-                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                child: Icon(
+                                  Icons.emoji_events_rounded,
+                                  color: AppColors.warning,
+                                  size: 22.widthMultiplier,
+                                ),
+                              ),
+                              SizedBox(width: 12.widthMultiplier),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      ticketsAwarded.toString(),
-                                      style: TextStyle(
-                                        fontSize: Responsive.fontSize(
-                                          context,
-                                          48,
+                                      'Campaign',
+                                      style: context.regular.copyWith(
+                                        fontSize: 11.textMultiplier,
+                                        color: AppColors.white.withOpacity(
+                                          0.55,
                                         ),
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: Responsive.spacing(context, 12),
+                                    Text(
+                                      campaignName,
+                                      style: context.bold.copyWith(
+                                        fontSize: 16.textMultiplier,
+                                        color: AppColors.white,
+                                      ),
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Raffle',
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              14,
-                                            ),
-                                            color: Colors.white.withOpacity(
-                                              0.9,
-                                            ),
-                                          ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 18.heightMultiplier),
+
+                          // Ticket count block
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.widthMultiplier,
+                              vertical: 18.heightMultiplier,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                16.radiusMultipier,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  ticketsAwarded.toString(),
+                                  style: context.extraBold.copyWith(
+                                    fontSize: 44.textMultiplier,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 12.widthMultiplier),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Raffle',
+                                      style: context.regular.copyWith(
+                                        fontSize: 13.textMultiplier,
+                                        color: AppColors.white.withOpacity(
+                                          0.85,
                                         ),
-                                        Text(
-                                          'Tickets',
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              20,
-                                            ),
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Tickets',
+                                      style: context.bold.copyWith(
+                                        fontSize: 18.textMultiplier,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 18.heightMultiplier),
+
+                          // Ticket numbers
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Your Ticket Numbers',
+                                style: context.semiBold.copyWith(
+                                  fontSize: 13.textMultiplier,
+                                  color: AppColors.white.withOpacity(0.65),
+                                ),
+                              ),
+                              SizedBox(height: 10.heightMultiplier),
+                              Wrap(
+                                spacing: 8.widthMultiplier,
+                                runSpacing: 8.heightMultiplier,
+                                children: ticketNumbers.map((number) {
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 14.widthMultiplier,
+                                      vertical: 10.heightMultiplier,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(
+                                        12.radiusMultipier,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppColors.primary.withOpacity(
+                                            0.25,
                                           ),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 20)),
-
-                              // Ticket Numbers
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Your Ticket Numbers',
-                                    style: TextStyle(
-                                      fontSize: Responsive.fontSize(
-                                        context,
-                                        14,
-                                      ),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white.withOpacity(0.7),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: Responsive.spacing(context, 12),
-                                  ),
-                                  Wrap(
-                                    spacing: Responsive.spacing(context, 8),
-                                    runSpacing: Responsive.spacing(context, 8),
-                                    children: ticketNumbers.map((number) {
-                                      return Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: Responsive.spacing(
-                                            context,
-                                            16,
-                                          ),
-                                          vertical: Responsive.spacing(
-                                            context,
-                                            10,
-                                          ),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color(
-                                                0xFFFF6B35,
-                                              ).withOpacity(0.3),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Text(
-                                          number,
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              18,
-                                            ),
-                                            fontWeight: FontWeight.w800,
-                                            color: const Color(0xFFFF6B35),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: Responsive.spacing(context, 20)),
-
-                              // Draw Info
-                              Container(
-                                padding: EdgeInsets.all(
-                                  Responsive.spacing(context, 16),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFFFFD23F,
-                                  ).withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: const Color(
-                                      0xFFFFD23F,
-                                    ).withOpacity(0.3),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.calendar_today,
-                                      color: const Color(0xFFFFD23F),
-                                      size: Responsive.iconSize(context, 20),
-                                    ),
-                                    SizedBox(
-                                      width: Responsive.spacing(context, 12),
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Draw Date',
-                                            style: TextStyle(
-                                              fontSize: Responsive.fontSize(
-                                                context,
-                                                12,
-                                              ),
-                                              color: Colors.white.withOpacity(
-                                                0.6,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            '$drawDate • $drawTime',
-                                            style: TextStyle(
-                                              fontSize: Responsive.fontSize(
-                                                context,
-                                                15,
-                                              ),
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
+                                    child: Text(
+                                      number,
+                                      style: context.extraBold.copyWith(
+                                        fontSize: 16.textMultiplier,
+                                        color: AppColors.primary,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                }).toList(),
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(height: Responsive.spacing(context, 32)),
+                          SizedBox(height: 18.heightMultiplier),
 
-                        // Info Message
-                        Container(
-                          padding: EdgeInsets.all(
-                            Responsive.spacing(context, 16),
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF10B981).withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFF10B981).withOpacity(0.3),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                color: const Color(0xFF10B981),
-                                size: Responsive.iconSize(context, 20),
+                          // Draw info
+                          Container(
+                            padding: EdgeInsets.all(14.widthMultiplier),
+                            decoration: BoxDecoration(
+                              color: AppColors.warning.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(
+                                12.radiusMultipier,
                               ),
-                              SizedBox(width: Responsive.spacing(context, 12)),
-                              Expanded(
-                                child: Text(
-                                  'Your tickets have been added to your wallet. Good luck!',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 13),
-                                    color: Colors.white.withOpacity(0.9),
+                              border: Border.all(
+                                color: AppColors.warning.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.calendar_today_rounded,
+                                  color: AppColors.warning,
+                                  size: 18.widthMultiplier,
+                                ),
+                                SizedBox(width: 10.widthMultiplier),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Draw Date',
+                                        style: context.regular.copyWith(
+                                          fontSize: 11.textMultiplier,
+                                          color: AppColors.white.withOpacity(
+                                            0.55,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        '$drawDate • $drawTime',
+                                        style: context.semiBold.copyWith(
+                                          fontSize: 14.textMultiplier,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                    SizedBox(height: 20.heightMultiplier),
 
-                // Action Buttons
-                Container(
-                  padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.white.withOpacity(0.1),
-                        width: 1,
+                    // Info message
+                    Container(
+                      padding: EdgeInsets.all(14.widthMultiplier),
+                      decoration: BoxDecoration(
+                        color: AppColors.success.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(14.radiusMultipier),
+                        border: Border.all(
+                          color: AppColors.success.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: AppColors.success,
+                            size: 18.widthMultiplier,
+                          ),
+                          SizedBox(width: 10.widthMultiplier),
+                          Expanded(
+                            child: Text(
+                              'Your tickets have been added to your wallet. Good luck!',
+                              style: context.regular.copyWith(
+                                fontSize: 12.textMultiplier,
+                                color: AppColors.white.withOpacity(0.85),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        height: Responsive.dimension(context, 52),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            context.pushNamed(Routes.ticketWallet);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF6B35),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: Text(
-                            'View My Tickets',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 16),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
-                      SizedBox(
-                        width: double.infinity,
-                        height: Responsive.dimension(context, 52),
-                        child: OutlinedButton(
-                          onPressed: () {
-                            context.pushNamed(Routes.home);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 2,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: Text(
-                            'Back to Home',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 16),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    SizedBox(height: 20.heightMultiplier),
+                  ],
+                ),
+              ),
+
+              // Action buttons
+              Container(
+                padding: EdgeInsets.all(20.widthMultiplier),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withOpacity(0.05),
+                  border: Border(
+                    top: BorderSide(color: AppColors.white.withOpacity(0.1)),
                   ),
                 ),
-              ],
-            ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52.heightMultiplier,
+                      child: ElevatedButton(
+                        onPressed: () => context.pushNamed(Routes.ticketWallet),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              16.radiusMultipier,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          'View My Tickets',
+                          style: context.bold.copyWith(
+                            fontSize: 15.textMultiplier,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10.heightMultiplier),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52.heightMultiplier,
+                      child: OutlinedButton(
+                        onPressed: () => context.pushNamed(Routes.home),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: AppColors.white.withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              16.radiusMultipier,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          'Back to Home',
+                          style: context.bold.copyWith(
+                            fontSize: 15.textMultiplier,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    90.verticalSpace,
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

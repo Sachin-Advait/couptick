@@ -1,6 +1,9 @@
 import 'dart:math';
-import 'package:couptick/routes/app_pages.dart';
 
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -256,7 +259,9 @@ class _Flutter2048ScreenState extends State<Flutter2048Screen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              context.pushNamed(Routes.leaderboard, extra: {'gameCode': 'flutter_2048'},
+              context.pushNamed(
+                Routes.leaderboard,
+                extra: {'gameCode': 'flutter_2048'},
               );
             },
             child: const Text('Leaderboard'),
@@ -319,9 +324,16 @@ class _Flutter2048ScreenState extends State<Flutter2048Screen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back),
+                  InkWell(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(8.widthMultiplier),
+                      child: Image.asset(
+                        AppImages.back,
+                        height: 20.heightMultiplier,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                   ),
                   Text(
                     '2048',

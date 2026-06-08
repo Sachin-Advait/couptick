@@ -25,7 +25,7 @@ class _DashboardState extends State<Dashboard>
     ),
     _ShellTab(
       path: Routes.gamesHub,
-      label: 'My Stuff',
+      label: 'Games',
       activeIcon: AppImages.myStuff,
     ),
     _ShellTab(

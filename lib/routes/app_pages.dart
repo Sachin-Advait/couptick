@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:couptick/common/utils/global_keys.dart';
 import 'package:couptick/modules/campaign_detail_screen.dart';
 import 'package:couptick/modules/claim_form_screen.dart';
@@ -28,7 +30,7 @@ import 'package:couptick/modules/ticket_awarded_screen.dart';
 import 'package:couptick/modules/ticket_wallet_screen.dart';
 import 'package:couptick/modules/transactions_screen.dart';
 import 'package:couptick/modules/winners_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -43,28 +45,27 @@ class PageTransitionConfig {
 
 Page<dynamic> buildPageWithTransition({
   required Widget child,
-  required LocalKey key,
+  required ValueKey<String> key,
 }) {
+  if (Platform.isIOS) {
+    return CupertinoPage(child: child, key: key);
+  }
   return CustomTransitionPage(
-    key: key,
     child: child,
     transitionDuration: PageTransitionConfig.transitionDuration,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(
-        opacity: animation,
-        child: SlideTransition(
-          position:
-              Tween<Offset>(
-                begin: PageTransitionConfig.slideBeginOffset,
-                end: Offset.zero,
-              ).animate(
-                CurvedAnimation(
-                  parent: animation,
-                  curve: PageTransitionConfig.transitionCurve,
-                ),
+      return SlideTransition(
+        position:
+            Tween<Offset>(
+              begin: PageTransitionConfig.slideBeginOffset,
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: PageTransitionConfig.transitionCurve,
               ),
-          child: child,
-        ),
+            ),
+        child: child,
       );
     },
   );

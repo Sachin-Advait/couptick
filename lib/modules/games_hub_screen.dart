@@ -174,7 +174,7 @@ class _GamesHubScreenState extends State<GamesHubScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'My Stuff',
+                'Games',
                 style: context.extraBold.copyWith(
                   fontSize: 22.textMultiplier,
                   color: AppColors.textPrimary,

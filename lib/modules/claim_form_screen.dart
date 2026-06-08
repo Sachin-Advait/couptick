@@ -1,7 +1,9 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class ClaimFormScreen extends StatefulWidget {
   final String prize;
@@ -44,26 +46,24 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
       SnackBar(
         content: Text(
           'Document uploaded successfully',
-          style: TextStyle(fontSize: Responsive.fontSize(context, 14)),
+          style: context.regular.copyWith(fontSize: 13.textMultiplier),
         ),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: AppColors.success,
       ),
     );
   }
 
   void _handleSubmit() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     if (_idProof == null || _addressProof == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             'Please upload required documents',
-            style: TextStyle(fontSize: Responsive.fontSize(context, 14)),
+            style: context.regular.copyWith(fontSize: 13.textMultiplier),
           ),
-          backgroundColor: const Color(0xFFFF6B35),
+          backgroundColor: AppColors.error,
         ),
       );
       return;
@@ -85,72 +85,88 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final prize = widget.prize;
-    final value = widget.value;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+              color: AppColors.white,
+              padding: EdgeInsets.only(
+                left: 16.widthMultiplier,
+                right: 16.widthMultiplier,
+                top: 12.heightMultiplier,
+                bottom: 16.heightMultiplier,
+              ),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.arrow_back),
+                      InkWell(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          padding: EdgeInsets.all(8.widthMultiplier),
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceVariant,
+                            borderRadius: BorderRadius.circular(
+                              12.radiusMultipier,
+                            ),
+                          ),
+                          child: Image.asset(
+                            AppImages.back,
+                            height: 20.heightMultiplier,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
                       ),
-                      SizedBox(width: Responsive.spacing(context, 8)),
+                      SizedBox(width: 12.widthMultiplier),
                       Text(
                         'Claim Your Prize',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 20),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1A1A2E),
+                        style: context.extraBold.copyWith(
+                          fontSize: 20.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: Responsive.spacing(context, 16)),
+                  SizedBox(height: 16.heightMultiplier),
+
+                  // Prize banner
                   Container(
-                    padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+                    padding: EdgeInsets.all(16.widthMultiplier),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                        colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.radiusMultipier),
                     ),
                     child: Row(
                       children: [
                         Text(
                           '🏆',
-                          style: TextStyle(
-                            fontSize: Responsive.fontSize(context, 40),
-                          ),
+                          style: TextStyle(fontSize: 36.textMultiplier),
                         ),
-                        SizedBox(width: Responsive.spacing(context, 16)),
+                        SizedBox(width: 14.widthMultiplier),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                prize,
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 18),
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                widget.prize,
+                                style: context.bold.copyWith(
+                                  fontSize: 16.textMultiplier,
+                                  color: AppColors.white,
                                 ),
                               ),
+                              SizedBox(height: 2.heightMultiplier),
                               Text(
-                                'Worth $value',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 14),
-                                  color: Colors.white.withOpacity(0.9),
+                                'Worth ${widget.value}',
+                                style: context.regular.copyWith(
+                                  fontSize: 13.textMultiplier,
+                                  color: AppColors.white.withOpacity(0.9),
                                 ),
                               ),
                             ],
@@ -166,7 +182,7 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
             // Form
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                padding: EdgeInsets.all(20.widthMultiplier),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -174,20 +190,20 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
                     children: [
                       Text(
                         'Personal Information',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 18),
-                          fontWeight: FontWeight.w700,
+                        style: context.bold.copyWith(
+                          fontSize: 16.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 16.heightMultiplier),
 
                       _buildTextField(
                         controller: _nameController,
                         label: 'Full Name *',
                         hint: 'Enter your full name',
-                        icon: Icons.person_outline,
+                        icon: Icons.person_outline_rounded,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _emailController,
@@ -196,16 +212,16 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _phoneController,
                         label: 'Phone Number *',
                         hint: 'Enter phone number',
-                        icon: Icons.phone,
+                        icon: Icons.phone_outlined,
                         keyboardType: TextInputType.phone,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _addressController,
@@ -214,63 +230,66 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
                         icon: Icons.home_outlined,
                         maxLines: 3,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 24)),
+                      SizedBox(height: 24.heightMultiplier),
 
                       Text(
                         'Required Documents',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 18),
-                          fontWeight: FontWeight.w700,
+                        style: context.bold.copyWith(
+                          fontSize: 16.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildDocumentUpload(
                         'ID Proof (Aadhaar/PAN/Passport) *',
                         _idProof,
                         () => _handleDocumentPick('id'),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
+                      SizedBox(height: 10.heightMultiplier),
 
                       _buildDocumentUpload(
                         'Address Proof *',
                         _addressProof,
                         () => _handleDocumentPick('address'),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
+                      SizedBox(height: 10.heightMultiplier),
 
                       _buildDocumentUpload(
                         'Bank Details (Optional)',
                         _bankProof,
                         () => _handleDocumentPick('bank'),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 32)),
+                      SizedBox(height: 32.heightMultiplier),
 
                       SizedBox(
                         width: double.infinity,
-                        height: Responsive.dimension(context, 52),
+                        height: 52.heightMultiplier,
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF6B35),
+                            backgroundColor: AppColors.primary,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(
+                                14.radiusMultipier,
+                              ),
                             ),
+                            elevation: 0,
                           ),
                           child: _isLoading
                               ? const CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 )
                               : Text(
                                   'Submit Claim',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 16),
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
+                                  style: context.bold.copyWith(
+                                    fontSize: 15.textMultiplier,
+                                    color: AppColors.white,
                                   ),
                                 ),
                         ),
                       ),
+                      SizedBox(height: 20.heightMultiplier),
                     ],
                   ),
                 ),
@@ -295,35 +314,60 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
+          style: context.semiBold.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 8)),
+        SizedBox(height: 8.heightMultiplier),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
+          style: context.regular.copyWith(
+            fontSize: 14.textMultiplier,
+            color: AppColors.textPrimary,
+          ),
           validator: label.contains('*')
-              ? (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required';
-                  }
-                  return null;
-                }
+              ? (v) =>
+                    (v == null || v.isEmpty) ? 'This field is required' : null
               : null,
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: Icon(icon, color: const Color(0xFFFF6B35)),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+            hintStyle: context.regular.copyWith(
+              fontSize: 13.textMultiplier,
+              color: AppColors.textDisabled,
+            ),
+            prefixIcon: Icon(
+              icon,
+              color: AppColors.primary,
+              size: 20.widthMultiplier,
+            ),
+            filled: true,
+            fillColor: AppColors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.border),
+            ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.error),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.error, width: 2),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.widthMultiplier,
+              vertical: 14.heightMultiplier,
             ),
           ),
         ),
@@ -336,55 +380,56 @@ class _ClaimFormScreenState extends State<ClaimFormScreen> {
     String? fileName,
     VoidCallback onTap,
   ) {
+    final uploaded = fileName != null;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+        padding: EdgeInsets.all(14.widthMultiplier),
         decoration: BoxDecoration(
-          color: fileName != null
-              ? const Color(0xFF10B981).withOpacity(0.05)
-              : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(16),
+          color: uploaded ? AppColors.successSurface : AppColors.white,
+          borderRadius: BorderRadius.circular(14.radiusMultipier),
           border: Border.all(
-            color: fileName != null
-                ? const Color(0xFF10B981)
-                : const Color(0xFFE5E7EB),
-            width: 2,
+            color: uploaded ? AppColors.success : AppColors.border,
+            width: 1.5,
           ),
         ),
         child: Row(
           children: [
             Icon(
-              fileName != null ? Icons.check_circle : Icons.upload_file,
-              color: fileName != null
-                  ? const Color(0xFF10B981)
-                  : const Color(0xFFFF6B35),
+              uploaded ? Icons.check_circle_rounded : Icons.upload_file_rounded,
+              color: uploaded ? AppColors.success : AppColors.primary,
+              size: 22.widthMultiplier,
             ),
-            SizedBox(width: Responsive.spacing(context, 12)),
+            SizedBox(width: 12.widthMultiplier),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 14),
-                      fontWeight: FontWeight.w600,
+                    style: context.semiBold.copyWith(
+                      fontSize: 13.textMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                   ),
+                  SizedBox(height: 2.heightMultiplier),
                   Text(
                     fileName ?? 'Tap to upload',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      color: fileName != null
-                          ? const Color(0xFF10B981)
-                          : const Color(0xFF6B7280),
+                    style: context.regular.copyWith(
+                      fontSize: 11.textMultiplier,
+                      color: uploaded
+                          ? AppColors.success
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14.widthMultiplier,
+              color: AppColors.textDisabled,
+            ),
           ],
         ),
       ),

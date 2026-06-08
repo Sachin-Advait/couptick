@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../utils/responsive.dart';
 
 class MyWinsScreen extends StatelessWidget {
   const MyWinsScreen({super.key});
@@ -9,37 +12,40 @@ class MyWinsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+              color: AppColors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.widthMultiplier,
+                vertical: 12.heightMultiplier,
+              ),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Container(
-                      padding: EdgeInsets.all(Responsive.spacing(context, 8)),
+                  InkWell(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(8.widthMultiplier),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FA),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.surfaceVariant,
+                        borderRadius: BorderRadius.circular(12.radiusMultipier),
                       ),
-                      child: Icon(
-                        Icons.arrow_back,
-                        size: Responsive.iconSize(context, 20),
+                      child: Image.asset(
+                        AppImages.back,
+                        height: 20.heightMultiplier,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ),
-                  SizedBox(width: Responsive.spacing(context, 16)),
+                  SizedBox(width: 12.widthMultiplier),
                   Text(
                     '🏆 My Wins',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 24),
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1A1A2E),
+                    style: context.extraBold.copyWith(
+                      fontSize: 22.textMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -48,13 +54,18 @@ class MyWinsScreen extends StatelessWidget {
 
             // Stats Banner
             Container(
-              margin: EdgeInsets.all(Responsive.spacing(context, 20)),
-              padding: EdgeInsets.all(Responsive.spacing(context, 24)),
+              margin: EdgeInsets.all(20.widthMultiplier),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20.widthMultiplier,
+                vertical: 20.heightMultiplier,
+              ),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                  colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.radiusMultipier),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -62,14 +73,14 @@ class MyWinsScreen extends StatelessWidget {
                   _buildStat(context, '2', 'Total Wins'),
                   Container(
                     width: 1,
-                    height: 40,
-                    color: Colors.white.withOpacity(0.3),
+                    height: 40.heightMultiplier,
+                    color: AppColors.white.withOpacity(0.3),
                   ),
                   _buildStat(context, '₹1.8L', 'Total Value'),
                   Container(
                     width: 1,
-                    height: 40,
-                    color: Colors.white.withOpacity(0.3),
+                    height: 40.heightMultiplier,
+                    color: AppColors.white.withOpacity(0.3),
                   ),
                   _buildStat(context, '1', 'Claimed'),
                 ],
@@ -79,9 +90,7 @@ class MyWinsScreen extends StatelessWidget {
             // Wins List
             Expanded(
               child: ListView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.spacing(context, 20),
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 20.widthMultiplier),
                 children: [
                   _buildWinCard(
                     context,
@@ -103,6 +112,7 @@ class MyWinsScreen extends StatelessWidget {
                     false,
                     '#3402',
                   ),
+                  SizedBox(height: 20.heightMultiplier),
                 ],
               ),
             ),
@@ -117,18 +127,17 @@ class MyWinsScreen extends StatelessWidget {
       children: [
         Text(
           value,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 24),
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
+          style: context.extraBold.copyWith(
+            fontSize: 22.textMultiplier,
+            color: AppColors.white,
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 4)),
+        SizedBox(height: 4.heightMultiplier),
         Text(
           label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 12),
-            color: Colors.white.withOpacity(0.9),
+          style: context.regular.copyWith(
+            fontSize: 11.textMultiplier,
+            color: AppColors.white.withOpacity(0.9),
           ),
         ),
       ],
@@ -136,29 +145,29 @@ class MyWinsScreen extends StatelessWidget {
   }
 
   Widget _buildWinCard(
-      BuildContext context,
-      String emoji,
-      String prize,
-      String value,
-      String date,
-      String status,
-      bool claimed,
-      String ticketNum,
-      ) {
+    BuildContext context,
+    String emoji,
+    String prize,
+    String value,
+    String date,
+    String status,
+    bool claimed,
+    String ticketNum,
+  ) {
     return Container(
-      margin: EdgeInsets.only(bottom: Responsive.spacing(context, 16)),
+      margin: EdgeInsets.only(bottom: 16.heightMultiplier),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20.radiusMultipier),
         border: Border(
           left: BorderSide(
-            color: claimed ? const Color(0xFF10B981) : const Color(0xFFFFD23F),
+            color: claimed ? AppColors.success : AppColors.warning,
             width: 4,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
@@ -167,70 +176,65 @@ class MyWinsScreen extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+            padding: EdgeInsets.all(18.widthMultiplier),
             child: Row(
               children: [
                 Container(
-                  width: Responsive.dimension(context, 70),
-                  height: Responsive.dimension(context, 70),
+                  width: 68.widthMultiplier,
+                  height: 68.widthMultiplier,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.primarySurface,
+                    borderRadius: BorderRadius.circular(16.radiusMultipier),
                   ),
                   child: Center(
                     child: Text(
                       emoji,
-                      style: TextStyle(fontSize: Responsive.fontSize(context, 36)),
+                      style: TextStyle(fontSize: 32.textMultiplier),
                     ),
                   ),
                 ),
-                SizedBox(width: Responsive.spacing(context, 16)),
+                SizedBox(width: 14.widthMultiplier),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         prize,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 16),
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1A1A2E),
+                        style: context.bold.copyWith(
+                          fontSize: 15.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 4)),
+                      SizedBox(height: 4.heightMultiplier),
                       Text(
                         'Worth $value',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 15),
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFFFF6B35),
+                        style: context.bold.copyWith(
+                          fontSize: 14.textMultiplier,
+                          color: AppColors.secondary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 8)),
+                      SizedBox(height: 8.heightMultiplier),
                       Row(
                         children: [
                           Icon(
-                            Icons.calendar_today,
-                            size: Responsive.iconSize(context, 14),
-                            color: const Color(0xFF6B7280),
+                            Icons.calendar_today_rounded,
+                            size: 12.widthMultiplier,
+                            color: AppColors.textSecondary,
                           ),
-                          SizedBox(width: Responsive.spacing(context, 4)),
+                          SizedBox(width: 4.widthMultiplier),
                           Text(
                             date,
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 12),
-                              color: const Color(0xFF6B7280),
+                            style: context.regular.copyWith(
+                              fontSize: 11.textMultiplier,
+                              color: AppColors.textSecondary,
                             ),
                           ),
-                          SizedBox(width: Responsive.spacing(context, 12)),
+                          SizedBox(width: 10.widthMultiplier),
                           Text(
                             'Ticket: $ticketNum',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 12),
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF6B7280),
+                            style: context.semiBold.copyWith(
+                              fontSize: 11.textMultiplier,
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -241,15 +245,20 @@ class MyWinsScreen extends StatelessWidget {
               ],
             ),
           ),
+
+          // Footer
           Container(
-            padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+            padding: EdgeInsets.symmetric(
+              horizontal: 18.widthMultiplier,
+              vertical: 12.heightMultiplier,
+            ),
             decoration: BoxDecoration(
               color: claimed
-                  ? const Color(0xFF10B981).withOpacity(0.1)
-                  : const Color(0xFFFFD23F).withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+                  ? AppColors.successSurface
+                  : AppColors.warningSurface,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20.radiusMultipier),
+                bottomRight: Radius.circular(20.radiusMultipier),
               ),
             ),
             child: Row(
@@ -258,41 +267,37 @@ class MyWinsScreen extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      claimed ? Icons.check_circle : Icons.pending,
-                      size: Responsive.iconSize(context, 18),
-                      color: claimed
-                          ? const Color(0xFF10B981)
-                          : const Color(0xFFD97706),
+                      claimed
+                          ? Icons.check_circle_rounded
+                          : Icons.pending_rounded,
+                      size: 16.widthMultiplier,
+                      color: claimed ? AppColors.success : AppColors.warning,
                     ),
-                    SizedBox(width: Responsive.spacing(context, 8)),
+                    SizedBox(width: 6.widthMultiplier),
                     Text(
                       status,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 14),
-                        fontWeight: FontWeight.w600,
-                        color: claimed
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFD97706),
+                      style: context.semiBold.copyWith(
+                        fontSize: 13.textMultiplier,
+                        color: claimed ? AppColors.success : AppColors.warning,
                       ),
                     ),
                   ],
                 ),
                 if (!claimed)
-                  TextButton(
-                    onPressed: () {
-                      context.pushNamed(Routes.claimForm, extra: {
-                          'prize': prize,
-                          'value': value,
-                          'ticketNum': ticketNum,
-                        },
-                      );
-                    },
+                  GestureDetector(
+                    onTap: () => context.pushNamed(
+                      Routes.claimForm,
+                      extra: {
+                        'prize': prize,
+                        'value': value,
+                        'ticketNum': ticketNum,
+                      },
+                    ),
                     child: Text(
                       'Claim Now →',
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 14),
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFFFF6B35),
+                      style: context.bold.copyWith(
+                        fontSize: 13.textMultiplier,
+                        color: AppColors.secondary,
                       ),
                     ),
                   ),

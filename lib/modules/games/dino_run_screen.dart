@@ -1,12 +1,17 @@
 import 'dart:async';
-import 'package:couptick/routes/app_pages.dart';
 import 'dart:math';
+
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../utils/responsive.dart';
+
 import '../../models/game_score.dart';
 import '../../services/leaderboard_service.dart';
 import '../../services/user_service.dart';
+import '../../utils/responsive.dart';
 
 class DinoRunScreen extends StatefulWidget {
   const DinoRunScreen({super.key});
@@ -228,9 +233,16 @@ class _DinoRunScreenState extends State<DinoRunScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back),
+                    InkWell(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        padding: EdgeInsets.all(8.widthMultiplier),
+                        child: Image.asset(
+                          AppImages.back,
+                          height: 20.heightMultiplier,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
                     ),
                     Text(
                       '🦖 Dino Run',

@@ -1,319 +1,431 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import '../utils/responsive.dart';
 
-class TicketWalletScreen extends StatelessWidget {
+class TicketWalletScreen extends StatefulWidget {
   const TicketWalletScreen({super.key});
+
+  @override
+  State<TicketWalletScreen> createState() => _TicketWalletScreenState();
+}
+
+class _TicketWalletScreenState extends State<TicketWalletScreen> {
+  String _selectedTab = 'All Tickets';
+
+  final List<String> _tabs = ['All Tickets', 'Active', 'Expired', 'Winners'];
+
+  final List<Map<String, dynamic>> _tickets = [
+    {
+      'title': 'iPhone 15 Pro Max',
+      'draw': 'Draw: Feb 22, 2026 • 6:00 PM',
+      'numbers': ['#2451', '#2452', '#2453'],
+      'purchased': 'Feb 8, 2026',
+      'code': 'TKT-2024-02-001',
+      'isActive': true,
+    },
+    {
+      'title': 'MacBook Air M3',
+      'draw': 'Draw: Feb 28, 2026 • 7:00 PM',
+      'numbers': ['#1089', '#1090', '#1091', '#1092', '#1093'],
+      'purchased': 'Feb 7, 2026',
+      'code': 'TKT-2024-02-002',
+      'isActive': true,
+    },
+    {
+      'title': 'Samsung Galaxy S24',
+      'draw': 'Draw: Feb 15, 2026 • 5:00 PM',
+      'numbers': ['#5678', '#5679'],
+      'purchased': 'Feb 8, 2026',
+      'code': 'TKT-2024-02-003',
+      'isActive': false,
+    },
+    {
+      'title': 'Apple Watch Ultra',
+      'draw': 'Draw: Feb 25, 2026 • 6:30 PM',
+      'numbers': ['#3401', '#3402', '#3403', '#3404'],
+      'purchased': 'Feb 6, 2026',
+      'code': 'TKT-2024-02-004',
+      'isActive': true,
+    },
+  ];
+
+  List<Map<String, dynamic>> get _filteredTickets {
+    if (_selectedTab == 'All Tickets') return _tickets;
+    if (_selectedTab == 'Active') {
+      return _tickets.where((t) => t['isActive'] == true).toList();
+    }
+    if (_selectedTab == 'Expired') {
+      return _tickets.where((t) => t['isActive'] == false).toList();
+    }
+    return [];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Container(
-                          padding: EdgeInsets.all(Responsive.spacing(context, 8)),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF8F9FA),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.arrow_back,
-                            size: Responsive.iconSize(context, 20),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: Responsive.spacing(context, 16)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'My Tickets',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 24),
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFF1A1A2E),
-                            ),
-                          ),
-                          Text(
-                            'Track your entries',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 14),
-                              color: const Color(0xFF6B7280),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Responsive.spacing(context, 20)),
-
-                  // Stats Banner
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
+      backgroundColor: AppColors.background,
+      body: Column(
+        children: [
+          _buildHeader(context),
+          _buildTabs(context),
+          Expanded(
+            child: _filteredTickets.isEmpty
+                ? _buildEmptyState(context)
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.widthMultiplier,
+                      vertical: 20.heightMultiplier,
                     ),
-                    padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _StatItem(context: context, number: '24', text: 'Total Tickets'),
-                        _StatItem(context: context, number: '6', text: 'Active'),
-                        _StatItem(context: context, number: '₹1.8K', text: 'Invested'),
-                      ],
-                    ),
+                    itemCount: _filteredTickets.length,
+                    itemBuilder: (_, i) =>
+                        _buildTicketCard(context, _filteredTickets[i]),
                   ),
-                ],
-              ),
-            ),
+          ),
+          80.verticalSpace,
+        ],
+      ),
+    );
+  }
 
-            // Filter Tabs
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: Responsive.spacing(context, 20),
-                vertical: Responsive.spacing(context, 16),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildTab(context, 'All Tickets', true),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    _buildTab(context, 'Active', false),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    _buildTab(context, 'Expired', false),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    _buildTab(context, 'Winners', false),
-                  ],
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      color: AppColors.white,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top,
+        left: 16.widthMultiplier,
+        right: 16.widthMultiplier,
+        bottom: 15.heightMultiplier,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              InkWell(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: EdgeInsets.all(8.widthMultiplier),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceVariant,
+                    borderRadius: BorderRadius.circular(12.radiusMultipier),
+                  ),
+                  child: Image.asset(
+                    AppImages.back,
+                    height: 20.heightMultiplier,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
-            ),
-
-            // Tickets List
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+              15.horizontalSpace,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTicketCard(
-                    context,
-                    'iPhone 15 Pro Max',
-                    'Draw: Feb 22, 2026 • 6:00 PM',
-                    ['#2451', '#2452', '#2453'],
-                    'Feb 8, 2026',
-                    'TKT-2024-02-001',
-                    true,
+                  Text(
+                    'My Tickets',
+                    style: context.extraBold.copyWith(
+                      fontSize: 22.textMultiplier,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
-                  _buildTicketCard(
-                    context,
-                    'MacBook Air M3',
-                    'Draw: Feb 28, 2026 • 7:00 PM',
-                    ['#1089', '#1090', '#1091', '#1092', '#1093'],
-                    'Feb 7, 2026',
-                    'TKT-2024-02-002',
-                    true,
-                  ),
-                  _buildTicketCard(
-                    context,
-                    'Samsung Galaxy S24',
-                    'Draw: Feb 15, 2026 • 5:00 PM',
-                    ['#5678', '#5679'],
-                    'Feb 8, 2026',
-                    'TKT-2024-02-003',
-                    false,
-                  ),
-                  _buildTicketCard(
-                    context,
-                    'Apple Watch Ultra',
-                    'Draw: Feb 25, 2026 • 6:30 PM',
-                    ['#3401', '#3402', '#3403', '#3404'],
-                    'Feb 6, 2026',
-                    'TKT-2024-02-004',
-                    true,
+                  Text(
+                    'Track your entries',
+                    style: context.regular.copyWith(
+                      fontSize: 13.textMultiplier,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
+            ],
+          ),
+          SizedBox(height: 10.heightMultiplier),
+
+          // Stats Banner
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.secondary,
+                  AppColors.secondary.withValues(alpha: .8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20.radiusMultipier),
             ),
-          ],
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.widthMultiplier,
+              vertical: 20.heightMultiplier,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatItem(context, '24', 'Total Tickets'),
+                _buildDivider(),
+                _buildStatItem(context, '6', 'Active'),
+                _buildDivider(),
+                _buildStatItem(context, '₹1.8K', 'Invested'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 36.heightMultiplier,
+      width: 1,
+      color: AppColors.white.withOpacity(0.25),
+    );
+  }
+
+  Widget _buildStatItem(BuildContext context, String number, String label) {
+    return Column(
+      children: [
+        Text(
+          number,
+          style: context.extraBold.copyWith(
+            fontSize: 26.textMultiplier,
+            color: AppColors.white,
+          ),
+        ),
+        SizedBox(height: 4.heightMultiplier),
+        Text(
+          label,
+          style: context.regular.copyWith(
+            fontSize: 11.textMultiplier,
+            color: AppColors.white.withOpacity(0.85),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabs(BuildContext context) {
+    return Container(
+      color: AppColors.white,
+      padding: EdgeInsets.only(
+        left: 20.widthMultiplier,
+        right: 20.widthMultiplier,
+        bottom: 16.heightMultiplier,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: _tabs.map((tab) {
+            final isActive = _selectedTab == tab;
+            return GestureDetector(
+              onTap: () => setState(() => _selectedTab = tab),
+              child: Container(
+                margin: EdgeInsets.only(right: 8.widthMultiplier),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.widthMultiplier,
+                  vertical: 8.heightMultiplier,
+                ),
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? AppColors.primary
+                      : AppColors.surfaceVariant,
+                  borderRadius: BorderRadius.circular(12.radiusMultipier),
+                ),
+                child: Text(
+                  tab,
+                  style: context.semiBold.copyWith(
+                    fontSize: 13.textMultiplier,
+                    color: isActive ? AppColors.white : AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
   }
 
-  Widget _buildTab(BuildContext context, String label, bool isActive) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.spacing(context, 16),
-        vertical: Responsive.spacing(context, 8),
-      ),
-      decoration: BoxDecoration(
-        color: isActive ? const Color(0xFFFF6B35) : const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: Responsive.fontSize(context, 14),
-          fontWeight: FontWeight.w600,
-          color: isActive ? Colors.white : const Color(0xFF6B7280),
-        ),
-      ),
-    );
-  }
+  Widget _buildTicketCard(BuildContext context, Map<String, dynamic> ticket) {
+    final isActive = ticket['isActive'] as bool;
+    final numbers = ticket['numbers'] as List<String>;
 
-  Widget _buildTicketCard(
-      BuildContext context,
-      String title,
-      String meta,
-      List<String> numbers,
-      String date,
-      String code,
-      bool isActive,
-      ) {
     return Container(
-      margin: EdgeInsets.only(bottom: Responsive.spacing(context, 16)),
+      margin: EdgeInsets.only(bottom: 16.heightMultiplier),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: const Border(left: BorderSide(color: Color(0xFFFF6B35), width: 4)),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20.radiusMultipier),
+        border: Border(
+          left: BorderSide(
+            color: isActive ? AppColors.primary : AppColors.textDisabled,
+            width: 4,
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+      padding: EdgeInsets.all(18.widthMultiplier),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title + status badge
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 16),
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A2E),
+                      ticket['title'],
+                      style: context.bold.copyWith(
+                        fontSize: 15.textMultiplier,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: Responsive.spacing(context, 6)),
-                    Text(
-                      meta,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 13),
-                        color: const Color(0xFF6B7280),
-                      ),
+                    SizedBox(height: 4.heightMultiplier),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: 12.widthMultiplier,
+                          color: AppColors.textSecondary,
+                        ),
+                        SizedBox(width: 4.widthMultiplier),
+                        Text(
+                          ticket['draw'],
+                          style: context.regular.copyWith(
+                            fontSize: 11.textMultiplier,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
+              SizedBox(width: 8.widthMultiplier),
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.spacing(context, 12),
-                  vertical: Responsive.spacing(context, 6),
+                  horizontal: 10.widthMultiplier,
+                  vertical: 5.heightMultiplier,
                 ),
                 decoration: BoxDecoration(
                   color: isActive
-                      ? const Color(0xFF10B981).withOpacity(0.1)
-                      : const Color(0xFFFFD23F).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
+                      ? AppColors.successSurface
+                      : AppColors.warningSurface,
+                  borderRadius: BorderRadius.circular(8.radiusMultipier),
                 ),
                 child: Text(
                   isActive ? 'ACTIVE' : 'PENDING',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 11),
-                    fontWeight: FontWeight.w700,
-                    color: isActive ? const Color(0xFF10B981) : const Color(0xFFD97706),
+                  style: context.semiBold.copyWith(
+                    fontSize: 10.textMultiplier,
+                    color: isActive ? AppColors.success : AppColors.warning,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: Responsive.spacing(context, 16)),
 
+          SizedBox(height: 14.heightMultiplier),
+
+          // Ticket numbers block
           Container(
-            padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+            padding: EdgeInsets.all(14.widthMultiplier),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
-              borderRadius: BorderRadius.circular(12),
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(12.radiusMultipier),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Your Ticket Numbers',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 12),
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF6B7280),
-                  ),
-                ),
-                SizedBox(height: Responsive.spacing(context, 8)),
-                Wrap(
-                  spacing: Responsive.spacing(context, 8),
-                  runSpacing: Responsive.spacing(context, 8),
-                  children: numbers
-                      .map((number) => Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Responsive.spacing(context, 12),
-                      vertical: Responsive.spacing(context, 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.confirmation_number_rounded,
+                      size: 13.widthMultiplier,
+                      color: AppColors.textSecondary,
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFFFF6B35), width: 2),
-                    ),
-                    child: Text(
-                      number,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 14),
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFFFF6B35),
+                    SizedBox(width: 6.widthMultiplier),
+                    Text(
+                      'Your Ticket Numbers',
+                      style: context.medium.copyWith(
+                        fontSize: 11.textMultiplier,
+                        color: AppColors.textSecondary,
                       ),
                     ),
-                  ))
+                  ],
+                ),
+                SizedBox(height: 10.heightMultiplier),
+                Wrap(
+                  spacing: 8.widthMultiplier,
+                  runSpacing: 8.heightMultiplier,
+                  children: numbers
+                      .map(
+                        (n) => Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.widthMultiplier,
+                            vertical: 7.heightMultiplier,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(
+                              8.radiusMultipier,
+                            ),
+                            border: Border.all(
+                              color: AppColors.primary.withOpacity(0.4),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Text(
+                            n,
+                            style: context.bold.copyWith(
+                              fontSize: 13.textMultiplier,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ],
             ),
           ),
-          SizedBox(height: Responsive.spacing(context, 12)),
 
+          SizedBox(height: 12.heightMultiplier),
+
+          // Footer: purchased + code
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Purchased: $date',
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 12),
-                  color: const Color(0xFF6B7280),
-                ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    size: 11.widthMultiplier,
+                    color: AppColors.textDisabled,
+                  ),
+                  SizedBox(width: 4.widthMultiplier),
+                  Text(
+                    'Purchased: ${ticket['purchased']}',
+                    style: context.light.copyWith(
+                      fontSize: 11.textMultiplier,
+                      color: AppColors.textDisabled,
+                    ),
+                  ),
+                ],
               ),
               Text(
-                code,
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 11),
-                  color: const Color(0xFF6B7280),
+                ticket['code'],
+                style: context.light.copyWith(
+                  fontSize: 10.textMultiplier,
+                  color: AppColors.textDisabled,
                   fontFamily: 'monospace',
                 ),
               ),
@@ -323,40 +435,35 @@ class TicketWalletScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class _StatItem extends StatelessWidget {
-  final BuildContext context;
-  final String number;
-  final String text;
-
-  const _StatItem({
-    required this.context,
-    required this.number,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          number,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 28),
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.confirmation_number_outlined,
+            size: 56.widthMultiplier,
+            color: AppColors.textDisabled,
           ),
-        ),
-        SizedBox(height: Responsive.spacing(context, 4)),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 12),
-            color: Colors.white.withOpacity(0.9),
+          SizedBox(height: 16.heightMultiplier),
+          Text(
+            'No tickets here',
+            style: context.bold.copyWith(
+              fontSize: 16.textMultiplier,
+              color: AppColors.textSecondary,
+            ),
           ),
-        ),
-      ],
+          SizedBox(height: 6.heightMultiplier),
+          Text(
+            'Tickets in this category will appear here.',
+            style: context.regular.copyWith(
+              fontSize: 13.textMultiplier,
+              color: AppColors.textDisabled,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,9 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class ProcessingTicketsScreen extends StatefulWidget {
   const ProcessingTicketsScreen({super.key});
@@ -31,41 +32,38 @@ class _ProcessingTicketsScreenState extends State<ProcessingTicketsScreen>
   void _simulateProcessing() async {
     for (int i = 0; i <= 100; i += 10) {
       await Future.delayed(const Duration(milliseconds: 300));
-      if (mounted) {
-        setState(() => _progress = i);
-      }
+      if (mounted) setState(() => _progress = i);
     }
-
     await Future.delayed(const Duration(milliseconds: 500));
-    if (mounted) {
-      context.pushNamed(Routes.ticketsAwarded);
-    }
+    if (mounted) context.pushNamed(Routes.ticketsAwarded);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: const Color(0xFF0D2233),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(Responsive.spacing(context, 24)),
+          padding: EdgeInsets.all(24.widthMultiplier),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Animated Icon
+              // Animated ticket icon
               RotationTransition(
                 turns: _controller,
                 child: Container(
-                  width: Responsive.dimension(context, 120),
-                  height: Responsive.dimension(context, 120),
+                  width: 120.widthMultiplier,
+                  height: 120.widthMultiplier,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                      colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFF6B35).withOpacity(0.3),
+                        color: AppColors.primary.withOpacity(0.35),
                         blurRadius: 30,
                         spreadRadius: 10,
                       ),
@@ -74,81 +72,80 @@ class _ProcessingTicketsScreenState extends State<ProcessingTicketsScreen>
                   child: Center(
                     child: Text(
                       '🎟️',
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 60),
-                      ),
+                      style: TextStyle(fontSize: 52.textMultiplier),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: Responsive.spacing(context, 40)),
+              SizedBox(height: 36.heightMultiplier),
 
               Text(
                 'Processing Your Tickets',
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 24),
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                style: context.extraBold.copyWith(
+                  fontSize: 22.textMultiplier,
+                  color: AppColors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: Responsive.spacing(context, 12)),
+              SizedBox(height: 10.heightMultiplier),
               Text(
                 'Please wait while we generate your raffle tickets...',
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 14),
-                  color: Colors.white.withOpacity(0.7),
+                style: context.regular.copyWith(
+                  fontSize: 13.textMultiplier,
+                  color: AppColors.white.withOpacity(0.65),
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: Responsive.spacing(context, 40)),
+              SizedBox(height: 36.heightMultiplier),
 
-              // Progress Bar
+              // Progress bar
               Container(
-                height: Responsive.dimension(context, 8),
+                height: 8.heightMultiplier,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10.radiusMultipier),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.radiusMultipier),
                   child: LinearProgressIndicator(
                     value: _progress / 100,
                     backgroundColor: Colors.transparent,
                     valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFFFF6B35),
+                      AppColors.secondary,
                     ),
-                    minHeight: Responsive.dimension(context, 8),
+                    minHeight: 8,
                   ),
                 ),
               ),
-              SizedBox(height: Responsive.spacing(context, 16)),
+              SizedBox(height: 12.heightMultiplier),
               Text(
                 '$_progress%',
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 18),
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFFFF6B35),
+                style: context.bold.copyWith(
+                  fontSize: 16.textMultiplier,
+                  color: AppColors.secondary,
                 ),
               ),
-              SizedBox(height: Responsive.spacing(context, 40)),
+              SizedBox(height: 36.heightMultiplier),
 
-              // Processing Steps
-              _buildStep('✓', 'Game completed', true),
-              SizedBox(height: Responsive.spacing(context, 12)),
+              // Steps
+              _buildStep(context, '✓', 'Game completed', true),
+              SizedBox(height: 10.heightMultiplier),
               _buildStep(
+                context,
                 _progress >= 30 ? '✓' : '⏳',
                 'Calculating score',
                 _progress >= 30,
               ),
-              SizedBox(height: Responsive.spacing(context, 12)),
+              SizedBox(height: 10.heightMultiplier),
               _buildStep(
+                context,
                 _progress >= 60 ? '✓' : '⏳',
                 'Generating tickets',
                 _progress >= 60,
               ),
-              SizedBox(height: Responsive.spacing(context, 12)),
+              SizedBox(height: 10.heightMultiplier),
               _buildStep(
+                context,
                 _progress >= 90 ? '✓' : '⏳',
                 'Finalizing entry',
                 _progress >= 90,
@@ -160,29 +157,33 @@ class _ProcessingTicketsScreenState extends State<ProcessingTicketsScreen>
     );
   }
 
-  Widget _buildStep(String icon, String text, bool completed) {
+  Widget _buildStep(
+    BuildContext context,
+    String icon,
+    String text,
+    bool completed,
+  ) {
     return Container(
-      padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.widthMultiplier,
+        vertical: 14.heightMultiplier,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(completed ? 0.1 : 0.05),
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.white.withOpacity(completed ? 0.1 : 0.04),
+        borderRadius: BorderRadius.circular(12.radiusMultipier),
         border: Border.all(
-          color: Colors.white.withOpacity(completed ? 0.2 : 0.1),
+          color: AppColors.white.withOpacity(completed ? 0.2 : 0.08),
         ),
       ),
       child: Row(
         children: [
-          Text(
-            icon,
-            style: TextStyle(fontSize: Responsive.fontSize(context, 24)),
-          ),
-          SizedBox(width: Responsive.spacing(context, 12)),
+          Text(icon, style: TextStyle(fontSize: 20.textMultiplier)),
+          SizedBox(width: 12.widthMultiplier),
           Text(
             text,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 14),
-              fontWeight: FontWeight.w600,
-              color: Colors.white.withOpacity(completed ? 1.0 : 0.5),
+            style: context.semiBold.copyWith(
+              fontSize: 13.textMultiplier,
+              color: AppColors.white.withOpacity(completed ? 1.0 : 0.45),
             ),
           ),
         ],

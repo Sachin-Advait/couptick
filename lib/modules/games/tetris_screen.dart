@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -325,9 +329,16 @@ class _TetrisScreenState extends State<TetrisScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  InkWell(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(8.widthMultiplier),
+                      child: Image.asset(
+                        AppImages.back,
+                        height: 20.heightMultiplier,
+                        color: AppColors.white,
+                      ),
+                    ),
                   ),
                   Text(
                     '🎮 Tetris',
@@ -401,13 +412,7 @@ class _TetrisScreenState extends State<TetrisScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text(
-                          'START GAME',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                        child: Text('START GAME', style: context.semiBold),
                       ),
                     )
                   : Column(

@@ -1,5 +1,9 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/assets/app_images.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import '../utils/responsive.dart';
+import 'package:go_router/go_router.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -11,56 +15,118 @@ class TransactionsScreen extends StatefulWidget {
 class _TransactionsScreenState extends State<TransactionsScreen> {
   String _selectedFilter = 'All';
 
+  final List<String> _filters = ['All', 'Campaigns', 'Products', 'Refunds'];
+
+  final List<Map<String, dynamic>> _transactions = [
+    {
+      'emoji': '📱',
+      'title': 'iPhone 15 Campaign Entry',
+      'datetime': 'Feb 10, 2026 • 2:30 PM',
+      'amount': '₹299',
+      'status': 'Completed',
+      'invoiceId': 'INV-2026-0210-001',
+      'isCompleted': true,
+    },
+    {
+      'emoji': '⌚',
+      'title': 'Apple Watch Campaign Entry',
+      'datetime': 'Feb 8, 2026 • 5:45 PM',
+      'amount': '₹149',
+      'status': 'Completed',
+      'invoiceId': 'INV-2026-0208-002',
+      'isCompleted': true,
+    },
+    {
+      'emoji': '💻',
+      'title': 'MacBook Campaign Entry',
+      'datetime': 'Feb 5, 2026 • 11:20 AM',
+      'amount': '₹349',
+      'status': 'Completed',
+      'invoiceId': 'INV-2026-0205-003',
+      'isCompleted': true,
+    },
+    {
+      'emoji': '🎧',
+      'title': 'AirPods Campaign Entry',
+      'datetime': 'Feb 2, 2026 • 3:15 PM',
+      'amount': '₹99',
+      'status': 'Refunded',
+      'invoiceId': 'INV-2026-0202-004',
+      'isCompleted': false,
+    },
+    {
+      'emoji': '📱',
+      'title': 'Samsung S24 Campaign Entry',
+      'datetime': 'Jan 28, 2026 • 6:50 PM',
+      'amount': '₹199',
+      'status': 'Completed',
+      'invoiceId': 'INV-2026-0128-005',
+      'isCompleted': true,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+              color: AppColors.white,
+              padding: EdgeInsets.only(
+                left: 16.widthMultiplier,
+                right: 16.widthMultiplier,
+                top: 12.heightMultiplier,
+                bottom: 16.heightMultiplier,
+              ),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Container(
-                          padding: EdgeInsets.all(Responsive.spacing(context, 8)),
+                      InkWell(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          padding: EdgeInsets.all(8.widthMultiplier),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8F9FA),
-                            borderRadius: BorderRadius.circular(12),
+                            color: AppColors.surfaceVariant,
+                            borderRadius: BorderRadius.circular(
+                              12.radiusMultipier,
+                            ),
                           ),
-                          child: Icon(
-                            Icons.arrow_back,
-                            size: Responsive.iconSize(context, 20),
+                          child: Image.asset(
+                            AppImages.back,
+                            height: 20.heightMultiplier,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                       ),
-                      SizedBox(width: Responsive.spacing(context, 16)),
+                      SizedBox(width: 12.widthMultiplier),
                       Text(
                         'Transactions',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 24),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1A1A2E),
+                        style: context.extraBold.copyWith(
+                          fontSize: 22.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: Responsive.spacing(context, 16)),
+                  SizedBox(height: 16.heightMultiplier),
 
-                  // Stats Summary
+                  // Stats banner
                   Container(
-                    padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.widthMultiplier,
+                      vertical: 20.heightMultiplier,
+                    ),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+                        colors: [AppColors.primary, Color(0xFF1A6B8A)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20.radiusMultipier),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -68,14 +134,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         _buildStat(context, '₹2,847', 'Total Spent'),
                         Container(
                           width: 1,
-                          height: 40,
-                          color: Colors.white.withOpacity(0.3),
+                          height: 40.heightMultiplier,
+                          color: AppColors.white.withOpacity(0.3),
                         ),
                         _buildStat(context, '12', 'Transactions'),
                         Container(
                           width: 1,
-                          height: 40,
-                          color: Colors.white.withOpacity(0.3),
+                          height: 40.heightMultiplier,
+                          color: AppColors.white.withOpacity(0.3),
                         ),
                         _buildStat(context, 'Feb', 'This Month'),
                       ],
@@ -85,85 +151,58 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
             ),
 
-            // Filter Tabs
+            // Filter tabs
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: Responsive.spacing(context, 20),
-                vertical: Responsive.spacing(context, 16),
+              color: AppColors.white,
+              padding: EdgeInsets.only(
+                left: 20.widthMultiplier,
+                right: 20.widthMultiplier,
+                bottom: 14.heightMultiplier,
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    _buildFilterTab('All'),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    _buildFilterTab('Campaigns'),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    _buildFilterTab('Products'),
-                    SizedBox(width: Responsive.spacing(context, 8)),
-                    _buildFilterTab('Refunds'),
-                  ],
+                  children: _filters.map((f) {
+                    final isSelected = _selectedFilter == f;
+                    return GestureDetector(
+                      onTap: () => setState(() => _selectedFilter = f),
+                      child: Container(
+                        margin: EdgeInsets.only(right: 8.widthMultiplier),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.widthMultiplier,
+                          vertical: 8.heightMultiplier,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.surfaceVariant,
+                          borderRadius: BorderRadius.circular(
+                            12.radiusMultipier,
+                          ),
+                        ),
+                        child: Text(
+                          f,
+                          style: context.semiBold.copyWith(
+                            fontSize: 13.textMultiplier,
+                            color: isSelected
+                                ? AppColors.white
+                                : AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ),
 
-            // Transactions List
+            // List
             Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-                children: [
-                  _buildTransactionCard(
-                    context,
-                    '📱',
-                    'iPhone 15 Campaign Entry',
-                    'Feb 10, 2026 • 2:30 PM',
-                    '₹299',
-                    'Completed',
-                    'INV-2026-0210-001',
-                    true,
-                  ),
-                  _buildTransactionCard(
-                    context,
-                    '⌚',
-                    'Apple Watch Campaign Entry',
-                    'Feb 8, 2026 • 5:45 PM',
-                    '₹149',
-                    'Completed',
-                    'INV-2026-0208-002',
-                    true,
-                  ),
-                  _buildTransactionCard(
-                    context,
-                    '💻',
-                    'MacBook Campaign Entry',
-                    'Feb 5, 2026 • 11:20 AM',
-                    '₹349',
-                    'Completed',
-                    'INV-2026-0205-003',
-                    true,
-                  ),
-                  _buildTransactionCard(
-                    context,
-                    '🎧',
-                    'AirPods Campaign Entry',
-                    'Feb 2, 2026 • 3:15 PM',
-                    '₹99',
-                    'Refunded',
-                    'INV-2026-0202-004',
-                    false,
-                  ),
-                  _buildTransactionCard(
-                    context,
-                    '📱',
-                    'Samsung S24 Campaign Entry',
-                    'Jan 28, 2026 • 6:50 PM',
-                    '₹199',
-                    'Completed',
-                    'INV-2026-0128-005',
-                    true,
-                  ),
-                ],
+              child: ListView.builder(
+                padding: EdgeInsets.all(20.widthMultiplier),
+                itemCount: _transactions.length,
+                itemBuilder: (_, i) =>
+                    _buildTransactionCard(context, _transactions[i]),
               ),
             ),
           ],
@@ -177,71 +216,34 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       children: [
         Text(
           value,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 20),
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
+          style: context.extraBold.copyWith(
+            fontSize: 18.textMultiplier,
+            color: AppColors.white,
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 4)),
+        SizedBox(height: 4.heightMultiplier),
         Text(
           label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 11),
-            color: Colors.white.withOpacity(0.9),
+          style: context.regular.copyWith(
+            fontSize: 11.textMultiplier,
+            color: AppColors.white.withOpacity(0.9),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildFilterTab(String label) {
-    final isSelected = _selectedFilter == label;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedFilter = label;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: Responsive.spacing(context, 16),
-          vertical: Responsive.spacing(context, 8),
-        ),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF6B35) : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : const Color(0xFF6B7280),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _buildTransactionCard(BuildContext context, Map<String, dynamic> tx) {
+    final isCompleted = tx['isCompleted'] as bool;
 
-  Widget _buildTransactionCard(
-      BuildContext context,
-      String emoji,
-      String title,
-      String datetime,
-      String amount,
-      String status,
-      String invoiceId,
-      bool isCompleted,
-      ) {
     return Container(
-      margin: EdgeInsets.only(bottom: Responsive.spacing(context, 12)),
+      margin: EdgeInsets.only(bottom: 12.heightMultiplier),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.radiusMultipier),
         border: Border(
           left: BorderSide(
-            color: isCompleted ? const Color(0xFF10B981) : const Color(0xFFFF6B35),
+            color: isCompleted ? AppColors.success : AppColors.warning,
             width: 4,
           ),
         ),
@@ -256,44 +258,41 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+            padding: EdgeInsets.all(14.widthMultiplier),
             child: Row(
               children: [
                 Container(
-                  width: Responsive.dimension(context, 50),
-                  height: Responsive.dimension(context, 50),
+                  width: 48.widthMultiplier,
+                  height: 48.widthMultiplier,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.primarySurface,
+                    borderRadius: BorderRadius.circular(12.radiusMultipier),
                   ),
                   child: Center(
                     child: Text(
-                      emoji,
-                      style: TextStyle(fontSize: Responsive.fontSize(context, 24)),
+                      tx['emoji'],
+                      style: TextStyle(fontSize: 22.textMultiplier),
                     ),
                   ),
                 ),
-                SizedBox(width: Responsive.spacing(context, 12)),
+                SizedBox(width: 12.widthMultiplier),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 15),
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1A1A2E),
+                        tx['title'],
+                        style: context.semiBold.copyWith(
+                          fontSize: 13.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 4)),
+                      SizedBox(height: 4.heightMultiplier),
                       Text(
-                        datetime,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 12),
-                          color: const Color(0xFF6B7280),
+                        tx['datetime'],
+                        style: context.regular.copyWith(
+                          fontSize: 11.textMultiplier,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -303,33 +302,31 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      amount,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 18),
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF1A1A2E),
+                      tx['amount'],
+                      style: context.extraBold.copyWith(
+                        fontSize: 16.textMultiplier,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: Responsive.spacing(context, 4)),
+                    SizedBox(height: 4.heightMultiplier),
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: Responsive.spacing(context, 8),
-                        vertical: Responsive.spacing(context, 4),
+                        horizontal: 8.widthMultiplier,
+                        vertical: 3.heightMultiplier,
                       ),
                       decoration: BoxDecoration(
                         color: isCompleted
-                            ? const Color(0xFF10B981).withOpacity(0.1)
-                            : const Color(0xFFFF6B35).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(6),
+                            ? AppColors.successSurface
+                            : AppColors.warningSurface,
+                        borderRadius: BorderRadius.circular(6.radiusMultipier),
                       ),
                       child: Text(
-                        status,
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 10),
-                          fontWeight: FontWeight.w700,
+                        tx['status'],
+                        style: context.semiBold.copyWith(
+                          fontSize: 10.textMultiplier,
                           color: isCompleted
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFFF6B35),
+                              ? AppColors.success
+                              : AppColors.warning,
                         ),
                       ),
                     ),
@@ -338,13 +335,18 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ],
             ),
           ),
+
+          // Invoice footer
           Container(
-            padding: EdgeInsets.all(Responsive.spacing(context, 12)),
+            padding: EdgeInsets.symmetric(
+              horizontal: 14.widthMultiplier,
+              vertical: 10.heightMultiplier,
+            ),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
+              color: AppColors.background,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16.radiusMultipier),
+                bottomRight: Radius.circular(16.radiusMultipier),
               ),
             ),
             child: Row(
@@ -353,16 +355,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 Row(
                   children: [
                     Icon(
-                      Icons.receipt,
-                      size: Responsive.iconSize(context, 16),
-                      color: const Color(0xFF6B7280),
+                      Icons.receipt_rounded,
+                      size: 14.widthMultiplier,
+                      color: AppColors.textDisabled,
                     ),
-                    SizedBox(width: Responsive.spacing(context, 6)),
+                    SizedBox(width: 6.widthMultiplier),
                     Text(
-                      invoiceId,
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 12),
-                        color: const Color(0xFF6B7280),
+                      tx['invoiceId'],
+                      style: context.light.copyWith(
+                        fontSize: 11.textMultiplier,
+                        color: AppColors.textDisabled,
                         fontFamily: 'monospace',
                       ),
                     ),
@@ -373,10 +375,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Invoice downloaded: $invoiceId.pdf',
-                          style: TextStyle(fontSize: Responsive.fontSize(context, 14)),
+                          'Invoice downloaded: ${tx['invoiceId']}.pdf',
+                          style: context.regular.copyWith(
+                            fontSize: 13.textMultiplier,
+                          ),
                         ),
-                        backgroundColor: const Color(0xFF10B981),
+                        backgroundColor: AppColors.success,
                         duration: const Duration(seconds: 2),
                       ),
                     );
@@ -384,17 +388,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.download,
-                        size: Responsive.iconSize(context, 16),
-                        color: const Color(0xFFFF6B35),
+                        Icons.download_rounded,
+                        size: 14.widthMultiplier,
+                        color: AppColors.primary,
                       ),
-                      SizedBox(width: Responsive.spacing(context, 4)),
+                      SizedBox(width: 4.widthMultiplier),
                       Text(
                         'Download',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 13),
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFFF6B35),
+                        style: context.semiBold.copyWith(
+                          fontSize: 12.textMultiplier,
+                          color: AppColors.primary,
                         ),
                       ),
                     ],

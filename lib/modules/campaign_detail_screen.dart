@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
 import 'package:couptick/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../utils/responsive.dart';
 
 class CampaignDetailScreen extends StatelessWidget {
   const CampaignDetailScreen({super.key});
@@ -9,408 +10,773 @@ class CampaignDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                // Hero Section
-                Container(
-                  height: Responsive.dimension(context, 380),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
+          CustomScrollView(
+            slivers: [
+              _buildHeroSliver(context),
+              SliverToBoxAdapter(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(28.radiusMultipier),
                     ),
                   ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding: EdgeInsets.all(Responsive.spacing(context, 20)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: Container(
-                              padding: EdgeInsets.all(Responsive.spacing(context, 8)),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                                size: Responsive.iconSize(context, 20),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Responsive.spacing(context, 16),
-                                    vertical: Responsive.spacing(context, 6),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.25),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    '🔥 HOT CAMPAIGN',
-                                    style: TextStyle(
-                                      fontSize: Responsive.fontSize(context, 12),
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: Responsive.spacing(context, 16)),
-                                Text(
-                                  '📱',
-                                  style: TextStyle(fontSize: Responsive.fontSize(context, 100)),
-                                ),
-                                SizedBox(height: Responsive.spacing(context, 16)),
-                                Text(
-                                  'iPhone 15 Pro Max',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 2),
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: Responsive.spacing(context, 8)),
-                                Text(
-                                  'Prize Worth ₹1,20,000',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 11),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20.widthMultiplier,
+                      24.heightMultiplier,
+                      20.widthMultiplier,
+                      120.heightMultiplier,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildStatsRow(context),
+                        SizedBox(height: 24.heightMultiplier),
+                        _buildParticipantsRow(context),
+                        SizedBox(height: 28.heightMultiplier),
+                        _buildCampaignDetails(context),
+                        SizedBox(height: 24.heightMultiplier),
+                        _buildAboutSection(context),
+                        SizedBox(height: 24.heightMultiplier),
+                        _buildHowToPlay(context),
+                        70.verticalSpace,
+                      ],
                     ),
                   ),
                 ),
+              ),
+            ],
+          ),
+          _buildBottomAction(context),
+        ],
+      ),
+    );
+  }
 
-                // Content Section
-                Transform.translate(
-                  offset: Offset(0, Responsive.spacing(context, -32)),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+  Widget _buildHeroSliver(BuildContext context) {
+    return SliverAppBar(
+      expandedHeight: 340.heightMultiplier,
+      pinned: true,
+      backgroundColor: AppColors.primary,
+      leading: Padding(
+        padding: EdgeInsets.only(left: 16.widthMultiplier),
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 8.heightMultiplier),
+            decoration: BoxDecoration(
+              color: AppColors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(10.radiusMultipier),
+            ),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.white,
+              size: 18.widthMultiplier,
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(right: 16.widthMultiplier),
+          child: GestureDetector(
+            onTap: () {},
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 8.heightMultiplier),
+              padding: EdgeInsets.all(8.widthMultiplier),
+              decoration: BoxDecoration(
+                color: AppColors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(10.radiusMultipier),
+              ),
+              child: Icon(
+                Icons.share_rounded,
+                color: AppColors.white,
+                size: 18.widthMultiplier,
+              ),
+            ),
+          ),
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.primary, AppColors.primary.withBlue(110)],
+            ),
+          ),
+          child: Stack(
+            children: [
+              // Decorative background circles
+              Positioned(
+                right: -30,
+                top: 40,
+                child: Container(
+                  width: 160.widthMultiplier,
+                  height: 160.widthMultiplier,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.white.withOpacity(0.05),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: -40,
+                bottom: 60,
+                child: Container(
+                  width: 120.widthMultiplier,
+                  height: 120.widthMultiplier,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.white.withOpacity(0.05),
+                  ),
+                ),
+              ),
+              // Content
+              SafeArea(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20.widthMultiplier,
+                      60.heightMultiplier,
+                      20.widthMultiplier,
+                      28.heightMultiplier,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(Responsive.spacing(context, 24)),
-                      child: Column(
-                        children: [
-                          // Stats Row
-                          Row(
-                            children: [
-                              Expanded(child: _buildStatCard(context, '₹299', 'Per Play')),
-                              SizedBox(width: Responsive.spacing(context, 12)),
-                              Expanded(child: _buildStatCard(context, '2.4K', 'Playing')),
-                              SizedBox(width: Responsive.spacing(context, 12)),
-                              Expanded(child: _buildStatCard(context, '12', 'Days Left')),
-                            ],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 14.widthMultiplier,
+                            vertical: 5.heightMultiplier,
                           ),
-                          SizedBox(height: Responsive.spacing(context, 24)),
-
-                          // Participants Preview
-                          Row(
+                          decoration: BoxDecoration(
+                            color: AppColors.secondary.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(
+                              20.radiusMultipier,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Stack(
-                                children: List.generate(5, (index) {
-                                  return Transform.translate(
-                                    offset: Offset(index * Responsive.dimension(context, 24), 0),
-                                    child: Container(
-                                      width: Responsive.dimension(context, 36),
-                                      height: Responsive.dimension(context, 36),
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-                                        ),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.white, width: 2),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          index < 4 ? ['A', 'R', 'S', 'M'][index] : '+',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: Responsive.fontSize(context, 14),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }),
+                              Icon(
+                                Icons.local_fire_department_rounded,
+                                color: AppColors.white,
+                                size: 13.widthMultiplier,
                               ),
-                              SizedBox(width: Responsive.spacing(context, 130)),
-                              Expanded(
-                                child: Text(
-                                  '2,456 people are playing',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 13),
-                                    color: const Color(0xFF6B7280),
-                                  ),
+                              SizedBox(width: 4.widthMultiplier),
+                              Text(
+                                'HOT CAMPAIGN',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 11.textMultiplier,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.white,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: Responsive.spacing(context, 24)),
-
-                          // Campaign Details
-                          _buildSection(
-                            context,
-                            'Campaign Details',
-                            Container(
-                              padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF8F9FA),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Column(
-                                children: [
-                                  _buildInfoRow(context, 'Start Date', 'Jan 15, 2026'),
-                                  _buildInfoRow(context, 'End Date', 'Feb 20, 2026'),
-                                  _buildInfoRow(context, 'Draw Date', 'Feb 22, 2026'),
-                                  _buildInfoRow(context, 'Max Tickets', '10,000', isLast: true),
-                                ],
-                              ),
+                        ),
+                        SizedBox(height: 16.heightMultiplier),
+                        Container(
+                          padding: EdgeInsets.all(20.widthMultiplier),
+                          decoration: BoxDecoration(
+                            color: AppColors.white.withOpacity(0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '📱',
+                            style: TextStyle(fontSize: 54.textMultiplier),
+                          ),
+                        ),
+                        SizedBox(height: 16.heightMultiplier),
+                        Text(
+                          'iPhone 15 Pro Max',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 22.textMultiplier,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 6.heightMultiplier),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.widthMultiplier,
+                            vertical: 4.heightMultiplier,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(
+                              8.radiusMultipier,
                             ),
                           ),
-
-                          // About
-                          _buildSection(
-                            context,
-                            'About This Campaign',
-                            Text(
-                              'Win the latest iPhone 15 Pro Max (256GB) in Titanium Blue! Purchase any mobile phone from our partner stores and get instant raffle tickets. The more you buy, the higher your chances to win this amazing prize worth ₹1,20,000!',
-                              style: TextStyle(
-                                fontSize: Responsive.fontSize(context, 14),
-                                color: const Color(0xFF2D3142),
-                                height: 1.6,
-                              ),
+                          child: Text(
+                            'Prize Worth ₹1,34,900',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13.textMultiplier,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.white.withOpacity(0.9),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-                          // How to Play
-                          _buildSection(
-                            context,
-                            'How to Play',
-                            Column(
-                              children: [
-                                _buildRuleItem(context, 'Buy any eligible product from partner stores'),
-                                _buildRuleItem(context, 'Pay ₹299 to enter the campaign'),
-                                _buildRuleItem(context, 'Play the instant game to reveal your tickets'),
-                                _buildRuleItem(context, 'Get up to 5 raffle tickets per entry'),
-                                _buildRuleItem(context, 'Winner announced on draw date via live stream'),
-                              ],
-                            ),
-                          ),
+  Widget _buildStatsRow(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildStatCard(
+            context,
+            icon: Icons.currency_rupee_rounded,
+            value: '299',
+            label: 'Per Play',
+            color: AppColors.secondary,
+          ),
+        ),
+        SizedBox(width: 10.widthMultiplier),
+        Expanded(
+          child: _buildStatCard(
+            context,
+            icon: Icons.people_outline_rounded,
+            value: '2.4K',
+            label: 'Playing',
+            color: AppColors.info,
+          ),
+        ),
+        SizedBox(width: 10.widthMultiplier),
+        Expanded(
+          child: _buildStatCard(
+            context,
+            icon: Icons.calendar_today_outlined,
+            value: '12',
+            label: 'Days Left',
+            color: AppColors.success,
+          ),
+        ),
+      ],
+    );
+  }
 
-                          SizedBox(height: Responsive.spacing(context, 100)),
-                        ],
+  Widget _buildStatCard(
+    BuildContext context, {
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 12.widthMultiplier,
+        vertical: 14.heightMultiplier,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.radiusMultipier),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.widthMultiplier),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10.radiusMultipier),
+            ),
+            child: Icon(icon, size: 16.widthMultiplier, color: color),
+          ),
+          SizedBox(height: 8.heightMultiplier),
+          Text(
+            value,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18.textMultiplier,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(height: 2.heightMultiplier),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 10.textMultiplier,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildParticipantsRow(BuildContext context) {
+    const initials = ['A', 'R', 'S', 'M'];
+    final avatarColors = [
+      AppColors.primary,
+      AppColors.info,
+      AppColors.success,
+      AppColors.secondary,
+    ];
+
+    return Container(
+      padding: EdgeInsets.all(16.widthMultiplier),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.radiusMultipier),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 36.heightMultiplier,
+            width: (initials.length * 26.0 + 10).widthMultiplier,
+            child: Stack(
+              children: List.generate(initials.length, (i) {
+                return Positioned(
+                  left: (i * 26.0).widthMultiplier,
+                  child: Container(
+                    width: 36.widthMultiplier,
+                    height: 36.widthMultiplier,
+                    decoration: BoxDecoration(
+                      color: avatarColors[i],
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.white, width: 2),
+                    ),
+                    child: Center(
+                      child: Text(
+                        initials[i],
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.textMultiplier,
+                        ),
                       ),
                     ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          SizedBox(width: 12.widthMultiplier),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '2,456 people are playing',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 13.textMultiplier,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 2.heightMultiplier),
+                Text(
+                  'Join them now!',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 11.textMultiplier,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.widthMultiplier,
+              vertical: 4.heightMultiplier,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.successSurface,
+              borderRadius: BorderRadius.circular(8.radiusMultipier),
+            ),
+            child: Text(
+              'Active',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 11.textMultiplier,
+                fontWeight: FontWeight.w600,
+                color: AppColors.success,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-          // Bottom Action
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
+  Widget _buildCampaignDetails(BuildContext context) {
+    return _buildSection(
+      context,
+      title: 'Campaign Details',
+      icon: Icons.info_outline_rounded,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16.radiusMultipier),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          children: [
+            _buildInfoRow(
+              context,
+              'Start Date',
+              'Jan 15, 2026',
+              Icons.play_circle_outline_rounded,
+            ),
+            Divider(height: 1, color: AppColors.divider),
+            _buildInfoRow(
+              context,
+              'End Date',
+              'Feb 20, 2026',
+              Icons.stop_circle_outlined,
+            ),
+            Divider(height: 1, color: AppColors.divider),
+            _buildInfoRow(
+              context,
+              'Draw Date',
+              'Feb 22, 2026',
+              Icons.emoji_events_outlined,
+            ),
+            Divider(height: 1, color: AppColors.divider),
+            _buildInfoRow(
+              context,
+              'Max Tickets',
+              '10,000',
+              Icons.confirmation_number_outlined,
+              isLast: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAboutSection(BuildContext context) {
+    return _buildSection(
+      context,
+      title: 'About This Campaign',
+      icon: Icons.article_outlined,
+      child: Container(
+        padding: EdgeInsets.all(16.widthMultiplier),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16.radiusMultipier),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Text(
+          'Win the latest iPhone 15 Pro Max (256GB) in Titanium Blue! Purchase any mobile phone from our partner stores and get instant raffle tickets. The more you buy, the higher your chances to win this amazing prize worth ₹1,34,900!',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 13.textMultiplier,
+            color: AppColors.textSecondary,
+            height: 1.7,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHowToPlay(BuildContext context) {
+    final steps = [
+      'Buy any eligible product from our partner stores',
+      'Pay ₹299 entry fee to join the campaign',
+      'Play the instant game to reveal your tickets',
+      'Get up to 5 raffle tickets per entry',
+      'Winner announced on draw date via live stream',
+    ];
+
+    return _buildSection(
+      context,
+      title: 'How to Play',
+      icon: Icons.help_outline_rounded,
+      child: Column(
+        children: steps
+            .asMap()
+            .entries
+            .map(
+              (e) => _buildStepItem(
+                context,
+                e.key + 1,
+                e.value,
+                e.key == steps.length - 1,
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildSection(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(6.widthMultiplier),
               decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 20,
-                    offset: const Offset(0, -4),
+                color: AppColors.primarySurface,
+                borderRadius: BorderRadius.circular(8.radiusMultipier),
+              ),
+              child: Icon(
+                icon,
+                size: 15.widthMultiplier,
+                color: AppColors.primary,
+              ),
+            ),
+            SizedBox(width: 10.widthMultiplier),
+            Text(
+              title,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16.textMultiplier,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.heightMultiplier),
+        child,
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon, {
+    bool isLast = false,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.widthMultiplier,
+        vertical: 13.heightMultiplier,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 16.widthMultiplier, color: AppColors.textDisabled),
+          SizedBox(width: 10.widthMultiplier),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 13.textMultiplier,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 13.textMultiplier,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStepItem(
+    BuildContext context,
+    int step,
+    String text,
+    bool isLast,
+  ) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: isLast ? 0 : 10.heightMultiplier),
+      child: Container(
+        padding: EdgeInsets.all(14.widthMultiplier),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(14.radiusMultipier),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 26.widthMultiplier,
+              height: 26.widthMultiplier,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(8.radiusMultipier),
+              ),
+              child: Center(
+                child: Text(
+                  '$step',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 12.textMultiplier,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.white,
                   ),
-                ],
+                ),
               ),
-              padding: EdgeInsets.fromLTRB(
-                Responsive.spacing(context, 20),
-                Responsive.spacing(context, 16),
-                Responsive.spacing(context, 20),
-                Responsive.spacing(context, 32),
+            ),
+            SizedBox(width: 12.widthMultiplier),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 13.textMultiplier,
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Entry Fee',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomAction(BuildContext context) {
+    return Positioned(
+      bottom: 80,
+      left: 0,
+      right: 0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border(top: BorderSide(color: AppColors.border)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 24,
+              offset: const Offset(0, -6),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.fromLTRB(
+          20.widthMultiplier,
+          16.heightMultiplier,
+          20.widthMultiplier,
+          28.heightMultiplier,
+        ),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Entry Fee',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 12.textMultiplier,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                SizedBox(height: 2.heightMultiplier),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '₹299',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 24.textMultiplier,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(width: 6.widthMultiplier),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 3.heightMultiplier),
+                      child: Text(
+                        'per play',
                         style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 14),
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF6B7280),
+                          fontFamily: 'Poppins',
+                          fontSize: 11.textMultiplier,
+                          color: AppColors.textSecondary,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(width: 16.widthMultiplier),
+            Expanded(
+              child: SizedBox(
+                height: 52.heightMultiplier,
+                child: ElevatedButton(
+                  onPressed: () => context.pushNamed(Routes.gamePlay),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.radiusMultipier),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.play_circle_filled_rounded,
+                        color: AppColors.white,
+                        size: 18.widthMultiplier,
+                      ),
+                      SizedBox(width: 8.widthMultiplier),
                       Text(
-                        '₹299',
+                        'Play Now & Win',
                         style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 28),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFFFF6B35),
+                          fontFamily: 'Poppins',
+                          fontSize: 15.textMultiplier,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.white,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: Responsive.spacing(context, 16)),
-                  SizedBox(
-                    width: double.infinity,
-                    height: Responsive.dimension(context, 56),
-                    child: ElevatedButton(
-                      onPressed: () => context.pushNamed(Routes.gamePlay),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF6B35),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 8,
-                        shadowColor: const Color(0xFFFF6B35).withOpacity(0.3),
-                      ),
-                      child: Text(
-                        '▶️ Play Now & Win',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 16),
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatCard(BuildContext context, String value, String label) {
-    return Container(
-      padding: EdgeInsets.all(Responsive.spacing(context, 16)),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 22),
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF1A1A2E),
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 4)),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 11),
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF6B7280),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection(BuildContext context, String title, Widget content) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: Responsive.spacing(context, 24)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 18),
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A1A2E),
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 12)),
-          content,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(BuildContext context, String label, String value, {bool isLast = false}) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : Responsive.spacing(context, 10)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 14),
-              color: const Color(0xFF6B7280),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 14),
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A1A2E),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRuleItem(BuildContext context, String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: Responsive.spacing(context, 8)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '✓ ',
-            style: TextStyle(
-              color: const Color(0xFF10B981),
-              fontWeight: FontWeight.bold,
-              fontSize: Responsive.fontSize(context, 16),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 13),
-                color: const Color(0xFF2D3142),
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

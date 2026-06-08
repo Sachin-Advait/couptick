@@ -1,9 +1,10 @@
 import 'package:confetti/confetti.dart';
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class ClaimSubmittedScreen extends StatefulWidget {
   final String prize;
@@ -61,12 +62,8 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
 
   @override
   Widget build(BuildContext context) {
-    final prize = widget.prize;
-    final value = widget.value;
-    final referenceId = widget.referenceId;
-
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: const Color(0xFF0D2233),
       body: Stack(
         children: [
           // Confetti
@@ -81,10 +78,10 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
               gravity: 0.05,
               shouldLoop: false,
               colors: const [
-                Color(0xFFFF6B35),
-                Color(0xFFFFD23F),
-                Color(0xFF10B981),
-                Color(0xFF667eea),
+                AppColors.secondary,
+                AppColors.warning,
+                AppColors.success,
+                AppColors.info,
                 Color(0xFFf093fb),
               ],
             ),
@@ -95,89 +92,83 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.all(Responsive.spacing(context, 24)),
+                    padding: EdgeInsets.all(24.widthMultiplier),
                     child: Column(
                       children: [
-                        SizedBox(height: Responsive.spacing(context, 40)),
+                        SizedBox(height: 40.heightMultiplier),
 
-                        // Success Animation
+                        // Success icon
                         FadeTransition(
                           opacity: _fadeAnimation,
                           child: ScaleTransition(
                             scale: _scaleAnimation,
                             child: Container(
-                              width: Responsive.dimension(context, 140),
-                              height: Responsive.dimension(context, 140),
+                              width: 130.widthMultiplier,
+                              height: 130.widthMultiplier,
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFF10B981),
+                                    AppColors.success,
                                     Color(0xFF059669),
                                   ],
                                 ),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(
-                                      0xFF10B981,
-                                    ).withOpacity(0.3),
+                                    color: AppColors.success.withOpacity(0.35),
                                     blurRadius: 30,
-                                    spreadRadius: 10,
+                                    spreadRadius: 8,
                                   ),
                                 ],
                               ),
                               child: Center(
                                 child: Text(
                                   '✅',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 70),
-                                  ),
+                                  style: TextStyle(fontSize: 60.textMultiplier),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: Responsive.spacing(context, 32)),
+                        SizedBox(height: 28.heightMultiplier),
 
-                        // Success Message
+                        // Heading
                         FadeTransition(
                           opacity: _fadeAnimation,
                           child: Column(
                             children: [
                               Text(
                                 'Claim Submitted!',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 32),
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
+                                style: context.extraBold.copyWith(
+                                  fontSize: 28.textMultiplier,
+                                  color: AppColors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                              SizedBox(height: Responsive.spacing(context, 12)),
+                              SizedBox(height: 10.heightMultiplier),
                               Text(
                                 'Your claim has been received successfully',
-                                style: TextStyle(
-                                  fontSize: Responsive.fontSize(context, 16),
-                                  color: Colors.white.withOpacity(0.8),
+                                style: context.regular.copyWith(
+                                  fontSize: 14.textMultiplier,
+                                  color: AppColors.white.withOpacity(0.75),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: Responsive.spacing(context, 40)),
+                        SizedBox(height: 32.heightMultiplier),
 
-                        // Claim Details Card
+                        // Claim details card
                         Container(
-                          padding: EdgeInsets.all(
-                            Responsive.spacing(context, 24),
-                          ),
+                          padding: EdgeInsets.all(22.widthMultiplier),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(24),
+                            color: AppColors.white.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(
+                              24.radiusMultipier,
+                            ),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.2),
-                              width: 1,
+                              color: AppColors.white.withOpacity(0.15),
                             ),
                           ),
                           child: Column(
@@ -187,15 +178,10 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                                   Text(
                                     '🏆',
                                     style: TextStyle(
-                                      fontSize: Responsive.fontSize(
-                                        context,
-                                        50,
-                                      ),
+                                      fontSize: 44.textMultiplier,
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: Responsive.spacing(context, 16),
-                                  ),
+                                  SizedBox(width: 14.widthMultiplier),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -203,35 +189,26 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                                       children: [
                                         Text(
                                           'Prize',
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              12,
-                                            ),
-                                            color: Colors.white.withOpacity(
-                                              0.6,
+                                          style: context.regular.copyWith(
+                                            fontSize: 11.textMultiplier,
+                                            color: AppColors.white.withOpacity(
+                                              0.55,
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 2.heightMultiplier),
                                         Text(
-                                          prize,
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              18,
-                                            ),
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
+                                          widget.prize,
+                                          style: context.bold.copyWith(
+                                            fontSize: 16.textMultiplier,
+                                            color: AppColors.white,
                                           ),
                                         ),
                                         Text(
-                                          'Worth $value',
-                                          style: TextStyle(
-                                            fontSize: Responsive.fontSize(
-                                              context,
-                                              14,
-                                            ),
-                                            color: const Color(0xFF10B981),
+                                          'Worth ${widget.value}',
+                                          style: context.semiBold.copyWith(
+                                            fontSize: 13.textMultiplier,
+                                            color: AppColors.success,
                                           ),
                                         ),
                                       ],
@@ -239,15 +216,13 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                                   ),
                                 ],
                               ),
-                              SizedBox(height: Responsive.spacing(context, 20)),
-
-                              Divider(color: Colors.white.withOpacity(0.1)),
-                              SizedBox(height: Responsive.spacing(context, 20)),
-
-                              _buildInfoRow('Reference ID', referenceId),
-                              SizedBox(height: Responsive.spacing(context, 12)),
+                              SizedBox(height: 18.heightMultiplier),
+                              Divider(color: AppColors.white.withOpacity(0.1)),
+                              SizedBox(height: 18.heightMultiplier),
+                              _buildInfoRow('Reference ID', widget.referenceId),
+                              SizedBox(height: 10.heightMultiplier),
                               _buildInfoRow('Status', 'Under Review'),
-                              SizedBox(height: Responsive.spacing(context, 12)),
+                              SizedBox(height: 10.heightMultiplier),
                               _buildInfoRow(
                                 'Submitted On',
                                 _formatDate(DateTime.now()),
@@ -255,18 +230,18 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                             ],
                           ),
                         ),
-                        SizedBox(height: Responsive.spacing(context, 32)),
+                        SizedBox(height: 24.heightMultiplier),
 
-                        // Next Steps
+                        // Next steps
                         Container(
-                          padding: EdgeInsets.all(
-                            Responsive.spacing(context, 20),
-                          ),
+                          padding: EdgeInsets.all(18.widthMultiplier),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFD23F).withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.warning.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(
+                              16.radiusMultipier,
+                            ),
                             border: Border.all(
-                              color: const Color(0xFFFFD23F).withOpacity(0.3),
+                              color: AppColors.warning.withOpacity(0.3),
                             ),
                           ),
                           child: Column(
@@ -275,34 +250,28 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.info_outline,
-                                    color: const Color(0xFFFFD23F),
-                                    size: Responsive.iconSize(context, 20),
+                                    Icons.info_outline_rounded,
+                                    color: AppColors.warning,
+                                    size: 18.widthMultiplier,
                                   ),
-                                  SizedBox(
-                                    width: Responsive.spacing(context, 8),
-                                  ),
+                                  SizedBox(width: 8.widthMultiplier),
                                   Text(
-                                    'What\'s Next?',
-                                    style: TextStyle(
-                                      fontSize: Responsive.fontSize(
-                                        context,
-                                        16,
-                                      ),
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
+                                    "What's Next?",
+                                    style: context.bold.copyWith(
+                                      fontSize: 14.textMultiplier,
+                                      color: AppColors.white,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: Responsive.spacing(context, 12)),
+                              SizedBox(height: 12.heightMultiplier),
                               _buildStep(
                                 '1',
                                 'Our team will verify your documents',
                               ),
                               _buildStep(
                                 '2',
-                                'You\'ll receive a confirmation email within 48 hours',
+                                "You'll receive a confirmation email within 48 hours",
                               ),
                               _buildStep(
                                 '3',
@@ -311,31 +280,31 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                             ],
                           ),
                         ),
-                        SizedBox(height: Responsive.spacing(context, 32)),
+                        SizedBox(height: 20.heightMultiplier),
 
-                        // Contact Info
+                        // Support
                         Container(
-                          padding: EdgeInsets.all(
-                            Responsive.spacing(context, 16),
-                          ),
+                          padding: EdgeInsets.all(14.widthMultiplier),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(12),
+                            color: AppColors.white.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(
+                              12.radiusMultipier,
+                            ),
                           ),
                           child: Row(
                             children: [
                               Icon(
-                                Icons.headset_mic,
-                                color: const Color(0xFF10B981),
-                                size: Responsive.iconSize(context, 24),
+                                Icons.headset_mic_rounded,
+                                color: AppColors.success,
+                                size: 20.widthMultiplier,
                               ),
-                              SizedBox(width: Responsive.spacing(context, 12)),
+                              SizedBox(width: 10.widthMultiplier),
                               Expanded(
                                 child: Text(
                                   'Need help? Contact support@couptick.com',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 13),
-                                    color: Colors.white.withOpacity(0.9),
+                                  style: context.regular.copyWith(
+                                    fontSize: 12.textMultiplier,
+                                    color: AppColors.white.withOpacity(0.85),
                                   ),
                                 ),
                               ),
@@ -347,66 +316,62 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
                   ),
                 ),
 
-                // Action Buttons
+                // Action buttons
                 Container(
-                  padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                  padding: EdgeInsets.all(20.widthMultiplier),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: AppColors.white.withOpacity(0.05),
                     border: Border(
-                      top: BorderSide(
-                        color: Colors.white.withOpacity(0.1),
-                        width: 1,
-                      ),
+                      top: BorderSide(color: AppColors.white.withOpacity(0.1)),
                     ),
                   ),
                   child: Column(
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        height: Responsive.dimension(context, 52),
+                        height: 52.heightMultiplier,
                         child: ElevatedButton(
-                          onPressed: () {
-                            context.pushNamed(Routes.myWins);
-                          },
+                          onPressed: () => context.pushNamed(Routes.myWins),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF10B981),
+                            backgroundColor: AppColors.success,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(
+                                16.radiusMultipier,
+                              ),
                             ),
+                            elevation: 0,
                           ),
                           child: Text(
                             'View My Wins',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 16),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                            style: context.bold.copyWith(
+                              fontSize: 15.textMultiplier,
+                              color: AppColors.white,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
+                      SizedBox(height: 10.heightMultiplier),
                       SizedBox(
                         width: double.infinity,
-                        height: Responsive.dimension(context, 52),
+                        height: 52.heightMultiplier,
                         child: OutlinedButton(
-                          onPressed: () {
-                            context.pushNamed(Routes.home);
-                          },
+                          onPressed: () => context.pushNamed(Routes.home),
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 2,
+                              color: AppColors.white.withOpacity(0.3),
+                              width: 1.5,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(
+                                16.radiusMultipier,
+                              ),
                             ),
                           ),
                           child: Text(
                             'Back to Home',
-                            style: TextStyle(
-                              fontSize: Responsive.fontSize(context, 16),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                            style: context.bold.copyWith(
+                              fontSize: 15.textMultiplier,
+                              color: AppColors.white,
                             ),
                           ),
                         ),
@@ -428,17 +393,16 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            color: Colors.white.withOpacity(0.6),
+          style: context.regular.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.white.withOpacity(0.55),
           ),
         ),
         Text(
           value,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+          style: context.semiBold.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.white,
           ),
         ),
       ],
@@ -447,35 +411,34 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
 
   Widget _buildStep(String number, String text) {
     return Padding(
-      padding: EdgeInsets.only(bottom: Responsive.spacing(context, 8)),
+      padding: EdgeInsets.only(bottom: 8.heightMultiplier),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: Responsive.dimension(context, 24),
-            height: Responsive.dimension(context, 24),
+            width: 22.widthMultiplier,
+            height: 22.widthMultiplier,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFD23F).withOpacity(0.2),
+              color: AppColors.warning.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 number,
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 12),
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFFFFD23F),
+                style: context.bold.copyWith(
+                  fontSize: 11.textMultiplier,
+                  color: AppColors.warning,
                 ),
               ),
             ),
           ),
-          SizedBox(width: Responsive.spacing(context, 12)),
+          SizedBox(width: 10.widthMultiplier),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 13),
-                color: Colors.white.withOpacity(0.9),
+              style: context.regular.copyWith(
+                fontSize: 12.textMultiplier,
+                color: AppColors.white.withOpacity(0.85),
               ),
             ),
           ),
@@ -485,7 +448,7 @@ class _ClaimSubmittedScreenState extends State<ClaimSubmittedScreen>
   }
 
   String _formatDate(DateTime date) {
-    final months = [
+    const months = [
       'Jan',
       'Feb',
       'Mar',

@@ -1,8 +1,9 @@
+import 'package:couptick/common/utils/app_screen_util.dart';
+import 'package:couptick/configs/theme/app_colors.dart';
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -25,7 +26,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   bool _isLoading = false;
   final bool _skipKyc = false;
 
-  // Mock data
+  String? _panDocument;
+  String? _aadhaarDocument;
+  String? _addressProof;
+
   final List<String> _states = [
     'Delhi',
     'Maharashtra',
@@ -42,72 +46,63 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot'],
   };
 
-  // Document upload states
-  String? _panDocument;
-  String? _aadhaarDocument;
-  String? _addressProof;
-
   void _handleSubmit() {
-    if (!_skipKyc && !_formKey.currentState!.validate()) {
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate API call
+    if (!_skipKyc && !_formKey.currentState!.validate()) return;
+    setState(() => _isLoading = true);
     Future.delayed(const Duration(seconds: 2), () {
-      context.pushNamed(Routes.ticketsAwarded); // ← ADD THIS LINE
+      context.pushNamed(Routes.ticketsAwarded);
     });
   }
 
   void _handleSkip() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.radiusMultipier),
+        ),
         title: Text(
           'Skip KYC?',
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 20),
-            fontWeight: FontWeight.w700,
+          style: context.bold.copyWith(
+            fontSize: 18.textMultiplier,
+            color: AppColors.textPrimary,
           ),
         ),
         content: Text(
           'You can complete your profile later, but some features may be limited until KYC is verified.',
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            color: const Color(0xFF6B7280),
+          style: context.regular.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.textSecondary,
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 14),
-                color: const Color(0xFF6B7280),
+              style: context.semiBold.copyWith(
+                fontSize: 13.textMultiplier,
+                color: AppColors.textSecondary,
               ),
             ),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(ctx);
               context.goNamed(Routes.home);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFF6B35),
+              backgroundColor: AppColors.primary,
+              elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.radiusMultipier),
               ),
             ),
             child: Text(
               'Skip for Now',
-              style: TextStyle(
-                fontSize: Responsive.fontSize(context, 14),
-                color: Colors.white,
+              style: context.semiBold.copyWith(
+                fontSize: 13.textMultiplier,
+                color: AppColors.white,
               ),
             ),
           ),
@@ -117,7 +112,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   void _handleDocumentPick(String docType) {
-    // Simulate file picker
     setState(() {
       switch (docType) {
         case 'pan':
@@ -136,9 +130,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       SnackBar(
         content: Text(
           'Document uploaded successfully',
-          style: TextStyle(fontSize: Responsive.fontSize(context, 14)),
+          style: context.regular.copyWith(fontSize: 13.textMultiplier),
         ),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: AppColors.success,
         duration: const Duration(seconds: 2),
       ),
     );
@@ -147,14 +141,17 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+              color: AppColors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: 20.widthMultiplier,
+                vertical: 16.heightMultiplier,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -163,30 +160,28 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     children: [
                       Text(
                         'Complete Your Profile',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 24),
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1A1A2E),
+                        style: context.extraBold.copyWith(
+                          fontSize: 20.textMultiplier,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 4)),
+                      SizedBox(height: 4.heightMultiplier),
                       Text(
                         'Step 2 of 2',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 14),
-                          color: const Color(0xFF6B7280),
+                        style: context.regular.copyWith(
+                          fontSize: 13.textMultiplier,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
                   ),
-                  TextButton(
-                    onPressed: _handleSkip,
+                  GestureDetector(
+                    onTap: _handleSkip,
                     child: Text(
                       'Skip',
-                      style: TextStyle(
-                        fontSize: Responsive.fontSize(context, 14),
-                        color: const Color(0xFFFF6B35),
-                        fontWeight: FontWeight.w600,
+                      style: context.semiBold.copyWith(
+                        fontSize: 14.textMultiplier,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
@@ -197,23 +192,22 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             // Form
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(Responsive.spacing(context, 20)),
+                padding: EdgeInsets.all(20.widthMultiplier),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Personal Information Section
                       _buildSectionHeader('Personal Information'),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _nameController,
                         label: 'Full Name *',
                         hint: 'Enter your full name',
-                        icon: Icons.person_outline,
+                        icon: Icons.person_outline_rounded,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _emailController,
@@ -222,11 +216,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 24)),
+                      SizedBox(height: 24.heightMultiplier),
 
-                      // Address Section
                       _buildSectionHeader('Address Details'),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _addressController,
@@ -235,7 +228,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         icon: Icons.home_outlined,
                         maxLines: 2,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       Row(
                         children: [
@@ -244,17 +237,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               label: 'State *',
                               value: _selectedState,
                               items: _states,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedState = value;
-                                  _selectedCity = null;
-                                });
-                              },
+                              onChanged: (v) => setState(() {
+                                _selectedState = v;
+                                _selectedCity = null;
+                              }),
                             ),
                           ),
-                          SizedBox(
-                            width: Responsive.spacing(context, 8),
-                          ), // ← Reduced from 12 to 8
+                          SizedBox(width: 8.widthMultiplier),
                           Expanded(
                             child: _buildDropdown(
                               label: 'City *',
@@ -262,17 +251,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               items: _selectedState != null
                                   ? _cities[_selectedState!]!
                                   : [],
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCity = value;
-                                });
-                              },
+                              onChanged: (v) =>
+                                  setState(() => _selectedCity = v),
                               enabled: _selectedState != null,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _pincodeController,
@@ -282,36 +268,35 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         keyboardType: TextInputType.number,
                         maxLength: 6,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 24)),
+                      SizedBox(height: 24.heightMultiplier),
 
-                      // KYC Section
                       _buildSectionHeader('KYC Documents (Optional)'),
-                      SizedBox(height: Responsive.spacing(context, 8)),
+                      SizedBox(height: 6.heightMultiplier),
                       Text(
                         'Complete KYC to unlock all features',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 13),
-                          color: const Color(0xFF6B7280),
+                        style: context.regular.copyWith(
+                          fontSize: 12.textMultiplier,
+                          color: AppColors.textSecondary,
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _panController,
                         label: 'PAN Number',
                         hint: 'Enter PAN (e.g., ABCDE1234F)',
-                        icon: Icons.credit_card,
+                        icon: Icons.credit_card_outlined,
                         maxLength: 10,
                         textCapitalization: TextCapitalization.characters,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
+                      SizedBox(height: 10.heightMultiplier),
 
                       _buildDocumentUpload(
                         'Upload PAN Card',
                         _panDocument,
                         () => _handleDocumentPick('pan'),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 14.heightMultiplier),
 
                       _buildTextField(
                         controller: _aadhaarController,
@@ -321,57 +306,57 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         keyboardType: TextInputType.number,
                         maxLength: 12,
                       ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
+                      SizedBox(height: 10.heightMultiplier),
 
                       _buildDocumentUpload(
                         'Upload Aadhaar Card',
                         _aadhaarDocument,
                         () => _handleDocumentPick('aadhaar'),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 16)),
+                      SizedBox(height: 10.heightMultiplier),
 
                       _buildDocumentUpload(
                         'Upload Address Proof',
                         _addressProof,
                         () => _handleDocumentPick('address'),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 32)),
+                      SizedBox(height: 32.heightMultiplier),
 
-                      // Submit Button
                       SizedBox(
                         width: double.infinity,
-                        height: Responsive.dimension(context, 52),
+                        height: 52.heightMultiplier,
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF6B35),
+                            backgroundColor: AppColors.primary,
+                            elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(
+                                14.radiusMultipier,
+                              ),
                             ),
-                            disabledBackgroundColor: const Color(
-                              0xFFFF6B35,
-                            ).withOpacity(0.5),
+                            disabledBackgroundColor: AppColors.primary
+                                .withOpacity(0.5),
                           ),
                           child: _isLoading
                               ? SizedBox(
-                                  height: Responsive.dimension(context, 24),
-                                  width: Responsive.dimension(context, 24),
+                                  height: 22.widthMultiplier,
+                                  width: 22.widthMultiplier,
                                   child: const CircularProgressIndicator(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     strokeWidth: 2,
                                   ),
                                 )
                               : Text(
                                   'Complete Setup',
-                                  style: TextStyle(
-                                    fontSize: Responsive.fontSize(context, 16),
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  style: context.bold.copyWith(
+                                    fontSize: 15.textMultiplier,
+                                    color: AppColors.white,
                                   ),
                                 ),
                         ),
                       ),
-                      SizedBox(height: Responsive.spacing(context, 20)),
+                      SizedBox(height: 20.heightMultiplier),
                     ],
                   ),
                 ),
@@ -386,10 +371,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-      style: TextStyle(
-        fontSize: Responsive.fontSize(context, 18),
-        fontWeight: FontWeight.w700,
-        color: const Color(0xFF1A1A2E),
+      style: context.bold.copyWith(
+        fontSize: 16.textMultiplier,
+        color: AppColors.textPrimary,
       ),
     );
   }
@@ -409,39 +393,63 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF1A1A2E),
+          style: context.semiBold.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 8)),
+        SizedBox(height: 8.heightMultiplier),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
           maxLength: maxLength,
           textCapitalization: textCapitalization,
+          style: context.regular.copyWith(
+            fontSize: 14.textMultiplier,
+            color: AppColors.textPrimary,
+          ),
           validator: label.contains('*')
-              ? (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required';
-                  }
-                  return null;
-                }
+              ? (v) =>
+                    (v == null || v.isEmpty) ? 'This field is required' : null
               : null,
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: Icon(icon, color: const Color(0xFFFF6B35)),
+            hintStyle: context.regular.copyWith(
+              fontSize: 13.textMultiplier,
+              color: AppColors.textDisabled,
+            ),
+            prefixIcon: Icon(
+              icon,
+              color: AppColors.primary,
+              size: 20.widthMultiplier,
+            ),
             counterText: '',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+            filled: true,
+            fillColor: AppColors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.border),
+            ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.error),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.error, width: 2),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.widthMultiplier,
+              vertical: 14.heightMultiplier,
             ),
           ),
         ),
@@ -461,28 +469,40 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: Responsive.fontSize(context, 14),
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF1A1A2E),
+          style: context.semiBold.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 8)),
+        SizedBox(height: 8.heightMultiplier),
         DropdownButtonFormField<String>(
           initialValue: value,
           items: items
               .map((item) => DropdownMenuItem(value: item, child: Text(item)))
               .toList(),
           onChanged: enabled ? onChanged : null,
+          style: context.regular.copyWith(
+            fontSize: 13.textMultiplier,
+            color: AppColors.textPrimary,
+          ),
           decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+            filled: true,
+            fillColor: AppColors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.border),
+            ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
+              borderRadius: BorderRadius.circular(14.radiusMultipier),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.widthMultiplier,
+              vertical: 14.heightMultiplier,
             ),
           ),
         ),
@@ -495,70 +515,66 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     String? fileName,
     VoidCallback onTap,
   ) {
+    final uploaded = fileName != null;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(Responsive.spacing(context, 16)),
+        padding: EdgeInsets.all(14.widthMultiplier),
         decoration: BoxDecoration(
-          color: fileName != null
-              ? const Color(0xFF10B981).withOpacity(0.05)
-              : const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(16),
+          color: uploaded ? AppColors.successSurface : AppColors.white,
+          borderRadius: BorderRadius.circular(14.radiusMultipier),
           border: Border.all(
-            color: fileName != null
-                ? const Color(0xFF10B981)
-                : const Color(0xFFE5E7EB),
-            width: 2,
+            color: uploaded ? AppColors.success : AppColors.border,
+            width: 1.5,
           ),
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(Responsive.spacing(context, 8)),
+              padding: EdgeInsets.all(8.widthMultiplier),
               decoration: BoxDecoration(
-                color: fileName != null
-                    ? const Color(0xFF10B981).withOpacity(0.1)
-                    : const Color(0xFFFF6B35).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                color: uploaded
+                    ? AppColors.success.withOpacity(0.12)
+                    : AppColors.primarySurface,
+                borderRadius: BorderRadius.circular(10.radiusMultipier),
               ),
               child: Icon(
-                fileName != null ? Icons.check_circle : Icons.upload_file,
-                color: fileName != null
-                    ? const Color(0xFF10B981)
-                    : const Color(0xFFFF6B35),
-                size: Responsive.iconSize(context, 24),
+                uploaded
+                    ? Icons.check_circle_rounded
+                    : Icons.upload_file_rounded,
+                color: uploaded ? AppColors.success : AppColors.primary,
+                size: 20.widthMultiplier,
               ),
             ),
-            SizedBox(width: Responsive.spacing(context, 12)),
+            SizedBox(width: 12.widthMultiplier),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 14),
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1A1A2E),
+                    style: context.semiBold.copyWith(
+                      fontSize: 13.textMultiplier,
+                      color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: Responsive.spacing(context, 2)),
+                  SizedBox(height: 2.heightMultiplier),
                   Text(
                     fileName ?? 'Tap to upload (JPG, PNG, PDF)',
-                    style: TextStyle(
-                      fontSize: Responsive.fontSize(context, 12),
-                      color: fileName != null
-                          ? const Color(0xFF10B981)
-                          : const Color(0xFF6B7280),
+                    style: context.regular.copyWith(
+                      fontSize: 11.textMultiplier,
+                      color: uploaded
+                          ? AppColors.success
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios,
-              size: Responsive.iconSize(context, 16),
-              color: const Color(0xFF6B7280),
+              Icons.arrow_forward_ios_rounded,
+              size: 14.widthMultiplier,
+              color: AppColors.textDisabled,
             ),
           ],
         ),

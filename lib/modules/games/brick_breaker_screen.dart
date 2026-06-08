@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:couptick/configs/theme/app_theme.dart';
 import 'package:couptick/routes/app_pages.dart';
 import 'package:couptick/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -338,9 +339,9 @@ class _BrickBreakerScreenState extends State<BrickBreakerScreen> {
                                   vertical: 16,
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'START GAME',
-                                style: TextStyle(fontSize: 16),
+                                style: context.semiBold,
                               ),
                             ),
                           ],
