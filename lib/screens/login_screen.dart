@@ -1,9 +1,10 @@
+import 'package:consumer_app/common/utils/app_screen_util.dart';
+import 'package:consumer_app/configs/assets/app_images.dart';
+import 'package:consumer_app/configs/theme/app_colors.dart';
 import 'package:consumer_app/routes/app_pages.dart';
 import 'package:consumer_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../utils/responsive.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _rememberMe = false;
   bool _obscurePassword = true;
 
   void _handleLogin() {
@@ -32,11 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Please fill in all required fields',
-            style: TextStyle(fontSize: Responsive.fontSize(context, 14)),
-          ),
-          backgroundColor: const Color(0xFFFF6B35),
+          content: const Text('Please fill in all required fields'),
+          backgroundColor: AppColors.secondary,
         ),
       );
     }
@@ -45,69 +42,198 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-          ),
+      backgroundColor: AppColors.white,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.bg1),
+              fit: BoxFit.cover,
             ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.widthMultiplier),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                /// Hero Section
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: Responsive.spacing(context, 24),
+                60.verticalSpace,
+                SizedBox(height: 60.heightMultiplier),
+                Image.asset(
+                  AppImages.textLogo2,
+                  height: 56.heightMultiplier,
+                  fit: BoxFit.contain,
+                ),
+                SizedBox(height: 6.heightMultiplier),
+                SizedBox(height: 52.heightMultiplier),
+
+                /// Title
+                Text(
+                  'Login',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 26.textMultiplier,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
                   ),
-                  child: Column(
-                    children: [
-                      Text(
-                        '🎉',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 90),
-                        ),
-                      ),
-                      SizedBox(height: Responsive.spacing(context, 12)),
-                      Text(
-                        'CoupTick',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 42),
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: Responsive.spacing(context, 6)),
-                      Text(
-                        'Win Big with Every Purchase!',
-                        style: TextStyle(
-                          fontSize: Responsive.fontSize(context, 16),
-                          color: Colors.white.withOpacity(0.95),
-                        ),
-                      ),
-                    ],
+                ),
+                SizedBox(height: 6.heightMultiplier),
+                Text(
+                  'Enter Mobile number and Password',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 13.textMultiplier,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
 
-                /// Form Section
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(Responsive.spacing(context, 28)),
-                    child: _buildForm(),
+                SizedBox(height: 40.heightMultiplier),
+
+                /// Form
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Mobile Field
+                      _buildInputField(
+                        controller: _mobileController,
+                        hint: 'Mobile Number',
+                        iconAsset: AppImages.phone,
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your mobile number';
+                          }
+                          if (value.length != 10) {
+                            return 'Enter a valid 10-digit number';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      SizedBox(height: 16.heightMultiplier),
+
+                      /// Password Field
+                      _buildInputField(
+                        controller: _passwordController,
+                        hint: 'Password',
+                        iconAsset: AppImages.password,
+                        obscureText: _obscurePassword,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (value.length < 6) {
+                            return 'Minimum 6 characters required';
+                          }
+                          return null;
+                        },
+                        suffix: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(12.radiusMultipier),
+                            child: Image.asset(
+                              _obscurePassword
+                                  ? AppImages.eyeoff
+                                  : AppImages.eyeon,
+                              width: 20.widthMultiplier,
+                              height: 20.widthMultiplier,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10.heightMultiplier),
+
+                      /// Forgot Password
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Forgot Password !',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13.textMultiplier,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.secondary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 40.heightMultiplier),
+
+                      /// Login Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56.heightMultiplier,
+                        child: ElevatedButton(
+                          onPressed: _handleLogin,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.secondary,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                30.radiusMultipier,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.textMultiplier,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 16.heightMultiplier),
+
+                      /// Register Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56.heightMultiplier,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            context.pushNamed(Routes.register);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: AppColors.primary,
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                30.radiusMultipier,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'Register',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.textMultiplier,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 32.heightMultiplier),
+                    ],
                   ),
                 ),
               ],
@@ -118,201 +244,78 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Welcome Back!',
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 26),
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF1A1A2E),
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 8)),
-          Text(
-            'Login to start playing & winning',
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 14),
-              color: const Color(0xFF6B7280),
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 28)),
-
-          /// Mobile Field
-          Text(
-            'Mobile Number *',
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 14),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 8)),
-          TextFormField(
-            controller: _mobileController,
-            keyboardType: TextInputType.phone,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your mobile number';
-              }
-              if (value.length != 10) {
-                return 'Enter a valid 10-digit number';
-              }
-              return null;
-            },
-            decoration: _inputDecoration(
-              context,
-              hint: 'Enter your mobile number',
-              icon: Icons.phone_android,
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 18)),
-
-          /// Password Field
-          Text(
-            'Password *',
-            style: TextStyle(
-              fontSize: Responsive.fontSize(context, 14),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 8)),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: _obscurePassword,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              if (value.length < 6) {
-                return 'Minimum 6 characters required';
-              }
-              return null;
-            },
-            decoration: _inputDecoration(
-              context,
-              hint: 'Enter your password',
-              icon: Icons.lock,
-              suffix: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-            ),
-          ),
-          SizedBox(height: Responsive.spacing(context, 14)),
-
-          /// Remember + Forgot
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Checkbox(
-                    value: _rememberMe,
-                    onChanged: (value) {
-                      setState(() {
-                        _rememberMe = value ?? false;
-                      });
-                    },
-                    activeColor: const Color(0xFFFF6B35),
-                  ),
-                  const Text('Remember me'),
-                ],
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Forgot?',
-                  style: TextStyle(color: Color(0xFFFF6B35)),
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: Responsive.spacing(context, 20)),
-
-          /// Login Button
-          SizedBox(
-            width: double.infinity,
-            height: Responsive.dimension(context, 52),
-            child: ElevatedButton(
-              onPressed: _handleLogin,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF6B35),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: const Text(
-                'Login to Account',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-
-          SizedBox(height: Responsive.spacing(context, 16)),
-
-          // Register Link
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Don't have an account? ",
-                style: TextStyle(
-                  fontSize: Responsive.fontSize(context, 14),
-                  color: const Color(0xFF6B7280),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.pushNamed(Routes.register);
-                },
-                child: Text(
-                  'Register Now',
-                  style: TextStyle(
-                    fontSize: Responsive.fontSize(context, 14),
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFFF6B35),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration(
-    BuildContext context, {
+  Widget _buildInputField({
+    required TextEditingController controller,
     required String hint,
-    required IconData icon,
+    required String iconAsset,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
     Widget? suffix,
   }) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon, color: const Color(0xFFFF6B35)),
-      suffixIcon: suffix,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      style: TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 14.textMultiplier,
+        color: AppColors.textPrimary,
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 14.textMultiplier,
+          color: AppColors.textSecondary,
+        ),
+        filled: true,
+        fillColor: AppColors.surfaceVariant,
+        prefixIcon: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 16.widthMultiplier),
+            Image.asset(
+              iconAsset,
+              width: 20.widthMultiplier,
+              height: 20.widthMultiplier,
+              color: AppColors.textSecondary,
+            ),
+            SizedBox(width: 10.widthMultiplier),
+            Container(
+              width: 1,
+              height: 20.heightMultiplier,
+              color: AppColors.border,
+            ),
+            SizedBox(width: 4.widthMultiplier),
+          ],
+        ),
+        suffixIcon: suffix,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.radiusMultipier),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.radiusMultipier),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.radiusMultipier),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.radiusMultipier),
+          borderSide: BorderSide(color: AppColors.error, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.radiusMultipier),
+          borderSide: BorderSide(color: AppColors.error, width: 1.5),
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 16.heightMultiplier,
+          horizontal: 4.widthMultiplier,
+        ),
       ),
     );
   }

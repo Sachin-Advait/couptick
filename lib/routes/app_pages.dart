@@ -1,3 +1,4 @@
+import 'package:consumer_app/common/utils/global_keys.dart';
 import 'package:consumer_app/screens/campaign_detail_screen.dart';
 import 'package:consumer_app/screens/claim_form_screen.dart';
 import 'package:consumer_app/screens/claim_submitted_screen.dart';
@@ -75,7 +76,7 @@ class Pages {
 
   static final GoRouter _router = GoRouter(
     initialLocation: Routes.login,
-
+    navigatorKey: GlobalKeys.navigatorKey,
     routes: [
       /// ─────────────────────────
       /// AUTH
